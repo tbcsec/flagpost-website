@@ -60,3 +60,358 @@ h4,
    * spec reserves for the "post" syllable only. */
   color: var(--sl-color-white);
 }
+
+/* ==========================================================================
+ * Splash landing page. `[data-has-hero]` is set only on the docs home, so
+ * everything below is scoped to it. Visual language mirrors flagpost.io:
+ * harbor glow + faint blueprint grid, split wordmark, terminal vignette.
+ * ========================================================================== */
+
+/* Backdrop: a signal-green glow over a fading grid, behind the hero. */
+[data-has-hero] main {
+  position: relative;
+}
+
+[data-has-hero] main::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42rem;
+  pointer-events: none;
+  background-image: radial-gradient(
+    52rem 30rem at 70% -8%,
+    rgba(31, 158, 107, 0.16),
+    transparent 65%
+  );
+}
+
+[data-has-hero] main::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 34rem;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--sl-color-gray-5) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--sl-color-gray-5) 55%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(46rem 26rem at 55% -4%, black 15%, transparent 72%);
+}
+
+:root[data-theme="light"][data-has-hero] main::before,
+[data-theme="light"] [data-has-hero] main::before {
+  background-image: radial-gradient(
+    52rem 30rem at 70% -8%,
+    rgba(31, 158, 107, 0.1),
+    transparent 65%
+  );
+}
+
+[data-has-hero] .hero {
+  position: relative;
+  z-index: 1;
+  padding-block: 2.5rem 1.5rem;
+}
+
+/* Split wordmark in the hero title (LOGO-SPEC §3). */
+.fp-wordmark {
+  white-space: nowrap;
+}
+
+.fp-flag-part {
+  color: var(--sl-color-white);
+}
+
+.fp-post-part {
+  color: var(--sl-color-accent);
+}
+
+:root:not([data-theme="light"]) .fp-post-part {
+  color: #2cb57c; /* dark-corrected green on dark grounds */
+}
+
+/* Give the terminal column real width on wide screens. */
+@media (min-width: 50rem) {
+  [data-has-hero] .hero {
+    grid-template-columns: 5fr 4fr;
+    gap: 2.5rem;
+  }
+}
+
+/* On small screens Starlight stacks the hero image first; lead with the
+ * headline instead and let the terminal follow the actions. */
+@media (max-width: 49.99rem) {
+  [data-has-hero] .hero > .hero-html {
+    order: 2;
+    margin-top: 0.5rem;
+  }
+}
+
+/* --- The quick-start terminal vignette ---------------------------------- */
+
+.fp-term {
+  width: min(30rem, 100%);
+  text-align: left;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+  box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.5);
+  overflow: hidden;
+  font-family: var(--sl-font-system-mono);
+}
+
+.fp-term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.fp-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--sl-color-gray-5);
+}
+
+.fp-term-title {
+  margin-inline-start: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--sl-color-gray-3);
+}
+
+.fp-term-link {
+  margin-inline-start: auto;
+  font-size: 0.72rem;
+  color: var(--sl-color-gray-3);
+  text-decoration: none;
+}
+
+.fp-term-link:hover {
+  color: var(--sl-color-accent-high);
+}
+
+.fp-term-body {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  font-size: 0.78rem;
+  line-height: 1.9;
+  background: transparent;
+  border: 0;
+  /* Wrap like a real shell instead of clipping the clone URL. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fp-term-body code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--sl-color-white);
+}
+
+.fp-p {
+  color: var(--sl-color-gray-4);
+  user-select: none;
+}
+
+.fp-term-out {
+  padding: 0.8rem 1.1rem 1rem;
+  border-top: 1px solid var(--sl-color-gray-5);
+  font-size: 0.74rem;
+  line-height: 1.8;
+  color: var(--sl-color-gray-3);
+}
+
+.fp-term-out p {
+  margin: 0;
+}
+
+.fp-ok,
+.fp-go {
+  color: var(--sl-color-accent);
+}
+
+:root:not([data-theme="light"]) .fp-ok,
+:root:not([data-theme="light"]) .fp-go {
+  color: #2cb57c;
+}
+
+/* --- Landing sections ---------------------------------------------------- */
+
+.fp-section {
+  margin-top: 4rem;
+}
+
+.fp-kicker {
+  margin: 0 0 1rem;
+  font-family: var(--fp-font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sl-color-accent);
+}
+
+:root:not([data-theme="light"]) .fp-kicker {
+  color: #2cb57c;
+}
+
+.fp-paths {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 50rem) {
+  .fp-paths {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fp-card {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+  padding: 1.5rem;
+  transition: border-color 150ms ease-out;
+}
+
+.fp-card:hover {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
+}
+
+.fp-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.fp-card > p {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.85rem;
+  color: var(--sl-color-gray-3);
+}
+
+.fp-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fp-card li {
+  margin: 0;
+  padding: 0.3rem 0;
+}
+
+.fp-card li + li {
+  border-top: 1px solid color-mix(in srgb, var(--sl-color-gray-5) 55%, transparent);
+}
+
+.fp-card a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--sl-color-gray-2);
+  text-decoration: none;
+}
+
+.fp-card a::after {
+  content: "\00a0→"; /* non-breaking, so the arrow never orphan-wraps */
+  color: var(--sl-color-gray-4);
+}
+
+.fp-card a:hover {
+  color: var(--sl-color-accent-high);
+}
+
+.fp-refs {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 50rem) {
+  .fp-refs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 72rem) {
+  .fp-refs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.fp-ref {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  background: var(--sl-color-gray-6);
+  padding: 1.1rem 1.2rem;
+  text-decoration: none;
+  transition: border-color 150ms ease-out;
+}
+
+.fp-ref:hover {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
+}
+
+.fp-ref strong {
+  font-family: var(--fp-font-display);
+  font-size: 0.95rem;
+  color: var(--sl-color-white);
+}
+
+.fp-ref code {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  background: var(--sl-color-black);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.45rem;
+  color: var(--sl-color-accent-high);
+}
+
+.fp-ref span {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--sl-color-gray-3);
+}
+
+.fp-foot {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--sl-color-gray-5);
+  text-align: center;
+}
+
+.fp-foot p {
+  font-size: 0.9rem;
+  color: var(--sl-color-gray-3);
+}
+
+/* `not-content` opts these blocks out of Starlight's flow styling (that's
+ * what equalises the grid cards), so links here need their colour back. */
+.fp-foot a {
+  color: var(--sl-color-text-accent);
+}
+
+.fp-foot a:hover {
+  color: var(--sl-color-white);
+}
+
+/* Light-mode surface corrections for the landing vignettes. */
+:root[data-theme="light"] .fp-card,
+:root[data-theme="light"] .fp-ref {
+  background: var(--sl-color-gray-7);
+}
+
+:root[data-theme="light"] .fp-term {
+  background: var(--sl-color-gray-7);
+  box-shadow: 0 24px 48px -30px rgb(22 32 44 / 0.35);
+}
+
+:root[data-theme="light"] .fp-ref code {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-accent);
+}

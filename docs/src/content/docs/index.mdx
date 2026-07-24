@@ -3,46 +3,104 @@ title: Flagpost documentation
 description: Run capture-the-flag competitions on your own infrastructure — real-time scoreboards, a visual automation engine, and batteries-included operations.
 template: splash
 hero:
-  tagline: Everything you need to run, operate, and extend the modern open-source CTF platform — from <code>docker compose up</code> to writing your own module.
-  image:
-    dark: ../../assets/flagpost-mark-dark.svg
-    light: ../../assets/flagpost-mark-light.svg
-    alt: The Flagpost mark — a green flag planted on a post
+  title: 'The <span class="fp-wordmark"><span class="fp-flag-part">Flag</span><span class="fp-post-part">post</span></span> handbook'
+  tagline: Everything to run, operate, and extend the open-source CTF platform — from first <code>docker compose up</code> to shipping your own module.
   actions:
     - text: Quick start
       link: /start/quick-start/
-      icon: right-arrow
-    - text: flagpost.io
-      link: https://flagpost.io
-      icon: external
-      variant: minimal
+      icon: rocket
+    - text: What is Flagpost?
+      link: /start/introduction/
+      variant: secondary
     - text: GitHub
       link: https://github.com/tbcsec/flagpost
       icon: github
       variant: minimal
+  image:
+    html: |
+      <div class="fp-term" aria-label="Quick start: three commands bring up the full stack">
+        <div class="fp-term-bar">
+          <span class="fp-dot"></span><span class="fp-dot"></span><span class="fp-dot"></span>
+          <span class="fp-term-title">bash</span>
+          <a class="fp-term-link" href="/start/quick-start/">full guide →</a>
+        </div>
+        <pre class="fp-term-body"><code><span class="fp-p">$</span> git clone https://github.com/tbcsec/flagpost.git
+      <span class="fp-p">$</span> cd flagpost
+      <span class="fp-p">$</span> docker compose up --build</code></pre>
+        <div class="fp-term-out">
+          <p><span class="fp-ok">✓</span> caddy · serving on :8080</p>
+          <p><span class="fp-ok">✓</span> backend · migrations applied, event bus up</p>
+          <p><span class="fp-go">→</span> open localhost:8080 — the setup wizard takes it from here</p>
+        </div>
+      </div>
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+<div class="fp-section not-content">
+  <p class="fp-kicker">Choose your path</p>
+  <div class="fp-paths">
+    <article class="fp-card">
+      <h2>Run a competition</h2>
+      <p>You're organising an event and the platform is already up.</p>
+      <ul>
+        <li><a href="/guides/competitions/">Create &amp; configure a competition</a></li>
+        <li><a href="/guides/challenges/">Author challenges, flags &amp; scoring</a></li>
+        <li><a href="/guides/automations/">Automate it — When → If → Then</a></li>
+        <li><a href="/guides/scoreboard/">Scoreboard, freeze &amp; spectators</a></li>
+      </ul>
+    </article>
+    <article class="fp-card">
+      <h2>Operate the platform</h2>
+      <p>You own the install — deployment, accounts, and upkeep.</p>
+      <ul>
+        <li><a href="/deploy/production/">Deploy to production</a></li>
+        <li><a href="/deploy/configuration/">Configuration reference</a></li>
+        <li><a href="/admin/users-roles/">Users, roles &amp; permissions</a></li>
+        <li><a href="/admin/backup/">Backup &amp; restore</a></li>
+      </ul>
+    </article>
+    <article class="fp-card">
+      <h2>Build on it</h2>
+      <p>You're extending Flagpost or contributing upstream.</p>
+      <ul>
+        <li><a href="/dev/architecture/">Architecture overview</a></li>
+        <li><a href="/dev/modules/">Develop a module</a></li>
+        <li><a href="/dev/events/">Work with events</a></li>
+        <li><a href="/dev/adrs/">Read the decision records</a></li>
+      </ul>
+    </article>
+  </div>
+</div>
 
-<CardGrid stagger>
-  <Card title="Run a competition" icon="rocket">
-    Create a competition, author challenges with static, regex or
-    multiple-choice flags, and go live with a real-time scoreboard.
-    Start with the [organiser guides](/guides/competitions/).
-  </Card>
-  <Card title="Deploy to production" icon="setting">
-    One `docker compose up` brings up the whole stack behind Caddy with
-    automatic HTTPS. See [production deployment](/deploy/production/) and the
-    [configuration reference](/deploy/configuration/).
-  </Card>
-  <Card title="Automate your event" icon="lightning">
-    Build When → If → Then rules visually: announce first blood, release
-    hint waves, freeze the board before the end. Read the
-    [automations guide](/guides/automations/).
-  </Card>
-  <Card title="Extend the platform" icon="puzzle">
-    Every feature is a module on a small kernel, wired through an event bus.
-    Learn the [architecture](/dev/architecture/) and how to
-    [develop a module](/dev/modules/).
-  </Card>
-</CardGrid>
+<div class="fp-section not-content">
+  <p class="fp-kicker">Look something up</p>
+  <div class="fp-refs">
+    <a class="fp-ref" href="/reference/events/">
+      <strong>Event catalogue</strong>
+      <code>challenge.solved</code>
+      <span>Every event, its payload fields, and its trigger permission.</span>
+    </a>
+    <a class="fp-ref" href="/reference/automations/">
+      <strong>Automation reference</strong>
+      <code>When → If → Then</code>
+      <span>Operators and all eleven actions, field by field.</span>
+    </a>
+    <a class="fp-ref" href="/reference/permissions/">
+      <strong>Permissions</strong>
+      <code>challenge_view</code>
+      <span>The full catalogue and what each built-in role holds.</span>
+    </a>
+    <a class="fp-ref" href="/reference/ctfcli/">
+      <strong>ctfcli format</strong>
+      <code>challenge.yml</code>
+      <span>The CTFd-compatible import/export field map.</span>
+    </a>
+  </div>
+</div>
+
+<div class="fp-foot not-content">
+  <p>
+    New to the platform? Start with <a href="/start/introduction/">What is Flagpost?</a>
+    and the <a href="/start/concepts/">core concepts</a> — or see it pitched at
+    <a href="https://flagpost.io">flagpost.io</a>.
+  </p>
+</div>
