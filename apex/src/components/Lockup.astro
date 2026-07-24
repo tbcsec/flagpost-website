@@ -1,0 +1,29 @@
+---
+/**
+ * Mark + wordmark, horizontally locked up (LOGO-SPEC §4.1).
+ *
+ * Wordmark: Space Grotesk 700, −0.035em tracking, sentence case, split at the
+ * syllable — "Flag" in sheet, "post" in dark-corrected green (§3, dark
+ * grounds). The split is mandatory in colour contexts.
+ */
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+import FlagpostMark from "./FlagpostMark.astro";
+
+const { size = 28, class: className } = Astro.props;
+---
+
+<span
+  class:list={["inline-flex items-center", className]}
+  style={`gap: ${size * 0.28}px`}
+>
+  <FlagpostMark size={size} />
+  <span
+    class="font-display font-bold leading-none tracking-[-0.035em]"
+    style={`font-size: ${size * 0.82}px`}
+    ><span class="text-fp-sheet">Flag</span><span class="text-fp-green-dark">post</span></span
+  >
+</span>

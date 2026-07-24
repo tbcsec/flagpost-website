@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Features from "../components/Features.astro";
+import Automation from "../components/Automation.astro";
+import Operations from "../components/Operations.astro";
+import QuickStart from "../components/QuickStart.astro";
+import OpenSource from "../components/OpenSource.astro";
+import Faq from "../components/Faq.astro";
+import Footer from "../components/Footer.astro";
+import { faq } from "../data/faq";
+import { GITHUB } from "../data/links";
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Flagpost",
+  applicationCategory: "SecurityApplication",
+  operatingSystem: "Linux, Docker",
+  url: "https://flagpost.io/",
+  image: "https://flagpost.io/og.png",
+  description:
+    "Flagpost is a modern, open-source CTF platform for running capture-the-flag competitions: real-time scoreboards, a visual automation engine, team collaboration, support tickets and one-command self-hosting.",
+  license: "https://www.gnu.org/licenses/agpl-3.0.html",
+  downloadUrl: GITHUB,
+  softwareRequirements: "Docker with Compose",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  author: {
+    "@type": "Person",
+    name: "Tom Collier",
+  },
+  sameAs: [GITHUB],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((entry) => ({
+    "@type": "Question",
+    name: entry.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: entry.answer,
+    },
+  })),
+};
+---
+
+<Base jsonLd={[softwareSchema, faqSchema]}>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <Features />
+    <Automation />
+    <Operations />
+    <QuickStart />
+    <OpenSource />
+    <Faq />
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  // Scroll reveal. The boot script only sets html[data-js] when
+  // IntersectionObserver exists, so this can assume it.
+  if (document.documentElement.hasAttribute("data-js")) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  }
+
+  // Copy-to-clipboard on the quick-start terminal.
+  document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.copy ?? "";
+      try {
+        await navigator.clipboard.writeText(text);
+        const label = btn.querySelector(".copy-label");
+        if (label) {
+          label.textContent = "Copied ✓";
+          setTimeout(() => {
+            label.textContent = "Copy";
+          }, 1600);
+        }
+      } catch {
+        // Clipboard unavailable (permissions/insecure context): leave the
+        // commands selectable rather than faking success.
+      }
+    });
+  });
+</script>

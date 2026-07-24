@@ -1,0 +1,6 @@
+# Cloudflare Pages project config — enables `npx wrangler pages deploy`
+# without dashboard prompts. The git-integration deploy path ignores this
+# file and uses the dashboard build settings instead.
+name = "flagpost-apex"
+compatibility_date = "2026-07-24"
+pages_build_output_dir = "dist"

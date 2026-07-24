@@ -1,0 +1,89 @@
+---
+/**
+ * Deep dive: event operations — tickets, announcements, presence, collab
+ * notes. The vignette stacks three mini product moments.
+ */
+import Icon from "./Icon.astro";
+---
+
+<section id="operations" class="border-t border-border/60 py-20 sm:py-28">
+  <div class="mx-auto grid w-full max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
+    <!-- Vignette first on large screens; copy first on small. -->
+    <div class="reveal order-last lg:order-first" style="--reveal-delay: 120ms">
+      <div class="space-y-3">
+        <!-- Announcement banner -->
+        <div class="flex items-center gap-3 rounded-lg border border-fp-green-dark/40 bg-fp-green-dark/10 px-4 py-3 text-sm">
+          <Icon name="bell" class="h-4 w-4 shrink-0 text-fp-green-dark" />
+          <span class="truncate"><span class="font-medium">Announcement</span> — Hint wave 2 is live on all web challenges.</span>
+        </div>
+
+        <!-- Support ticket -->
+        <div class="rounded-lg border border-border bg-card p-5 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="rounded-full bg-warning/15 px-2.5 py-0.5 text-[11px] font-semibold text-warning">Open</span>
+              <h3 class="text-sm font-medium">#214 — “Is the flag format flag&lcub;…&rcub; for RSA-mble?”</h3>
+            </div>
+            <span class="hidden items-center gap-1.5 whitespace-nowrap text-[11px] text-muted-foreground sm:flex">
+              <Icon name="eye" class="h-3.5 w-3.5" />
+              a judge is viewing
+            </span>
+          </div>
+          <div class="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
+            <p><span class="font-medium text-foreground">seg_fault_society:</span> we keep getting “invalid format” on our submission</p>
+            <p><span class="font-medium text-fp-green-dark">judge · ava:</span> Yes — flag&lcub;…&rcub;, all lowercase. Check for a trailing newline.</p>
+          </div>
+          <p class="mt-3 border-t border-border/70 pt-2.5 text-[11px] text-muted-foreground">
+            replied in 1m 40s &middot; linked to challenge <span class="font-medium text-foreground">RSA-mble</span>
+          </p>
+        </div>
+
+        <!-- Collaborative note -->
+        <div class="rounded-lg border border-border bg-card p-5 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="text-sm font-medium">Team notes — Heap of Trouble</h3>
+            <span class="flex -space-x-1.5" aria-label="Three teammates editing now">
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-fp-green-dark font-display text-[10px] font-bold text-primary-foreground ring-2 ring-card">K</span>
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-warning font-display text-[10px] font-bold text-warning-foreground ring-2 ring-card">M</span>
+              <span class="flex h-5 w-5 items-center justify-center rounded-full bg-secondary font-display text-[10px] font-bold text-secondary-foreground ring-2 ring-card">R</span>
+            </span>
+          </div>
+          <p class="mt-3 font-mono text-xs leading-relaxed text-muted-foreground">
+            offset is 0x48 → tcache poisoning works<br />
+            libc 2.39, no safe-linking on this build<span class="ml-px inline-block h-3.5 w-0.5 translate-y-0.5 bg-fp-green-dark" aria-hidden="true"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="font-display text-xs font-semibold uppercase tracking-[0.16em] text-fp-green-dark">
+        Operations
+      </p>
+      <h2 class="mt-3 font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        Close the Discord back-channel.
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-muted-foreground">
+        Everything that usually sprawls across chat servers and spreadsheets
+        lives in the platform: competitors file support tickets into a live
+        staff queue, announcements land as a banner everywhere, presence shows
+        who's looking at what, and every challenge carries a real-time shared
+        notepad for the team working it.
+      </p>
+      <ul class="mt-6 space-y-3 text-sm leading-relaxed">
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-fp-green-dark" />
+          <span><span class="font-medium">A live support queue</span> with assignment, private staff notes and an audio cue for new tickets.</span>
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-fp-green-dark" />
+          <span><span class="font-medium">Feedback built in</span> — post-event surveys and per-challenge ratings, exportable for your retro.</span>
+        </li>
+        <li class="flex gap-3">
+          <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-fp-green-dark" />
+          <span><span class="font-medium">An operational dashboard</span> — drag-and-drop widgets for solves, tickets and challenge health, plus a full audit log.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

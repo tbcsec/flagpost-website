@@ -1,0 +1,78 @@
+---
+/**
+ * Base document: fonts, tokens, and the SEO head. One layout, one page — the
+ * head carries everything a crawler needs (canonical, OG/Twitter, JSON-LD)
+ * because the site is fully static.
+ */
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/600.css";
+import "@fontsource/space-grotesk/700.css";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** JSON-LD structured data blocks, rendered verbatim. */
+  jsonLd?: object[];
+}
+
+const {
+  title = "Flagpost — The modern, open-source CTF platform",
+  description = "The open-source CTF platform: run capture-the-flag competitions with real-time scoreboards, visual automations, team collaboration and one-command self-hosting.",
+  jsonLd = [],
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/og.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#111b28" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Flagpost" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Flagpost — the modern, open-source CTF platform" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {jsonLd.map((block) => (
+      <script type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+
+    <!-- Pre-paint boot: reveal gating + once-per-session logo entrance.
+         External (not inline) so the CSP stays script-src 'self'. -->
+    <script is:inline src="/js/boot.js"></script>
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+    >
+      Skip to content
+    </a>
+    <slot />
+  </body>
+</html>

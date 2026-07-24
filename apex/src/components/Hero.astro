@@ -1,0 +1,85 @@
+---
+import FlagpostMark from "./FlagpostMark.astro";
+import ScoreboardMock from "./ScoreboardMock.astro";
+import Icon from "./Icon.astro";
+import { GITHUB, DEMO } from "../data/links";
+---
+
+<section class="relative pt-32 pb-20 sm:pt-40 sm:pb-28">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="mx-auto grid w-full max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+    <div>
+      <!-- The one sanctioned home of the "Plant" entrance (LOGO-SPEC §11.4). -->
+      <FlagpostMark size={80} plant />
+
+      <h1 class="mt-6 font-display text-4xl font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl lg:text-[3.4rem]">
+        The modern, open-source <span class="text-fp-green-dark">CTF platform</span>
+      </h1>
+
+      <p class="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+        Flagpost runs your whole capture-the-flag event: live scoreboards, a
+        visual automation engine, support tickets and real-time team
+        collaboration — self-hosted with one command, and yours forever.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href="#quick-start"
+          class="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:active:scale-[0.98]"
+        >
+          Get started
+        </a>
+        <a
+          href={DEMO}
+          class="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input px-6 text-sm font-medium transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-safe:active:scale-[0.98]"
+        >
+          Live demo
+          <Icon name="arrow-up-right" class="h-4 w-4 text-muted-foreground" />
+        </a>
+        <a
+          href={GITHUB}
+          class="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-safe:active:scale-[0.98]"
+        >
+          <Icon name="github" class="h-4 w-4" />
+          Star on GitHub
+        </a>
+      </div>
+
+      <ul class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+        <li class="flex items-center gap-2">
+          <Icon name="check" class="h-4 w-4 text-fp-green-dark" />
+          AGPL-3.0 licensed
+        </li>
+        <li class="flex items-center gap-2">
+          <Icon name="check" class="h-4 w-4 text-fp-green-dark" />
+          CTFd-compatible import
+        </li>
+        <li class="flex items-center gap-2">
+          <Icon name="check" class="h-4 w-4 text-fp-green-dark" />
+          <code class="font-mono text-[13px]">docker compose up</code>&nbsp;and you're live
+        </li>
+      </ul>
+    </div>
+
+    <div class="relative">
+      <ScoreboardMock />
+    </div>
+  </div>
+
+  <!-- Stack strip: proven tech, stated plainly. -->
+  <div class="mx-auto mt-20 w-full max-w-6xl px-4 sm:px-6">
+    <p class="text-center text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
+      Built on boring, proven tech
+    </p>
+    <ul class="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-medium text-muted-foreground">
+      <li>FastAPI</li>
+      <li>PostgreSQL</li>
+      <li>Next.js</li>
+      <li>Redis</li>
+      <li>WebSockets</li>
+      <li>Docker</li>
+      <li>Caddy</li>
+    </ul>
+  </div>
+</section>

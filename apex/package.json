@@ -1,0 +1,29 @@
+{
+  "name": "flagpost-apex",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "flagpost.io — marketing landing page for Flagpost, the modern open-source CTF platform",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "assets": "node scripts/generate-assets.mjs",
+    "astro": "astro"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/space-grotesk": "^5.2.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.3",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "png-to-ico": "^2.1.8",
+    "satori": "^0.29.0"
+  }
+}

@@ -1,0 +1,90 @@
+---
+/**
+ * An illustrative live-scoreboard panel in the product's own visual language
+ * (Harbor tokens, Space Grotesk numerals). Clearly a vignette, not a
+ * screenshot — real captures can replace it later without touching layout.
+ */
+import Icon from "./Icon.astro";
+
+const rows = [
+  { rank: 1, team: "hex&flex", solves: 19, score: "4,210", blood: true },
+  { rank: 2, team: "mov eax,1337", solves: 18, score: "3,980", blood: false },
+  { rank: 3, team: "NullByte Collective", solves: 17, score: "3,745", blood: true },
+  { rank: 4, team: "stack sm4shers", solves: 16, score: "3,520", blood: false },
+  { rank: 5, team: "seg_fault_society", solves: 15, score: "3,310", blood: false },
+];
+---
+
+<div class="overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-2xl shadow-black/30">
+  <!-- Window chrome -->
+  <div class="flex items-center gap-2 border-b border-border bg-muted/60 px-4 py-2.5">
+    <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+    <span class="ml-3 truncate rounded-md bg-background/70 px-3 py-1 text-xs text-muted-foreground">
+      ctf.example.org/scoreboard
+    </span>
+  </div>
+
+  <div class="p-4 sm:p-5">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <h3 class="font-display text-sm font-semibold">Scoreboard</h3>
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-fp-green-dark/40 bg-fp-green-dark/10 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-fp-green-dark">
+          <span class="live-dot h-1.5 w-1.5 rounded-full bg-fp-green-dark"></span>
+          LIVE
+        </span>
+      </div>
+      <div class="flex items-center gap-1 text-[11px]">
+        <span class="rounded-full bg-secondary px-2.5 py-0.5 font-medium text-secondary-foreground">Open</span>
+        <span class="rounded-full px-2.5 py-0.5 text-muted-foreground">Student</span>
+      </div>
+    </div>
+
+    <table class="mt-4 w-full text-sm">
+      <thead>
+        <tr class="text-left text-[11px] uppercase tracking-wider text-muted-foreground">
+          <th class="pb-2 pr-2 font-medium">#</th>
+          <th class="pb-2 pr-2 font-medium">Team</th>
+          <th class="pb-2 pr-2 text-right font-medium">Solves</th>
+          <th class="pb-2 text-right font-medium">Score</th>
+        </tr>
+      </thead>
+      <tbody class="font-display">
+        {rows.map((r) => (
+          <tr class="border-t border-border/70">
+            <td class="py-2.5 pr-2 tabular-nums text-muted-foreground">{r.rank}</td>
+            <td class="py-2.5 pr-2">
+              <span class="inline-flex items-center gap-1.5 font-medium">
+                {r.team}
+                {r.blood && (
+                  <Icon name="drop" class="h-3.5 w-3.5 text-destructive" label="First blood" />
+                )}
+              </span>
+            </td>
+            <td class="py-2.5 pr-2 text-right tabular-nums text-muted-foreground">{r.solves}</td>
+            <td class="py-2.5 text-right font-semibold tabular-nums">{r.score}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <div class="mt-3 flex items-center justify-between border-t border-border/70 pt-3 text-xs text-muted-foreground">
+      <span>52 teams &middot; 31 challenges</span>
+      <span class="tabular-nums">freeze in 00:42:10</span>
+    </div>
+  </div>
+
+  <!-- Solve toast rising in over the panel footer -->
+  <div class="anim-toast pointer-events-none mx-4 mb-4 flex items-center gap-2.5 rounded-md border border-fp-green-dark/40 bg-background/95 px-3.5 py-2.5 text-sm shadow-lg sm:mx-5 sm:mb-5">
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-success text-success-foreground">
+      <Icon name="check" class="h-3 w-3" />
+    </span>
+    <span class="truncate">
+      <span class="font-medium">hex&amp;flex</span>
+      <span class="text-muted-foreground"> solved </span>
+      <span class="font-medium">Heap of Trouble</span>
+    </span>
+    <span class="ml-auto font-display font-semibold tabular-nums text-fp-green-dark">+460</span>
+  </div>
+</div>

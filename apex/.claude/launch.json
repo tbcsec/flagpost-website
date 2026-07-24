@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "apex-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["scripts/preview.sh"],
+      "port": 4321
+    }
+  ]
+}

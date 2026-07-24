@@ -1,0 +1,87 @@
+---
+/**
+ * The nine differentiators, straight from the repo README's Highlights —
+ * every one built and working today. No roadmap features here.
+ */
+import Icon from "./Icon.astro";
+
+const features = [
+  {
+    icon: "zap",
+    title: "Real-time everything",
+    body: "Scoreboard, presence, notifications and ticket threads update live over WebSockets. Nobody refreshes anything.",
+  },
+  {
+    icon: "branch",
+    title: "Visual automation engine",
+    body: "No-code When → If → Then rules: announce first blood, release hints on a timer, unlock bonus waves, freeze the board before the end.",
+  },
+  {
+    icon: "pencil",
+    title: "Live collaborative notes",
+    body: "True CRDT co-editing on every challenge — a shared scratchpad for your team where everyone types at once, conflict-free.",
+  },
+  {
+    icon: "award",
+    title: "A scoreboard done right",
+    body: "First blood, brackets and divisions, a freeze for the final stretch, a public spectator board and a CTFtime feed.",
+  },
+  {
+    icon: "layers",
+    title: "A deep challenge model",
+    body: "Static, regex and multiple-choice flags. Dynamic decay scoring, prerequisite unlock chains, scheduled releases, guess caps.",
+  },
+  {
+    icon: "users",
+    title: "Permissions as data",
+    body: "RBAC that isn't hard-coded: clone the built-in roles and craft custom ones with per-competition or site-wide scope.",
+  },
+  {
+    icon: "repeat",
+    title: "No lock-in, ever",
+    body: "CTFd-compatible ctfcli YAML import and export, plus a one-click, full-fidelity backup of your entire install.",
+  },
+  {
+    icon: "lock",
+    title: "Secure by default",
+    body: "argon2 hashing, timing-safe auth, SSRF-hardened webhooks, ReDoS-contained regex flags — and no shipped credentials.",
+  },
+  {
+    icon: "terminal",
+    title: "Production in one command",
+    body: "docker compose up brings up the app, Postgres, Redis, MinIO and Caddy behind one origin — with automatic HTTPS.",
+  },
+] as const;
+---
+
+<section id="features" class="border-t border-border/60 py-20 sm:py-28">
+  <div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <div class="reveal max-w-2xl">
+      <p class="font-display text-xs font-semibold uppercase tracking-[0.16em] text-fp-green-dark">
+        Why Flagpost
+      </p>
+      <h2 class="mt-3 font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        Everything an organiser needs. Built in, and built already.
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-muted-foreground">
+        No plugin roulette, no duct-taped Discord workflows. Each of these
+        ships in the box and works today.
+      </p>
+    </div>
+
+    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map((f, i) => (
+        <li
+          class="reveal group rounded-lg border border-border bg-card p-6 shadow-sm transition hover:border-fp-green-dark/50"
+          style={`--reveal-delay: ${(i % 3) * 70}ms`}
+        >
+          <span class="flex h-10 w-10 items-center justify-center rounded-md bg-fp-green-dark/10 text-fp-green-dark transition group-hover:bg-fp-green-dark/15">
+            <Icon name={f.icon} class="h-5 w-5" />
+          </span>
+          <h3 class="mt-4 font-display text-base font-semibold">{f.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

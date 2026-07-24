@@ -1,0 +1,78 @@
+---
+import Icon from "./Icon.astro";
+import { DEPLOY_GUIDE, DOCS } from "../data/links";
+
+const commands = `git clone https://github.com/tbcsec/flagpost.git
+cd flagpost
+docker compose up --build`;
+---
+
+<section id="quick-start" class="border-t border-border/60 bg-muted/20 py-20 sm:py-28">
+  <div class="mx-auto grid w-full max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
+    <div class="reveal">
+      <p class="font-display text-xs font-semibold uppercase tracking-[0.16em] text-fp-green-dark">
+        Quick start
+      </p>
+      <h2 class="mt-3 font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        Live before your coffee cools.
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-muted-foreground">
+        Three commands bring up the entire production stack — app, PostgreSQL,
+        Redis, MinIO and a Caddy reverse proxy on a single origin.
+        Open <span class="font-mono text-base">localhost:8080</span> and a
+        one-time setup wizard creates your owner account. No seeded passwords,
+        nothing else to configure.
+      </p>
+      <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+        Going public? Set your domain
+        in <span class="font-mono">.env</span> and Caddy obtains and renews
+        HTTPS certificates automatically.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          href={DOCS}
+          class="inline-flex h-10 items-center gap-2 rounded-md bg-secondary px-4 text-sm font-medium text-secondary-foreground transition hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-safe:active:scale-[0.98]"
+        >
+          Documentation
+          <Icon name="arrow-up-right" class="h-4 w-4 text-muted-foreground" />
+        </a>
+        <a
+          href={DEPLOY_GUIDE}
+          class="inline-flex h-10 items-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Production deploy guide
+          <Icon name="arrow-up-right" class="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+
+    <div class="reveal" style="--reveal-delay: 120ms">
+      <div class="overflow-hidden rounded-lg border border-border bg-fp-ink shadow-2xl shadow-black/30">
+        <div class="flex items-center justify-between border-b border-border/60 px-4 py-2.5">
+          <div class="flex items-center gap-2">
+            <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-secondary"></span>
+            <span class="ml-2 text-xs text-muted-foreground">bash</span>
+          </div>
+          <button
+            type="button"
+            class="copy-btn inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-muted-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            data-copy={commands}
+          >
+            <Icon name="copy" class="h-3.5 w-3.5" />
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <pre class="overflow-x-auto p-5 font-mono text-sm leading-7 text-fp-sheet"><code><span class="select-none text-muted-foreground">$ </span>git clone https://github.com/tbcsec/flagpost.git
+<span class="select-none text-muted-foreground">$ </span>cd flagpost
+<span class="select-none text-muted-foreground">$ </span>docker compose up --build</code></pre>
+        <div class="border-t border-border/60 px-5 py-3.5 font-mono text-xs leading-relaxed text-muted-foreground">
+          <p><span class="text-fp-green-dark">✓</span> caddy &nbsp;· serving on :8080</p>
+          <p><span class="text-fp-green-dark">✓</span> backend · migrations applied, event bus up</p>
+          <p><span class="text-fp-green-dark">→</span> open http://localhost:8080 to run the setup wizard</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

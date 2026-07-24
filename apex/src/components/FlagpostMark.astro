@@ -1,0 +1,36 @@
+---
+/**
+ * The Flagpost mark — flag on post, exact geometry from FLAGPOST-LOGO-SPEC §1.1.
+ * Reverse colourway (light post, dark-corrected green flag) for dark grounds.
+ *
+ * Below 32px the ground shadow is dropped (compact variant, §1.2). With
+ * `plant`, the mark opts into the sanctioned entrance (§11): the pre-paint
+ * boot script sets html[data-plant] once per session, and global.css animates
+ * only marks that carry data-plant themselves. Server-rendered markup is the
+ * final resting state, so no-JS and reduced-motion both get a static mark.
+ */
+interface Props {
+  size?: number;
+  plant?: boolean;
+  class?: string;
+}
+
+const { size = 32, plant = false, class: className } = Astro.props;
+const compact = size < 32;
+---
+
+<svg
+  class:list={["fp-mark", className]}
+  data-plant={plant ? "" : undefined}
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  role="img"
+  aria-label="Flagpost"
+>
+  {!compact && (
+    <ellipse class="fp-ground" cx="22" cy="55" rx="12" ry="3.2" fill="var(--color-fp-sheet)" opacity="0.16" />
+  )}
+  <rect class="fp-post" x="19" y="6" width="6" height="49" rx="3" fill="var(--color-fp-sheet)" />
+  <path class="fp-flag" d="M25 9 H46 L40.5 16 L46 23 H25 Z" fill="var(--color-fp-green-dark)" />
+</svg>
