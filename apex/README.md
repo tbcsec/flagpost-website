@@ -31,27 +31,31 @@ npm run assets
 Re-run only when the brand changes (satori renders the wordmark from the
 vendored Space Grotesk, so output is deterministic).
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers, static assets)
 
-**Git integration (recommended):** connect the repository in the Cloudflare
-dashboard with
+Deployed as an **assets-only Worker** named `flagpost-apex` via Workers
+Builds (the dashboard "Import a repository" flow): every push to `main`
+builds and deploys production; other branches get preview URLs.
 
-| Setting          | Value           |
-| ---------------- | --------------- |
-| Root directory   | `apex`          |
-| Build command    | `npm run build` |
-| Build output     | `dist`          |
+| Setting          | Value               |
+| ---------------- | ------------------- |
+| Root directory   | `apex`              |
+| Build command    | `npm run build`     |
+| Deploy command   | `npx wrangler deploy` |
 
-Node version is picked up from `.node-version`. Attach the `flagpost.io`
-custom domain to the production environment.
+The Worker config is `wrangler.toml` (`[assets] directory = "./dist"`, no
+`main`). Its `name` **must match the Worker in the dashboard** — otherwise
+deploys create a second, disconnected Worker. Node version is picked up from
+`.node-version`. Attach the `flagpost.io` custom domain to the Worker.
 
-**Direct upload:** `npm run build && npx wrangler pages deploy`
-(project settings come from `wrangler.toml`).
+**Manual deploy from a checkout:** `npm run build && npx wrangler deploy`.
 
-Security headers, CSP and cache policy ship in `public/_headers`. If you add
-an inline `<script>` (don't), the CSP will block it — every script must be an
-external same-origin file, which `assetsInlineLimit: 0` in
-`astro.config.mjs` guarantees for bundled ones.
+Security headers, CSP and cache policy ship in `public/_headers`, which
+Workers static assets honours (same syntax as Pages). If you add an inline
+`<script>` (don't), the CSP will block it — every script must be an external
+same-origin file, which `assetsInlineLimit: 0` in `astro.config.mjs`
+guarantees for bundled ones. Unknown paths serve `src/pages/404.astro` with a
+404 status (`not_found_handling = "404-page"`).
 
 ## Where things live
 

@@ -8,7 +8,12 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://flagpost.io",
   output: "static",
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // The 404 page is served for unknown paths; it has no business in the sitemap.
+      filter: (page) => !page.endsWith("/404/") && !page.endsWith("/404"),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     build: {

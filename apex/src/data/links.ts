@@ -1,5 +1,6 @@
 /** External destinations, in one place so a URL change is a one-line edit. */
 export const GITHUB = "https://github.com/tbcsec/flagpost";
+export const WEBSITE_REPO = "https://github.com/tbcsec/flagpost-website";
 export const DOCS = "https://docs.flagpost.io";
 export const DEMO = "https://demo.flagpost.io";
 export const DEPLOY_GUIDE = `${GITHUB}#-deploying-to-production`;

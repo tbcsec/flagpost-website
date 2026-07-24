@@ -1,6 +1,17 @@
-# Cloudflare Pages project config — enables `npx wrangler pages deploy`
-# without dashboard prompts. The git-integration deploy path ignores this
-# file and uses the dashboard build settings instead.
+# Cloudflare Workers (static assets) config.
+#
+# The dashboard project was created via Workers Builds ("Import a repository"),
+# which runs `npx wrangler deploy` after the build — so this must be a Workers
+# assets config, not a Pages one. `name` must match the Worker in the
+# dashboard or deploys land on a second, disconnected Worker.
+#
+# No `main`: this is an assets-only Worker (pure static site). `_headers` and
+# `_redirects` in the assets directory are honoured, same syntax as Pages.
 name = "flagpost-apex"
 compatibility_date = "2026-07-24"
-pages_build_output_dir = "dist"
+
+[assets]
+directory = "./dist"
+# Serve dist/404.html (built from src/pages/404.astro) with a 404 status for
+# unknown paths instead of an empty response.
+not_found_handling = "404-page"
