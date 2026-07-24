@@ -1,0 +1,62 @@
+/* Flagpost theme for Starlight — the same design language as the platform and
+ * flagpost.io. Brand values from FLAGPOST-LOGO-SPEC.md §2; the dark greys lean
+ * Harbor (the product's default blue-slate palette) rather than neutral.
+ *
+ * Contrast rules honoured (LOGO-SPEC §2.2): green on dark grounds is the
+ * dark-corrected #2CB57C family; green used as text on light is #14795A. */
+
+/* Dark (default) — Harbor-leaning. */
+:root {
+  --sl-color-accent-low: #14402e;
+  --sl-color-accent: #1f9e6b;
+  --sl-color-accent-high: #8fd7b8;
+
+  --sl-color-white: #f2f6fa;
+  --sl-color-gray-1: #ecf2f8;
+  --sl-color-gray-2: #c0ccda;
+  --sl-color-gray-3: #97a7ba;
+  --sl-color-gray-4: #5c7189;
+  --sl-color-gray-5: #263950;
+  --sl-color-gray-6: #162231;
+  --sl-color-black: #111b28;
+
+  /* Brand/display face for headings + site title; body stays on the default
+   * UI stack, matching the app (Space Grotesk is the display face only). */
+  --fp-font-display: "Space Grotesk", var(--sl-font-system);
+}
+
+/* Light — Daybreak-leaning cool white. */
+:root[data-theme="light"] {
+  --sl-color-accent-low: #d3efe2;
+  --sl-color-accent: #14795a;
+  --sl-color-accent-high: #0f5a43;
+
+  --sl-color-white: #16202c;
+  --sl-color-gray-1: #1f2c3c;
+  --sl-color-gray-2: #3c4c60;
+  --sl-color-gray-3: #5c7189;
+  --sl-color-gray-4: #8497a9;
+  --sl-color-gray-5: #ccd7e2;
+  --sl-color-gray-6: #eef2f7;
+  --sl-color-gray-7: #f7fafc;
+  --sl-color-black: #fdfefe;
+}
+
+/* Headings + the site title carry the brand face. */
+h1,
+h2,
+h3,
+h4,
+.site-title {
+  font-family: var(--fp-font-display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.site-title {
+  letter-spacing: -0.035em; /* wordmark tracking, LOGO-SPEC §3 */
+  /* Single-colour wordmark (the sanctioned mono treatment) — Starlight's
+   * default accent-tinted title would set the whole word green, which the
+   * spec reserves for the "post" syllable only. */
+  color: var(--sl-color-white);
+}

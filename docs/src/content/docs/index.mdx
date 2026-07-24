@@ -1,0 +1,48 @@
+---
+title: Flagpost documentation
+description: Run capture-the-flag competitions on your own infrastructure — real-time scoreboards, a visual automation engine, and batteries-included operations.
+template: splash
+hero:
+  tagline: Everything you need to run, operate, and extend the modern open-source CTF platform — from <code>docker compose up</code> to writing your own module.
+  image:
+    dark: ../../assets/flagpost-mark-dark.svg
+    light: ../../assets/flagpost-mark-light.svg
+    alt: The Flagpost mark — a green flag planted on a post
+  actions:
+    - text: Quick start
+      link: /start/quick-start/
+      icon: right-arrow
+    - text: flagpost.io
+      link: https://flagpost.io
+      icon: external
+      variant: minimal
+    - text: GitHub
+      link: https://github.com/tbcsec/flagpost
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Run a competition" icon="rocket">
+    Create a competition, author challenges with static, regex or
+    multiple-choice flags, and go live with a real-time scoreboard.
+    Start with the [organiser guides](/guides/competitions/).
+  </Card>
+  <Card title="Deploy to production" icon="setting">
+    One `docker compose up` brings up the whole stack behind Caddy with
+    automatic HTTPS. See [production deployment](/deploy/production/) and the
+    [configuration reference](/deploy/configuration/).
+  </Card>
+  <Card title="Automate your event" icon="lightning">
+    Build When → If → Then rules visually: announce first blood, release
+    hint waves, freeze the board before the end. Read the
+    [automations guide](/guides/automations/).
+  </Card>
+  <Card title="Extend the platform" icon="puzzle">
+    Every feature is a module on a small kernel, wired through an event bus.
+    Learn the [architecture](/dev/architecture/) and how to
+    [develop a module](/dev/modules/).
+  </Card>
+</CardGrid>

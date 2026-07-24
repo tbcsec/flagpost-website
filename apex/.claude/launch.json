@@ -6,6 +6,12 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["scripts/preview.sh"],
       "port": 4321
+    },
+    {
+      "name": "docs-preview",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["../docs/scripts/preview.sh"],
+      "port": 4322
     }
   ]
 }

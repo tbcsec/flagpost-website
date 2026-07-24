@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Same artwork the Flagpost app ships as its favicon, so the marketing
+       site and the product read identically in a tab bar. Fixed colours: a
+       static favicon can't read theme tokens. -->
+  <rect width="64" height="64" rx="14" fill="#0f1a24" />
+  <rect x="20" y="12" width="5" height="40" rx="2.5" fill="#e7eae5" />
+  <path d="M25 15 H44 L39 21.5 L44 28 H25 Z" fill="#2bbd7e" />
+</svg>

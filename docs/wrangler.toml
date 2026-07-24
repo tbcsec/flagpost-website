@@ -1,0 +1,11 @@
+# Cloudflare Workers (static assets) config for docs.flagpost.io.
+# Same deployment model as ../apex: an assets-only Worker deployed by Workers
+# Builds running `npx wrangler deploy`. `name` must match the Worker created
+# in the dashboard.
+name = "flagpost-docs"
+compatibility_date = "2026-07-24"
+
+[assets]
+directory = "./dist"
+# Starlight emits its own 404.html; serve it with a 404 status.
+not_found_handling = "404-page"
