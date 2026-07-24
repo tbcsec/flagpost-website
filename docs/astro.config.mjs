@@ -28,9 +28,6 @@ export default defineConfig({
           href: "https://github.com/tbcsec/flagpost",
         },
       ],
-      editLink: {
-        baseUrl: "https://github.com/tbcsec/flagpost-website/edit/main/docs/",
-      },
       lastUpdated: true,
       head: [
         {
