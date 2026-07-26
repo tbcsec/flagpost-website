@@ -61,7 +61,13 @@ sessions are short-lived JWTs plus rotating hashed refresh sessions.
 ## The real-time layer
 
 - Scoped WS rooms per resource (`/ws/<type>/<id>`), a per-user notification
-  room, and collab-note relay rooms.
+  room, and collab-note relay rooms. Two room idioms coexist: **snapshot
+  rooms** (scoreboard, announcements) push full shared state, while **ping
+  rooms** — tickets, and the per-competition `activity/<id>` room — push
+  tiny id-only frames and let each client refetch its own
+  permission-filtered REST slice. The activity room fans out a curated
+  allowlist of events; on the frontend, making a surface live is one entry
+  in an event-to-query-invalidation map, not a new socket.
 - Auth is a **first-frame handshake** — tokens never appear in URLs.
 - Presence is ephemeral WS state with debounced clearing.
 - Collaborative prose uses **Y.js CRDTs with a dumb-relay transport**

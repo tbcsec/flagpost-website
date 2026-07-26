@@ -18,7 +18,11 @@ Flagpost's defaults reflect that.
   server-side refresh sessions** in an httpOnly cookie — bans and password
   resets revoke them immediately
   ([ADR-0008](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0008-stateful-refresh-sessions.md)).
-  The per-install JWT secret is derived and persisted if you don't set one.
+  There is **no repo-public default JWT secret**: left unset, a strong
+  per-install secret is derived and persisted
+  ([ADR-0019](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0019-jwt-secret-hardening.md)) —
+  a forgotten env var can never mean tokens signed with a value printed in
+  the source tree.
 - **Flags never leave the server.** Static and multiple-choice answers are
   stored as salted hashes and compared server-side; admin APIs show *that* a
   flag is set, never the flag.

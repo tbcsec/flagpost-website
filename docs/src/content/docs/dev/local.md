@@ -68,6 +68,21 @@ ESLint:
 6. **New backend features register through the module loader** — see
    [Developing modules](/dev/modules/).
 
+## Bugs, features, and questions
+
+- **Bug?** Open a [bug report](https://github.com/tbcsec/flagpost/issues/new?template=bug_report.yml)
+  (search [existing issues](https://github.com/tbcsec/flagpost/issues) first).
+- **Small, well-defined feature idea?** A
+  [feature request](https://github.com/tbcsec/flagpost/issues/new?template=feature_request.yml).
+- **Big or open-ended idea, or a question?** Start a
+  [Discussion](https://github.com/tbcsec/flagpost/discussions) so scope gets
+  shaped before it becomes a tracked issue.
+- **Security vulnerability?** Never a public issue —
+  [private disclosure](https://github.com/tbcsec/flagpost/blob/main/SECURITY.md).
+
+New issues start as `needs-triage`; a maintainer confirms, labels, and — if
+it's slated for a release — milestones it onto the public roadmap.
+
 ## Reading list
 
 - [`docs/ARCHITECTURE.md`](https://github.com/tbcsec/flagpost/blob/main/docs/ARCHITECTURE.md)

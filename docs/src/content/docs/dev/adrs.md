@@ -31,6 +31,7 @@ quietly working around it.
 | [0016](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0016-platform-export-import.md) | Platform export/import — registry-driven, additive backup | Accepted |
 | [0017](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0017-first-run-setup-wizard.md) | First-run setup wizard; no seeded default admin | Accepted |
 | [0018](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0018-regex-flag-redos-containment.md) | Regex flag evaluation contained against ReDoS | Accepted |
+| [0019](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0019-jwt-secret-hardening.md) | Per-install derived JWT secret — never a repo-public default | Accepted |
 
 Two threads are worth reading in sequence to see the project's decision
 style: the **bootstrap story** (0007 → 0010 → 0017 — from "first user wins"

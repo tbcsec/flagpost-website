@@ -35,6 +35,10 @@ challenge table, and each rating emits `challenge.rated`.
 The Analytics module (`view_competition_analytics`, staff) reads everything
 the platform already recorded — no extra instrumentation:
 
+A row of **insight cards** answers the judge questions directly — least
+solved, most attempted, most tickets, most first bloods — kept live as the
+event runs, with unanswerable cards omitted rather than zero-filled.
+
 **Challenges table** — per challenge: solves, attempts and fails, completion
 rate, average solve time, hint usage, linked support tickets, and rating
 average. This is where an over-hard or broken challenge shows up fast: high

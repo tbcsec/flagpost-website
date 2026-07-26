@@ -29,6 +29,17 @@ Configuration lives in `.env` (copied from `.env.example`), read by
 | --- | --- | --- |
 | `JWT_SECRET` | *(unset)* | Signing secret for access tokens. Unset, the app **derives a strong per-install secret and persists it** to the backend data volume (survives restarts). Set it explicitly for production, and always when running multiple backend hosts. |
 
+## Demo mode
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `DEMO_MODE` | *(unset)* | For **public demo instances only** (it's what runs demo.flagpost.io). Seeds well-known accounts (`admin` / `judge` / `participant`, password `password`) and a sample competition, shows a "resets hourly" banner and a credentials card on the login page, and disables the outbound automation actions (`webhook`, `send_email`). |
+
+:::danger[Never enable on a real deployment]
+Demo mode seeds publicly-known credentials. The hourly reset is external —
+recreate the stack on a schedule (`docker compose down -v && docker compose up -d`).
+:::
+
 ## Set inside the app, not the environment
 
 - **SMTP** (host, port, credentials, sender) — configured at Admin → Site

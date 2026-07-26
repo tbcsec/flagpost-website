@@ -10,7 +10,9 @@ move the board the moment they land, for everyone watching.
 
 - **Standings** per team (team mode) or competitor (individual mode) —
   total points are the sum of solve awards, judge/automation score
-  adjustments, hint costs, and award points.
+  adjustments, hint costs, and award points. Ties follow the standard CTF
+  convention: equal points rank by the earliest time the subject reached
+  its current score.
 - **First blood** — the first solve of each challenge is marked (a
   lightning-bolt icon next to the solver).
 - **Dynamic values** — decay-scored challenges re-value all their solvers on
@@ -50,7 +52,13 @@ An explicit per-competition opt-in (Settings → General) exposes a read-only,
   your site settings).
 - Only public, non-archived, opted-in competitions are served — anything
   else 404s, so private events are never disclosed.
-- The spectator board respects the freeze like any competitor view.
+- Beyond the table, the page shows **competition insight cards** (most
+  solved, most attempted, first-blood leader, fastest solve) and a live
+  **cumulative points timeline** of the top ten, so spectators can watch
+  overtakes as they happen.
+- The spectator board respects the freeze like any competitor view — and so
+  does every score-derived insight and the timeline, so the page never
+  leaks what the frozen board hides.
 
 ## CTFtime feed
 

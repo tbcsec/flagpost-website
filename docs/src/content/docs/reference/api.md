@@ -52,6 +52,7 @@ build clients accordingly.
 | `GET /api/site-settings/logo` | The uploaded logo (served sandboxed) |
 | `GET /api/public/competitions` | Directory of competitions that opted into the public scoreboard |
 | `GET /api/public/competitions/{id}/scoreboard` | Spectator scoreboard (respects freezes; 404 for private/non-opted-in) |
+| `GET /api/public/competitions/{id}/insights` | Spectator stats, highlights and the top-10 points timeline (freeze-parity with the board) |
 | `GET /api/public/competitions/{id}/ctftime` | [CTFtime scoreboard feed](https://ctftime.org/json-scoreboard-feed) |
 
 ## WebSocket rooms
@@ -59,6 +60,9 @@ build clients accordingly.
 `wss://<host>/ws/<resource_type>/<resource_id>` — scoped rooms for shared
 resources (scoreboard, challenge presence, ticket threads), plus
 `/ws/user/<user_id>` for the personal notification stream and
-`note/<doc_key>` rooms relaying collaborative-note updates. After the
-first-frame auth handshake, rooms stream JSON state updates; reconnect with
-exponential backoff and jitter, as the built-in client does.
+`note/<doc_key>` rooms relaying collaborative-note updates. A
+per-competition `activity/<competition_id>` room fans out tiny
+id-only event frames (never payload bodies) that clients use to refresh
+their own permission-filtered REST views — it's what keeps the whole UI
+live. After the first-frame auth handshake, rooms stream JSON updates;
+reconnect with exponential backoff and jitter, as the built-in client does.

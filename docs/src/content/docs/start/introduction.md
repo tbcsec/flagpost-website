@@ -52,6 +52,8 @@ module system currently runs trusted, in-repo code only.
 
 ## Where to go next
 
+- [Try the hosted demo](https://demo.flagpost.io) — a public instance with
+  sample data and demo logins, reset every hour.
 - [Quick start](/start/quick-start/) — a running platform in three commands.
 - [Core concepts](/start/concepts/) — competitions, roles, modules, events.
 - [Production deployment](/deploy/production/) — go live on your domain.

@@ -81,9 +81,18 @@ firing for this competition's events.
   audit history; the schedule is cleared and a new invite code minted.
 - **Archive / unarchive** — a reversible soft-close. Archived competitions
   disappear from the lobby and switcher and are badged in the admin list.
-- **Delete** — permanently removes the competition and its entire data tree,
-  behind a confirmation. There is no undo; consider an
-  [export](/admin/backup/) first.
+  If the site's **data-retention policy** is enabled (Admin → Site
+  settings → Data retention; on by default at 30 days, configurable
+  1–3650), archiving also stamps a purge date: once it passes, the platform
+  automatically deletes the competition — attachments out of storage, the
+  data tree out of the database — emitting `competition.deleted` with
+  `auto: true`. The archive confirmation states the exact deletion date and
+  suggests an export first; unarchiving cancels the clock, re-archiving
+  restarts it. Competitions archived before the policy existed are never
+  touched.
+- **Delete** — permanently removes the competition and its entire data tree
+  (database and stored attachments), behind a confirmation. There is no
+  undo; consider an [export](/admin/backup/) first.
 
 Every one of these emits its event (`competition.created`, `.archived`,
 `.deleted`, …) into the [audit log](/admin/audit-log/).

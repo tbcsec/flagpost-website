@@ -50,8 +50,10 @@ generates the rule builder (`GET /api/automations/catalog`).
 ## Templating
 
 Fields marked **templateable** interpolate event payload fields with
-`{placeholders}` — `"Solved {challenge_id}!"` becomes the real ID at fire
-time. The available fields per trigger are listed in the
+`{placeholders}` — and the engine resolves
+[friendly companion fields](/reference/events/#friendly-companion-fields) at
+fire time, so `"First blood on {challenge_title} by {team_name}!"` renders
+names, not IDs. The available fields per trigger are listed in the
 [event catalogue](/reference/events/).
 
 ## Actions
@@ -131,12 +133,14 @@ No configuration. Set/clear the competition's freeze and emit
 
 ### `create_announcement`
 
-| Field | Kind | Required |
-| --- | --- | --- |
-| `title` | text · templateable | yes |
-| `body` | textarea · templateable | yes |
+| Field | Kind | Required | Notes |
+| --- | --- | --- | --- |
+| `title` | text · templateable | yes | |
+| `body` | textarea · templateable | yes | |
+| `severity` | select: `info` · `warning` · `critical` | no | Defaults to `info`; `critical` bypasses recipients' announcement mute |
 
 Posts to the competition's live banner and emits `announcement.published`.
+See [announcement severity & audiences](/guides/support/#announcements).
 
 ## Execution semantics
 
@@ -149,3 +153,6 @@ Posts to the competition's live banner and emits `announcement.published`.
 - The time trigger fires **once** per rule when its threshold first goes
   true (deduplicated via the trigger count), and only for
   competition-scoped rules.
+- On a [demo-mode](/deploy/configuration/#demo-mode) instance, the outbound
+  actions (`webhook`, `send_email`) are hidden from the builder and refused
+  at execution time.
