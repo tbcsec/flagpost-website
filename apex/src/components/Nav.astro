@@ -6,6 +6,7 @@ import { GITHUB, DOCS, DEMO } from "../data/links";
 const anchors = [
   { href: "#features", label: "Features" },
   { href: "#automation", label: "Automation" },
+  { href: "#compare", label: "Compare" },
   { href: "#quick-start", label: "Quick start" },
   { href: "#roadmap", label: "Roadmap" },
   { href: "#faq", label: "FAQ" },
@@ -21,11 +22,11 @@ const anchors = [
       <Lockup size={28} />
     </a>
 
-    <div class="hidden items-center gap-1 md:flex">
+    <div class="hidden items-center gap-1 lg:flex">
       {anchors.map(({ href, label }) => (
         <a
           href={href}
-          class="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          class="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {label}
         </a>

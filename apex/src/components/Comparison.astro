@@ -1,0 +1,187 @@
+---
+/**
+ * Feature comparison vs. "other platforms" — deliberately unnamed, and
+ * deliberately fair: the first row concedes the table stakes, the footnote
+ * invites corrections. The pitch is the operations layer, not a wall of
+ * red crosses.
+ */
+import Icon from "./Icon.astro";
+import { GITHUB, DOCS } from "../data/links";
+
+type OtherState = "yes" | "partial" | "no";
+
+interface Row {
+  capability: string;
+  detail: string;
+  flagpost: string;
+  others: { state: OtherState; label: string };
+}
+
+const rows: Row[] = [
+  {
+    capability: "Scoreboard essentials",
+    detail: "First blood, freeze, dynamic decay scoring",
+    flagpost: "Built in",
+    others: { state: "yes", label: "Built in — table stakes" },
+  },
+  {
+    capability: "Real-time everything",
+    detail: "Live board, presence, notifications, ticket threads",
+    flagpost: "WebSockets throughout",
+    others: { state: "partial", label: "Refresh or polling" },
+  },
+  {
+    capability: "Automation engine",
+    detail: "Visual When → If → Then rules on any platform event",
+    flagpost: "Built in",
+    others: { state: "no", label: "—" },
+  },
+  {
+    capability: "Support tickets",
+    detail: "Live staff queue, assignment, internal notes, audio cue",
+    flagpost: "Built in",
+    others: { state: "no", label: "Discord or external tools" },
+  },
+  {
+    capability: "Team collaboration",
+    detail: "Shared real-time notes on every challenge (CRDT)",
+    flagpost: "Built in",
+    others: { state: "no", label: "External docs & chat" },
+  },
+  {
+    capability: "Roles & permissions",
+    detail: "Custom roles, granular per-competition scope",
+    flagpost: "Data-driven role editor",
+    others: { state: "partial", label: "Fixed roles, typically" },
+  },
+  {
+    capability: "Multi-competition",
+    detail: "Many isolated events from one install",
+    flagpost: "Multi-tenant core",
+    others: { state: "partial", label: "One event per instance, typically" },
+  },
+  {
+    capability: "Deep challenge model",
+    detail: "Regex & multiple-choice flags, unlock chains, waved release, guess caps",
+    flagpost: "All built in",
+    others: { state: "partial", label: "Partial — often plugins" },
+  },
+  {
+    capability: "Feedback & analytics",
+    detail: "Surveys, post-solve ratings, challenge health, insight cards",
+    flagpost: "Built in",
+    others: { state: "partial", label: "Basic stats" },
+  },
+  {
+    capability: "Divisions & spectators",
+    detail: "Brackets, public spectator board + insights, CTFtime feed",
+    flagpost: "Built in",
+    others: { state: "partial", label: "Varies" },
+  },
+  {
+    capability: "Portability",
+    detail: "ctfcli-format challenge import/export, full platform backup",
+    flagpost: "No lock-in by design",
+    others: { state: "partial", label: "Varies" },
+  },
+  {
+    capability: "Licence & cost",
+    detail: "Every feature, self-hosted",
+    flagpost: "AGPL-3.0 — all of it, free",
+    others: { state: "partial", label: "Open core; paid tiers common" },
+  },
+];
+
+const otherIcon: Record<OtherState, { icon: "check" | "minus"; class: string } | null> = {
+  yes: { icon: "check", class: "text-muted-foreground" },
+  partial: { icon: "minus", class: "text-warning/70" },
+  no: null,
+};
+---
+
+<section id="compare" class="border-t border-border/60 bg-muted/20 py-20 sm:py-28">
+  <div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <div class="reveal max-w-2xl">
+      <p class="font-display text-xs font-semibold uppercase tracking-[0.16em] text-fp-green-dark">
+        Compared
+      </p>
+      <h2 class="mt-3 font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        The basics are everywhere. The event layer isn't.
+      </h2>
+      <p class="mt-4 text-lg leading-relaxed text-muted-foreground">
+        Most platforms score flags perfectly well. The difference is
+        everything around the scoring — the operations you otherwise
+        duct-tape together on event day.
+      </p>
+    </div>
+
+    <div class="reveal mt-12 overflow-x-auto rounded-lg border border-border bg-card shadow-sm" style="--reveal-delay: 90ms">
+      <table class="w-full min-w-[38rem] text-sm">
+        <caption class="sr-only">
+          Feature comparison between Flagpost and typical self-hosted CTF platforms
+        </caption>
+        <thead>
+          <tr class="border-b border-border text-left">
+            <th scope="col" class="px-5 py-4 font-display text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:px-6">
+              Capability
+            </th>
+            <th scope="col" class="bg-fp-green-dark/[0.07] px-5 py-4 font-display text-base font-bold tracking-[-0.035em] sm:px-6">
+              <span class="text-fp-sheet">Flag</span><span class="text-fp-green-dark">post</span>
+            </th>
+            <th scope="col" class="px-5 py-4 font-display text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:px-6">
+              Other platforms<span aria-hidden="true">*</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr class="border-b border-border/60 last:border-b-0">
+              <th scope="row" class="px-5 py-3.5 text-left font-normal sm:px-6">
+                <span class="block font-medium text-foreground">{row.capability}</span>
+                <span class="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{row.detail}</span>
+              </th>
+              <td class="bg-fp-green-dark/[0.07] px-5 py-3.5 sm:px-6">
+                <span class="flex items-start gap-2">
+                  <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-fp-green-dark" />
+                  <span class="font-medium">{row.flagpost}</span>
+                </span>
+              </td>
+              <td class="px-5 py-3.5 text-muted-foreground sm:px-6">
+                <span class="flex items-start gap-2">
+                  {otherIcon[row.others.state] && (
+                    <Icon
+                      name={otherIcon[row.others.state]!.icon}
+                      class={`mt-0.5 h-4 w-4 shrink-0 ${otherIcon[row.others.state]!.class}`}
+                    />
+                  )}
+                  <span>{row.others.label}</span>
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="reveal mt-4 text-xs leading-relaxed text-muted-foreground/80" style="--reveal-delay: 140ms">
+      * Built-in capabilities of typical self-hosted CTF platforms — without
+      plugins or paid tiers — as we understand them in mid-2026. Spot
+      something wrong or outdated?{" "}
+      <a href={`${GITHUB}/issues`} class="underline decoration-border underline-offset-2 transition hover:text-foreground">Tell us and we'll fix it.</a>
+    </p>
+
+    <div class="reveal mt-8 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-card px-6 py-5" style="--reveal-delay: 180ms">
+      <p class="text-sm text-muted-foreground">
+        Already running another platform? Your ctfcli challenge repo imports
+        as-is — switching is an afternoon, not a rewrite.
+      </p>
+      <a
+        href={`${DOCS}/start/switching/`}
+        class="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-md bg-secondary px-4 text-sm font-medium text-secondary-foreground transition hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-safe:active:scale-[0.98]"
+      >
+        Migration guide
+        <Icon name="arrow-up-right" class="h-4 w-4 text-muted-foreground" />
+      </a>
+    </div>
+  </div>
+</section>
