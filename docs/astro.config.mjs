@@ -42,6 +42,7 @@ export default defineConfig({
             { label: "What is Flagpost?", slug: "start/introduction" },
             { label: "Quick start", slug: "start/quick-start" },
             { label: "Core concepts", slug: "start/concepts" },
+            { label: "Switching from another platform", slug: "start/switching" },
           ],
         },
         {

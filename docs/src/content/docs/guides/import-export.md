@@ -26,7 +26,9 @@ Field-by-field details: [ctfcli YAML format](/reference/ctfcli/).
 
 **Migrating from CTFd?** Export your challenges with
 [ctfcli](https://github.com/CTFd/ctfcli) (or use your existing ctfcli-format
-challenge repo), zip the challenge directories, and import.
+challenge repo), zip the challenge directories, and import. Moving your
+whole event, not just the challenges? See
+[Switching from another platform](/start/switching/).
 
 ## Cloning a competition
 
