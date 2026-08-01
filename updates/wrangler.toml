@@ -15,7 +15,7 @@ compatibility_date = "2026-07-24"
 binding = "DB"
 database_name = "flagpost-updates"
 # Filled in by `wrangler d1 create flagpost-updates` — see README.
-database_id = "REPLACE_ME"
+database_id = "f99a130e-e309-46c9-86df-932da866b6d4"
 
 # The request path never talks to GitHub: this refreshes the cached latest
 # version out of band, so a GitHub outage or rate limit can't affect a
