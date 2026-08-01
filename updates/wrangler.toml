@@ -1,0 +1,28 @@
+# updates.flagpost.io — the update-check + adoption-count endpoint (flagpost#111).
+#
+# Unlike ../apex and ../docs this is a *script* Worker, not assets-only, so it
+# carries `main`. Same deployment model otherwise: Workers Builds with the root
+# directory pointed at this folder, running `npx wrangler deploy`. `name` must
+# match the Worker in the dashboard or deploys land on a second, disconnected
+# one.
+name = "flagpost-updates"
+main = "src/index.ts"
+compatibility_date = "2026-07-24"
+
+# Aggregate counters only — see schema.sql, which is deliberately incapable of
+# storing anything that identifies a deployment.
+[[d1_databases]]
+binding = "DB"
+database_name = "flagpost-updates"
+# Filled in by `wrangler d1 create flagpost-updates` — see README.
+database_id = "REPLACE_ME"
+
+# The request path never talks to GitHub: this refreshes the cached latest
+# version out of band, so a GitHub outage or rate limit can't affect a
+# deployment's check, and GitHub sees one request per interval globally rather
+# than one per Cloudflare colo.
+[triggers]
+crons = ["*/15 * * * *"]
+
+[vars]
+GITHUB_REPO = "tbcsec/Flagpost"

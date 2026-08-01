@@ -1,0 +1,20 @@
+{
+  "name": "flagpost-updates",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:init": "wrangler d1 execute flagpost-updates --remote --file=./schema.sql",
+    "db:init:local": "wrangler d1 execute flagpost-updates --local --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.9.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.7",
+    "wrangler": "^4.86.0"
+  }
+}
