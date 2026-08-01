@@ -47,6 +47,13 @@ fails, low completion, rising tickets.
 **Teams table** — per team/competitor: rank, points, solves, first bloods,
 tickets opened, and last solve time.
 
+**Submissions browser** — a dispute-resolution view of raw submissions
+(who submitted what, when, and whether it graded correct), filterable and
+exportable to CSV. Raw payloads are more sensitive than aggregate stats, so
+it sits behind its own permission, `view_submissions` (Judge and
+Administrator hold it by default). When a team claims "we submitted that
+flag before the freeze", this is where you settle it.
+
 ## Platform overview
 
 Administrators get a cross-competition **Admin → Dashboard** overview

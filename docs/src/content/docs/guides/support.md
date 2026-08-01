@@ -18,6 +18,11 @@ live thread; staff work a real-time queue.
   queue with assignment and resolution, plus **internal notes** on each
   ticket: a private, collaboratively-edited pad visible only to staff holding
   `ticket_view_internal_notes` — never to the ticket's opener.
+- **Attachments** — screenshots attach to ticket messages (up to 5 per
+  ticket, 2.5 MB each). Uploads are content-sniffed as images — the declared
+  filename is never trusted — and served sandboxed, because ticket content
+  is competitor-controlled input. Attachment activity emits
+  `ticket.attachment_added` / `.attachment_deleted`.
 - **The audio cue** — the *only* sound in the platform: a new ticket cues
   staff; a reply cues whichever side didn't just post. Everything else is
   visual-only via the bell.

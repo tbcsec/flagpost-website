@@ -60,11 +60,17 @@ the competition for your next event, or use the
 [platform backup](/admin/backup/) to move whole installs — both are
 full-fidelity within Flagpost.
 
-## 3. People — fresh accounts, by design
+## 3. People — SSO, or fresh accounts by design
 
-Accounts are the one thing that genuinely can't port: no platform can (or
-should) export usable password hashes into another. Flagpost keeps
-re-registration as close to zero-friction as it gets:
+If your organisation runs an identity provider,
+**[OIDC single sign-on](/admin/sso/)** dissolves this step entirely:
+connect Google, Okta, Keycloak, or Entra, and your people sign in with the
+accounts they already have — provisioned just-in-time on first login,
+nothing to migrate.
+
+Without an IdP, accounts are the one thing that genuinely can't port: no
+platform can (or should) export usable password hashes into another.
+Flagpost keeps re-registration as close to zero-friction as it gets:
 
 - **Username-first identity** — email is optional, so sign-up is one field
   and a password.

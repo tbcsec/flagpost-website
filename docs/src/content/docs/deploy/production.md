@@ -18,11 +18,16 @@ Set at minimum:
 | Variable | Set it to |
 | --- | --- |
 | `SITE_ADDRESS` | Your domain, e.g. `ctf.example.com`. Caddy obtains and renews TLS **automatically** once ports 80/443 are reachable. |
-| `PUBLIC_ORIGIN` | The browser-facing origin, e.g. `https://ctf.example.com`. **Baked into the frontend at build time** — set it before building. |
+| `PUBLIC_ORIGIN` | The browser-facing origin, e.g. `https://ctf.example.com`. Baked into the frontend at **source-build** time (release images are same-origin and don't need the rebuild), and it's what [OIDC redirect URIs](/admin/sso/) are built from — so it must be exact if you configure SSO. |
 | `JWT_SECRET` | A long random value. (Left unset, the app derives a strong per-install secret and persists it — fine for a single host, but set it explicitly for production and always for multi-host.) |
-| `POSTGRES_PASSWORD` | A real password. |
-| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | Real credentials. |
+| `POSTGRES_PASSWORD` | A real password — generate with `openssl rand -hex 24`. |
+| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | Real credentials, same treatment. **The backend refuses to start** if it finds MinIO's published defaults on a deployment that looks reachable (non-local `PUBLIC_ORIGIN`, or `MINIO_PUBLIC_ENDPOINT` set) — default credentials there mean world read/write on every attachment, outside RBAC entirely. |
 | `MINIO_PUBLIC_ENDPOINT` | A browser-reachable MinIO host for signed attachment downloads (see below). |
+
+Note that `MINIO_ROOT_*` **initialise** the MinIO server rather than
+reconfigure it: changing them after first boot needs
+`docker compose up -d --force-recreate minio`, and rotating credentials on a
+stack that already holds data must also be done inside MinIO.
 
 Full variable semantics: [Configuration reference](/deploy/configuration/).
 
@@ -53,14 +58,16 @@ variable is almost always why.
 
 ## Upgrades
 
-```bash
-git pull
-docker compose build
-docker compose up -d
-```
-
-Migrations run automatically on start. Take a
+Prefer **pinned release images** — every release publishes
+`ghcr.io/tbcsec/flagpost-{backend,frontend}:vX.Y.Z`, so upgrading is a tag
+bump instead of a source rebuild. Building from source (`git pull &&
+docker compose build && docker compose up -d`) still works. Either way,
+migrations run automatically on start; take a
 [platform export](/admin/backup/) and a `pg_dump` first — cheap insurance.
+
+The full story — image overrides, version reporting, release notes,
+security advisories, and the update check — is on
+[Releases & upgrades](/deploy/upgrades/).
 
 ## Scaling expectations
 

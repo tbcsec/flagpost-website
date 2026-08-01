@@ -4,8 +4,10 @@ description: Run the backend and frontend directly on a host — process model, 
 ---
 
 Docker Compose is the supported happy path, but nothing in Flagpost requires
-it. You need: **Python 3.12+**, **Node 20+**, and reachable **PostgreSQL**,
-**Redis**, and an **S3-compatible object store** (MinIO works well).
+it. You need: **Python 3.12+** and **Node 20+** (the release images run
+Python 3.14 and Node 26, which is what CI tests), plus reachable
+**PostgreSQL**, **Redis**, and an **S3-compatible object store** (MinIO
+works well).
 
 ## Backend
 
@@ -21,6 +23,7 @@ export MINIO_ENDPOINT="miniohost:9000"
 export MINIO_PUBLIC_ENDPOINT="files.example.com:9000"
 export MINIO_ACCESS_KEY="…" MINIO_SECRET_KEY="…"
 export CORS_ORIGINS="https://ctf.example.com"
+export PUBLIC_BASE_URL="https://ctf.example.com"   # OIDC redirect URIs build from this
 export JWT_SECRET="a-long-random-value"
 
 .venv/bin/alembic upgrade head     # migrate + seed built-in roles

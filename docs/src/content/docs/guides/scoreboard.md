@@ -20,6 +20,8 @@ move the board the moment they land, for everyone watching.
 - **Divisions** — when the competition defines brackets, a division filter
   ranks within the selected division; staff assign divisions inline from the
   board.
+- **The top-10 chart** — a bar chart of the leaders above the table, with
+  per-bar labels and a detail tooltip on hover or keyboard focus.
 
 ## Freezing the board
 
@@ -33,6 +35,11 @@ until the unfreeze. This is the classic end-game tension mechanic.
 - The board everyone sees is computed **as of the freeze instant** — dynamic
   values by solve count at that moment; later solves, adjustments, awards,
   and hint costs excluded.
+- The freeze covers **every competitor-visible solve surface**, not just the
+  board: per-challenge solver lists and solve counts, dashboards, the
+  participants roster, and the spectator insights all apply the same cutoff
+  (tightened in v1.2.0 — [GHSA-q69m-7mgh-r2gh](https://github.com/tbcsec/Flagpost/security/advisories/GHSA-q69m-7mgh-r2gh)),
+  so a frozen board can't be reconstructed from side channels.
 - Staff can still read the live board (`?live=true` — the UI does this for
   staff automatically).
 - Freeze and unfreeze emit `scoreboard.frozen` / `scoreboard.unfrozen`, and

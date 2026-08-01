@@ -8,6 +8,12 @@ an Administrator (`manage_site_settings`). Theming is deliberately
 **site-wide only** for now; per-competition theming is a possible future
 (recorded in ADR-0011).
 
+**Admin → Settings** is tabbed — **General · Email · Auth · Rules · Backup ·
+Appearance** (plus an AI placeholder for a future release) — with the active
+tab in the URL, so a settings link lands where you meant it to. The Auth
+tab requires the separate `manage_auth_providers` permission and is covered
+on its own page: [Single sign-on](/admin/sso/).
+
 ## Appearance
 
 - **Platform name** — the wordmark text shown across the app and on the
@@ -32,19 +38,42 @@ renders on every page. An organisation may fully rebrand the platform;
 Flagpost stays visibly the underlying software — this is also how the AGPL's
 source-offer surfaces to your users.
 
-## Operational settings
+## Registration
 
 - **Registration policy** — leave public self-registration open, or close
   it. Closed installs mint accounts from
   [Admin → Users](/admin/users-roles/); the register page shows a notice and
   the login page hides its register link automatically.
+- **Email-domain allowlist** — restrict public self-registration to listed
+  domains (e.g. your university's). Applies to self-registration only — not
+  to admin-minted accounts or [SSO sign-ins](/admin/sso/).
+- **Email verification** — when enabled (requires SMTP), a self-registered
+  account must verify its address; verifying emits `user.email_verified`.
+  Users manage their own address from `/profile` — add, change, or clear.
+
+## Rules & code of conduct
+
+Author site-wide **rules** as rich text on the Rules tab. By default they
+gate joining: a competitor must record acceptance before entering a
+competition (emitting `competition.rules_accepted`, so organisers can audit
+who agreed and when). A **display-only** toggle shows the rules at join
+without gating. A competition can carry its own
+[rules override](/guides/competitions/#general) that supersedes the site
+text; with no rules configured anywhere, there's no gate at all.
+
+## Operational settings
+
 - **SMTP** — host, port, credentials, and sender. Powers the
-  [`send_email` automation action](/guides/automations/) and
-  [self-service password resets](/admin/users-roles/); both no-op quietly
-  while SMTP is unset. The password is write-only — reads only reveal *that*
-  one is set.
+  [`send_email` automation action](/guides/automations/),
+  [password resets](/admin/users-roles/), and email verification; all no-op
+  quietly while SMTP is unset. The password is write-only — reads only
+  reveal *that* one is set.
+- **Update checks** — the once-daily, version-only check that drives the
+  "update available" notice. Toggle it here, or disable it outright via the
+  environment for air-gapped installs; what it sends (and doesn't) is
+  documented in [Releases & upgrades](/deploy/upgrades/#the-update-check).
 
 ## Backup
 
-The platform [export / import panel](/admin/backup/) also lives on this
-page.
+The platform [export / import panel](/admin/backup/) lives on the Backup
+tab.

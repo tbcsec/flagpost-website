@@ -27,8 +27,27 @@ Flagpost's defaults reflect that.
   stored as salted hashes and compared server-side; admin APIs show *that* a
   flag is set, never the flag.
 - **Submission abuse**: per-subject rate limiting with escalating backoff,
-  idempotent repeat-correct handling, full attempt logging, and
-  competition-wide multiple-choice guess caps refused *before* grading.
+  idempotent repeat-correct handling (race-safe as of v1.2.0 —
+  concurrent duplicate submissions can no longer bank points twice), full
+  attempt logging, and competition-wide multiple-choice guess caps refused
+  *before* grading.
+- **Credential endpoints are rate-limited** (v1.2.0): login, registration,
+  password reset, and email verification all throttle.
+- **OIDC single sign-on** hardened by construction: mandatory PKCE, `state`
+  and `nonce`; ID-token signature and claim validation; JIT-provisioned
+  users get Participant with **no** competition scope; IdP group/role
+  claims are ignored so permission changes never bypass the audit log; and
+  provider secrets are stored encrypted
+  ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)),
+  while everything only ever *verified* — passwords, flags, API tokens,
+  reset tokens — is stored hashed.
+- **Personal API tokens** are hash-stored, shown once at mint, self-mint
+  only by route construction, and revocable by oversight
+  (`manage_api_tokens`).
+- **The stack refuses dangerous defaults**: no shipped JWT secret
+  ([ADR-0019](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0019-jwt-secret-hardening.md)),
+  and the backend won't boot on MinIO's default credentials when the
+  deployment looks reachable.
 - **Regex flags** are contained against catastrophic backtracking (ReDoS)
   ([ADR-0018](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0018-regex-flag-redos-containment.md)).
 - **Webhook egress** ([ADR-0013](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0013-webhook-egress-hardening.md)):
@@ -67,6 +86,15 @@ with the `webhook` action.
    database dumps.
 5. Watch the [audit log](/admin/audit-log/) during events — every mutation
    is in there.
+
+## Security releases and advisories
+
+Fixed vulnerabilities are published as
+[GitHub Security Advisories](https://github.com/tbcsec/flagpost/security/advisories)
+with affected-version ranges (v1.2.0 shipped four). The
+[update check](/deploy/upgrades/#the-update-check) tells administrators
+when they're behind; if you've disabled it, watch the advisories feed —
+security releases are the ones not to sit on.
 
 ## Reporting vulnerabilities
 

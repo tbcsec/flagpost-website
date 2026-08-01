@@ -43,8 +43,11 @@ truth.
 | `manage_users` | Users & Roles | global |
 | `manage_roles` | Users & Roles | global |
 | `view_all_users` | Users & Roles | global |
+| `manage_api_tokens` | Users & Roles | global |
 | `manage_site_settings` | Site Settings | global |
+| `manage_auth_providers` | Site Settings | global |
 | `view_competition_analytics` | Analytics | competition |
+| `view_submissions` | Analytics | competition |
 | `view_global_analytics` | Analytics | global |
 | `customize_dashboard` | Dashboard | competition |
 | `manage_dashboard_widgets` | Dashboard | competition |
@@ -67,8 +70,8 @@ competition:
 `ticket_respond` · `ticket_assign` · `ticket_view_internal_notes` ·
 `announcement_create` · `announcement_delete` · `feedback_manage` ·
 `feedback_view_responses` · `feedback_submit` ·
-`view_competition_analytics` · `customize_dashboard` · `automation_view` ·
-`automation_create` · `automation_edit`
+`view_competition_analytics` · `view_submissions` · `customize_dashboard` ·
+`automation_view` · `automation_create` · `automation_edit`
 
 **Participant** (competition) — competitor-facing only:
 
@@ -78,7 +81,14 @@ competition:
 
 - Some competitor abilities are enforced by **ownership**, not a catalogue
   permission: submitting flags, managing your own team, replying to your own
-  tickets. That's why the Participant list looks short.
+  tickets, and minting your own API tokens. That's why the Participant list
+  looks short.
+- Two of the newer grants are deliberately narrow: `manage_api_tokens` is
+  oversight-only (list/revoke anyone's token — never mint, which is
+  self-only by construction), and `manage_auth_providers` is separate from
+  `manage_site_settings` because deciding who can log in is materially more
+  sensitive than changing a palette. `view_submissions` splits raw
+  submission payloads from aggregate analytics.
 - System roles **re-sync from this catalogue on every startup**, so
   permissions added by an upgrade reach existing installs' built-in roles
   automatically. Custom roles are never touched by the sync.

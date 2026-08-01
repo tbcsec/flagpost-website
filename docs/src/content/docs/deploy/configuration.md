@@ -13,15 +13,26 @@ Configuration lives in `.env` (copied from `.env.example`), read by
 | --- | --- | --- |
 | `HTTP_PORT` | `8080` | Host port the app is served on for local (non-domain) use. |
 | `SITE_ADDRESS` | `:80` | Caddy's site address. Set to your **domain** (`ctf.example.com`) for automatic TLS issuance and renewal; the `:80` default means plain HTTP on the mapped port. |
-| `PUBLIC_ORIGIN` | `http://localhost:8080` | The origin browsers use to reach the API — **baked into the frontend at build time** (`docker compose build`). Also becomes the backend's allowed CORS origin. |
+| `PUBLIC_ORIGIN` | `http://localhost:8080` | The origin browsers use to reach the API. Baked into the frontend at **source-build** time (release images are same-origin and skip this); becomes the backend's allowed CORS origin **and its `PUBLIC_BASE_URL`**, which [OIDC redirect URIs](/admin/sso/) are built from — exactness matters with SSO. |
 
 ## Database, cache, storage
 
-| Variable | Default | Meaning |
+Credential variables ship **commented out**: compose falls back to
+well-known development values so a local `docker compose up` needs no
+config, but those fallbacks are published in the repo — set real values
+(`openssl rand -hex 24`) for anything reachable from outside your machine.
+
+| Variable | Fallback | Meaning |
 | --- | --- | --- |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `flagpost` / `flagpost` / `flagpost` | Postgres credentials; compose derives the backend's `DATABASE_URL` from them. |
-| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | `minioadmin` / `minioadmin` | MinIO credentials; also used by the backend as its S3 access/secret keys. |
+| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | `minioadmin` / `minioadmin` | MinIO credentials; also the backend's S3 keys. **The backend refuses to boot on these defaults when the deployment looks reachable** — see [Production deployment](/deploy/production/#1-configure-env). |
 | `MINIO_PUBLIC_ENDPOINT` | `localhost:9000` | The host **browsers** hit for signed attachment downloads — must be reachable by competitors. See [Production deployment](/deploy/production/#attachments-and-minio_public_endpoint). |
+
+## Update check
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `UPDATE_CHECK_URL` | the project endpoint | Where the once-daily, version-only update check calls home ([PRIVACY.md](https://github.com/tbcsec/flagpost/blob/main/PRIVACY.md) documents exactly what's sent — the version number, nothing else). Set **empty** to disable outright for air-gapped installs; administrators can also toggle it off in Admin → Settings. See [Releases & upgrades](/deploy/upgrades/#the-update-check). |
 
 ## Auth
 

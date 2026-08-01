@@ -42,6 +42,11 @@ and **Modules**.
   scoreboard; rankings can be filtered per division.
 - **Max team size** (team mode) — enforced at join and when a captain
   approves a join request; blank means unlimited.
+- **Rules override** — a per-competition rules / code-of-conduct document
+  that supersedes the [site-wide rules](/admin/site-settings/#rules--code-of-conduct)
+  for this event. Unless marked display-only, competitors must record
+  acceptance before joining (`competition.rules_accepted` gives you the
+  audit trail).
 
 ### Schedule
 

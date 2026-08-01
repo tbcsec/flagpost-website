@@ -51,6 +51,7 @@ See [First-run setup](/admin/setup/) for details.
 - [Create your first competition](/guides/competitions/) and
   [author challenges](/guides/challenges/).
 - Going public? Set your domain and real credentials —
-  [Production deployment](/deploy/production/).
+  [Production deployment](/deploy/production/). Prefer pinned images over
+  source builds? [Releases & upgrades](/deploy/upgrades/).
 - Prefer hot-reloading dev servers? See
   [Local development](/dev/local/) for the dev stack.

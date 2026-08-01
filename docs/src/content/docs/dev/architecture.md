@@ -16,7 +16,8 @@ itself. Everything else is built on these.
 
 **Required core** — what makes the platform a CTF tool at all: challenges,
 scoring/scoreboard, hints, tickets, announcements, notifications, dashboard,
-collab notes, users, roles, site settings, audit log. Organised as modules
+collab notes, users, roles, SSO, setup, site settings, audit log, teams, and
+the competitions module itself — sixteen modules. Organised as modules
 (same registration path as everything else) but not user-toggleable.
 
 **Optional modules** — currently **Automations**, **Feedback**, and
@@ -55,8 +56,12 @@ One deployment, many isolated competitions.
 Permissions are a
 [catalogued list](/reference/permissions/) checked by one shared
 `require_permission` dependency; roles are data; system roles re-sync from
-the catalogue at startup. Identity is username-first with optional email;
-sessions are short-lived JWTs plus rotating hashed refresh sessions.
+the catalogue at startup. Identity is username-first with optional email —
+arriving via local login, [OIDC SSO](/admin/sso/), or a personal API token,
+all of which resolve to the same `current_user` and the same session
+contract. Sessions are short-lived JWTs plus rotating hashed refresh
+sessions; secrets follow ADR-0020 (hash what's only verified, encrypt what
+must be retrieved).
 
 ## The real-time layer
 

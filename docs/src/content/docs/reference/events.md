@@ -34,6 +34,7 @@ the audit log, the automation engine, and the rule-builder UI.
 | `competition.ended` | `competition_id`, `name` | `edit_competition` |
 | `competition.time_remaining` | `competition_id`, `minutes_remaining` | `edit_competition` |
 | `competition.member_joined` | `competition_id`, `user_id` | `challenge_view` |
+| `competition.rules_accepted` | `competition_id`, `user_id` | `challenge_view` |
 | `competition.archived` | `competition_id` | `edit_competition` |
 | `competition.unarchived` | `competition_id` | `edit_competition` |
 | `competition.deleted` | `competition_id`, `user_id`, `auto` | `delete_competition` |
@@ -106,6 +107,8 @@ effects are events like any other mutation's.
 | `ticket.assigned` | `competition_id`, `ticket_id`, `assignee_user_id` | `ticket_view` |
 | `ticket.resolved` | `competition_id`, `ticket_id` | `ticket_view` |
 | `ticket.message_posted` | `competition_id`, `ticket_id`, `author_user_id`, `is_internal` | `ticket_view` |
+| `ticket.attachment_added` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id`, `is_internal` | `ticket_view` |
+| `ticket.attachment_deleted` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id` | `ticket_view` |
 | `announcement.published` | `competition_id`, `announcement_id`, `title`, `body`, `severity`, `audience_type` | `challenge_view` |
 
 ## Feedback
@@ -126,11 +129,19 @@ effects are events like any other mutation's.
 | `user.unbanned` | `user_id`, `actor_user_id` | `manage_users` |
 | `user.deleted` | `user_id`, `actor_user_id` | `manage_users` |
 | `user.password_changed` | common | `manage_users` |
+| `user.email_verified` | `user_id` | `manage_users` |
+| `identity.linked` / `identity.unlinked` | `user_id`, `provider_id`, `provider_slug` | `manage_users` |
+| `api_token.created` | `api_token_id`, `user_id`, `created_by_user_id` | `manage_api_tokens` |
+| `api_token.revoked` | `api_token_id`, `user_id` | `manage_api_tokens` |
+| `auth_provider.created` / `auth_provider.deleted` | `provider_id`, `slug`, `actor_user_id` | `manage_auth_providers` |
+| `auth_provider.updated` | `provider_id`, `slug`, `changed_fields`, `actor_user_id` | `manage_auth_providers` |
 | `role.created` / `role.updated` / `role.deleted` | common | `manage_roles` |
 | `role.assigned` / `role.unassigned` | common | `manage_roles` |
 
 These are governed by **global** admin permissions — a competition-scoped
-role can never automate on them.
+role can never automate on them. `identity.*` records an external
+[SSO identity](/admin/sso/) being attached to or detached from a local
+account; `auth_provider.*` records provider configuration changes.
 
 ## Platform & modules
 

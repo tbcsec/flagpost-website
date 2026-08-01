@@ -11,11 +11,26 @@ This keeps sign-up frictionless and lets accounts exist without an email;
 role assignment still works for email-less accounts because Admin → Roles
 resolves people by username or email.
 
-Self-service **password reset** is available from the login screen when
-[SMTP is configured](/admin/site-settings/#operational-settings): the request
-endpoint never discloses whether an account exists, reset tokens are stored
-hashed and expire after an hour, and a successful reset revokes every active
-session.
+Accounts can also arrive via **[OIDC single sign-on](/admin/sso/)** — linked
+to an existing local account by verified email on first contact, or created
+just-in-time holding Participant only. However a user signed up, RBAC alone
+decides what they can do.
+
+Self-service account management, from **/profile** and the login screen:
+
+- **Password reset** (needs [SMTP](/admin/site-settings/#operational-settings)):
+  the request endpoint never discloses whether an account exists, reset
+  tokens are stored hashed and expire after an hour, and a successful reset
+  revokes every active session.
+- **Email add / change / clear** — users manage their own address; if
+  [email verification](/admin/site-settings/#registration) is enabled, a
+  changed address must be re-verified (emits `user.email_verified`).
+- **Personal API tokens** — self-minted, `flp_`-prefixed tokens for
+  programmatic access; see the [API reference](/reference/api/#personal-api-tokens).
+  Administrators holding `manage_api_tokens` can list **every** token on the
+  install and revoke any of them — an oversight grant for killing leaked
+  credentials, deliberately not an issuance one (minting is self-only by
+  construction, so no permission can create a token for someone else).
 
 ## The user directory (Admin → Users)
 

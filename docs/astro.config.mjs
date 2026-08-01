@@ -63,6 +63,7 @@ export default defineConfig({
           items: [
             { label: "First-run setup", slug: "admin/setup" },
             { label: "Users & roles", slug: "admin/users-roles" },
+            { label: "Single sign-on (OIDC)", slug: "admin/sso" },
             { label: "Site settings & branding", slug: "admin/site-settings" },
             { label: "Backup & restore", slug: "admin/backup" },
             { label: "Audit log", slug: "admin/audit-log" },
@@ -72,6 +73,7 @@ export default defineConfig({
           label: "Deployment",
           items: [
             { label: "Production deployment", slug: "deploy/production" },
+            { label: "Releases & upgrades", slug: "deploy/upgrades" },
             { label: "Configuration reference", slug: "deploy/configuration" },
             { label: "Running without Docker", slug: "deploy/without-docker" },
             { label: "Stack architecture", slug: "deploy/stack" },
