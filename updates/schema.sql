@@ -12,9 +12,12 @@
 CREATE TABLE IF NOT EXISTS checkins (
   -- UTC calendar day, "YYYY-MM-DD".
   day     TEXT NOT NULL,
-  -- A validated version string, or the literal "dev" (source build) or
-  -- "invalid" (anything unrecognised, bucketed so a junk value can't create
-  -- unbounded rows). See normaliseVersion() in src/index.ts.
+  -- A validated version string, or "invalid" (anything unrecognised, bucketed
+  -- so a junk value can't create unbounded rows). Source builds report the base
+  -- release with a "-src" suffix ("1.2.0-src"), which stores as its own row and
+  -- keeps them distinguishable from the release images. "dev" is also accepted,
+  -- for a deployment that sets APP_VERSION=dev explicitly. See
+  -- normaliseVersion() in src/index.ts.
   version TEXT NOT NULL,
   count   INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, version)

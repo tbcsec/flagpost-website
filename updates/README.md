@@ -33,7 +33,7 @@ entire data model:
 ```sql
 CREATE TABLE checkins (
   day     TEXT NOT NULL,   -- "YYYY-MM-DD"
-  version TEXT NOT NULL,   -- validated version, or "dev" / "invalid"
+  version TEXT NOT NULL,   -- "1.2.0" (image), "1.2.0-src" (source), "invalid"
   count   INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, version)
 );
@@ -131,8 +131,19 @@ GROUP BY day ORDER BY day DESC LIMIT 30;
 SELECT version, count FROM checkins
 WHERE day = date('now') ORDER BY count DESC;
 
--- How many are running something from source
-SELECT day, count FROM checkins WHERE version = 'dev' ORDER BY day DESC LIMIT 30;
+-- Release images vs. builds from source. Source builds report the base release
+-- with a "-src" suffix, so this is where to look before deciding how much
+-- effort packaging deserves.
+SELECT day,
+       SUM(CASE WHEN version LIKE '%-src' THEN count ELSE 0 END) AS from_source,
+       SUM(CASE WHEN version NOT LIKE '%-src' AND version != 'invalid'
+                THEN count ELSE 0 END) AS from_images
+FROM checkins GROUP BY day ORDER BY day DESC LIMIT 30;
+
+-- Collapse the -src distinction when you only care about which release
+SELECT day, replace(version, '-src', '') AS release, SUM(count) AS deployments
+FROM checkins WHERE version != 'invalid'
+GROUP BY day, release ORDER BY day DESC, deployments DESC;
 ```
 
 ```bash
