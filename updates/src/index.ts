@@ -145,6 +145,9 @@ function json(body: unknown, status = 200): Response {
       // reaching this Worker, so the check-in would go uncounted.
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
+      // This host is an API, not a page — keep it out of search indexes
+      // entirely (robots.txt Disallow alone prevents crawling, not indexing).
+      "X-Robots-Tag": "noindex",
       // No CORS headers: this is a server-to-server endpoint, and there's no
       // reason for a browser page to be able to read it.
     },
@@ -154,6 +157,17 @@ function json(body: unknown, status = 200): Response {
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    // An API host has nothing for crawlers; be explicit rather than serving
+    // them a JSON 404 (belt and braces with the X-Robots-Tag below).
+    if (url.pathname === "/robots.txt") {
+      return new Response("User-agent: *\nDisallow: /\n", {
+        headers: {
+          "Content-Type": "text/plain",
+          "Cache-Control": "public, max-age=86400",
+          "X-Robots-Tag": "noindex",
+        },
+      });
+    }
     if (url.pathname !== "/v1/check") return json({ error: "not_found" }, 404);
     if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
 
