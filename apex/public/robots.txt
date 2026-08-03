@@ -1,3 +1,5 @@
+# flagpost.io — the Flagpost marketing site. Everything here is public;
+# crawl away. Security reports: /.well-known/security.txt
 User-agent: *
 Allow: /
 

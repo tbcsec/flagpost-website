@@ -1,0 +1,7 @@
+# Security policy for Flagpost — the platform and its websites (RFC 9116).
+# Please do NOT report vulnerabilities via public GitHub issues.
+Contact: https://github.com/tbcsec/flagpost/security/advisories/new
+Policy: https://github.com/tbcsec/flagpost/blob/main/SECURITY.md
+Preferred-Languages: en
+Canonical: https://flagpost.io/.well-known/security.txt
+Expires: 2027-08-03T00:00:00.000Z
