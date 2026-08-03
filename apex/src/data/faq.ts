@@ -6,6 +6,9 @@
 export interface FaqEntry {
   question: string;
   answer: string;
+  /** Optional follow-up link rendered after the answer (visible accordion
+   *  only — JSON-LD carries the plain answer text). */
+  link?: { href: string; label: string };
 }
 
 export const faq: FaqEntry[] = [
@@ -18,6 +21,15 @@ export const faq: FaqEntry[] = [
     question: "Is Flagpost free?",
     answer:
       "Yes. Flagpost is open source under the AGPL-3.0 licence. There is no hosted tier, no feature gate and no telemetry — you run it on your own infrastructure and your competition data stays yours.",
+  },
+  {
+    question: "Is Flagpost an alternative to CTFd?",
+    answer:
+      "Yes — Flagpost is a modern, open-source CTFd alternative, built for organisers who want real-time operations, a visual automation engine, and many competitions on one install. It reads CTFd's ctfcli challenge format, so trying it with your existing challenges takes minutes, and the docs carry a full, honest feature-by-feature comparison.",
+    link: {
+      href: "https://docs.flagpost.io/start/flagpost-vs-ctfd/",
+      label: "Read the Flagpost vs CTFd comparison",
+    },
   },
   {
     question: "Can I import my competition from CTFd?",
