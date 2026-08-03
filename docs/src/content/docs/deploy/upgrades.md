@@ -4,7 +4,8 @@ description: How Flagpost versions and ships — tagged releases, pinned GHCR im
 ---
 
 Flagpost ships as **tagged releases** with generated notes and, since
-v1.1.1, **pinned container images**. Follow
+v1.1.1, **pinned container images** (v1.0.0, the initial public release,
+shipped in July 2026). Follow
 [Releases](https://github.com/tbcsec/flagpost/releases) for what changed;
 security fixes are additionally published as
 [GitHub Security Advisories](https://github.com/tbcsec/flagpost/security/advisories).

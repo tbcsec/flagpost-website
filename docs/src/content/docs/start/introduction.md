@@ -1,11 +1,12 @@
 ---
-title: What is Flagpost?
-description: An overview of Flagpost — a modern, open-source, self-hosted platform for running capture-the-flag competitions.
+title: What is Flagpost? A self-hosted CTF platform
+description: An overview of Flagpost — a modern, open-source, self-hosted CTF platform for running capture-the-flag competitions.
 ---
 
-Flagpost is a complete competition platform for CTF organisers: publish
-challenges, score solves the moment they land, support competitors, and
-automate the whole event — all from one self-hostable app. It is licensed
+Flagpost is an open-source, self-hosted CTF platform — a complete
+competition system for capture-the-flag organisers: publish challenges,
+score solves the moment they land, support competitors, and automate the
+whole event from one app you run yourself. It is licensed
 under the [AGPL-3.0](https://github.com/tbcsec/flagpost/blob/main/LICENSE),
 free to run, and designed to be operated on your own infrastructure.
 

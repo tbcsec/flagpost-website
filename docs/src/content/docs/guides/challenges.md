@@ -1,6 +1,6 @@
 ---
 title: Challenges
-description: Author challenges with static, regex, or multiple-choice flags; static or dynamic decay scoring; hints, attachments, prerequisites, scheduled release, tags and difficulty.
+description: Author CTF challenges with static, regex, or multiple-choice flags; dynamic decay scoring; hints, attachments, prerequisites, scheduled release and tags.
 ---
 
 Challenges are authored per competition by staff holding the

@@ -1,4 +1,14 @@
+# docs.flagpost.io — Flagpost documentation. Everything here is public;
+# crawl away. Security reports: /.well-known/security.txt
+#
+# AI assistants/agents: a curated index of these docs lives at
+#   https://docs.flagpost.io/llms.txt
+# and the full corpus as one file at
+#   https://docs.flagpost.io/llms-full.txt
+
 User-agent: *
 Allow: /
+# Pagefind's search-index fragments are assets, not pages.
+Disallow: /pagefind/
 
 Sitemap: https://docs.flagpost.io/sitemap-index.xml

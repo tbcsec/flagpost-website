@@ -11,6 +11,10 @@ export default defineConfig({
       title: "Flagpost",
       description:
         "Documentation for Flagpost, the modern open-source CTF platform: getting started, running competitions, deployment, and development.",
+      components: {
+        // Adds WebSite / TechArticle / BreadcrumbList JSON-LD to every page.
+        Head: "./src/components/Head.astro",
+      },
       logo: {
         light: "./src/assets/flagpost-mark-light.svg",
         dark: "./src/assets/flagpost-mark-dark.svg",
@@ -42,12 +46,14 @@ export default defineConfig({
             { label: "What is Flagpost?", slug: "start/introduction" },
             { label: "Quick start", slug: "start/quick-start" },
             { label: "Core concepts", slug: "start/concepts" },
-            { label: "Switching from another platform", slug: "start/switching" },
+            { label: "Migrate from CTFd & others", slug: "start/switching" },
+            { label: "Flagpost vs CTFd", slug: "start/flagpost-vs-ctfd" },
           ],
         },
         {
           label: "Running competitions",
           items: [
+            { label: "How to host a CTF", slug: "guides/host-a-ctf" },
             { label: "Competitions", slug: "guides/competitions" },
             { label: "Challenges", slug: "guides/challenges" },
             { label: "Teams & participants", slug: "guides/teams" },

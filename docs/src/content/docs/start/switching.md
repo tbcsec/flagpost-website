@@ -1,12 +1,13 @@
 ---
-title: Switching from another platform
-description: Move your whole event to Flagpost — challenges, competition setup, people, and go-live — with an honest account of what ports automatically and what gets recreated.
+title: Migrate from CTFd or another platform
+description: Move your whole event to Flagpost — challenges import from CTFd automatically, people arrive via SSO or fresh accounts, and a cutover checklist covers the rest.
 ---
 
-Moving to Flagpost is an afternoon's work, not a rewrite — but different
-parts of an event move differently. This guide walks the whole thing:
-what imports automatically, what you recreate (and how fast), what
-deliberately doesn't move, and the cutover itself.
+Moving to Flagpost from CTFd — or any other platform — is an afternoon's
+work, not a rewrite, but different parts of an event move differently. This
+guide walks the whole thing: what imports automatically, what you recreate
+(and how fast), what deliberately doesn't move, and the cutover itself.
+(Still deciding? See [Flagpost vs CTFd](/start/flagpost-vs-ctfd/).)
 
 One rule up front: **migrate between events, never mid-event.** Finish (or
 archive) the running competition where it is; launch the next one on

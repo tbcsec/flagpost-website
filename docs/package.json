@@ -6,7 +6,7 @@
   "description": "docs.flagpost.io — documentation for Flagpost, the modern open-source CTF platform",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -1,0 +1,74 @@
+---
+/**
+ * Head override: Starlight's default head plus JSON-LD structured data —
+ * WebSite on the landing page, TechArticle + BreadcrumbList on every doc
+ * page. Breadcrumb middle items point at each section's de-facto landing
+ * page (sections have no index routes of their own).
+ */
+import Default from "@astrojs/starlight/components/Head.astro";
+
+const SITE = "https://docs.flagpost.io";
+
+const SECTIONS: Record<string, { name: string; landing: string }> = {
+  start: { name: "Start here", landing: "/start/introduction/" },
+  guides: { name: "Running competitions", landing: "/guides/host-a-ctf/" },
+  admin: { name: "Administration", landing: "/admin/setup/" },
+  deploy: { name: "Deployment", landing: "/deploy/production/" },
+  reference: { name: "Reference", landing: "/reference/events/" },
+  dev: { name: "Development", landing: "/dev/local/" },
+};
+
+const route = (Astro.locals as any)?.starlightRoute;
+const title: string = route?.entry?.data?.title ?? "Flagpost documentation";
+const description: string = route?.entry?.data?.description ?? "";
+const path = Astro.url.pathname;
+const url = new URL(path, SITE).href;
+
+const blocks: object[] = [];
+
+if (path === "/") {
+  blocks.push({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Flagpost documentation",
+    url: `${SITE}/`,
+    description,
+    about: {
+      "@type": "SoftwareApplication",
+      name: "Flagpost",
+      applicationCategory: "SecurityApplication",
+      url: "https://flagpost.io/",
+    },
+  });
+} else {
+  blocks.push({
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: title,
+    description,
+    url,
+    inLanguage: "en",
+    isPartOf: { "@type": "WebSite", name: "Flagpost documentation", url: `${SITE}/` },
+  });
+
+  const section = SECTIONS[path.split("/").filter(Boolean)[0] ?? ""];
+  const items: object[] = [
+    { "@type": "ListItem", position: 1, name: "Flagpost documentation", item: `${SITE}/` },
+  ];
+  if (section) {
+    items.push({
+      "@type": "ListItem",
+      position: 2,
+      name: section.name,
+      item: new URL(section.landing, SITE).href,
+    });
+  }
+  items.push({ "@type": "ListItem", position: items.length + 1, name: title });
+  blocks.push({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: items });
+}
+---
+
+<Default {...Astro.props}><slot /></Default>
+{blocks.map((block) => (
+  <script type="application/ld+json" set:html={JSON.stringify(block)} />
+))}

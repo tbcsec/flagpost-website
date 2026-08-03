@@ -1,6 +1,6 @@
 ---
-title: Scoreboard
-description: The live scoreboard — first blood, dynamic values, divisions, freezing for the final stretch, the public spectator board, and the CTFtime feed.
+title: CTF scoreboard
+description: The live CTF scoreboard — first blood, dynamic values, divisions, freezing for the final stretch, the public spectator board, and the CTFtime feed.
 ---
 
 The scoreboard streams over WebSockets: solves, score adjustments, and awards
