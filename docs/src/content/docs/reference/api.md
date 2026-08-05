@@ -21,10 +21,19 @@ the contracts that don't change.
   Login takes an `identifier` (username **or** email) plus password and
   returns a short-lived **JWT access token**; a rotating refresh session
   rides an httpOnly cookie. `POST /api/auth/refresh` rotates and re-issues.
-- **SSO** — `GET /api/auth/oidc/providers` lists the enabled identity
-  providers; `GET /api/auth/oidc/{slug}/login` starts the redirect flow and
-  `…/{slug}/callback` completes it, issuing the same session local login
-  does. See [Single sign-on](/admin/sso/).
+- **SSO** — `GET /api/auth/providers` lists the enabled redirect
+  providers as `{slug, name, kind}` (v1.3.0 — this **replaced**
+  `GET /api/auth/oidc/providers`, a breaking change for integrations on
+  the old path). `GET /api/auth/{kind}/{slug}/login` starts the redirect
+  flow for OIDC and SAML; OIDC completes at
+  `GET /api/auth/oidc/{slug}/callback`, SAML at
+  `POST /api/auth/saml/{slug}/acs`, with public SP metadata at
+  `GET /api/auth/saml/{slug}/metadata`. LDAP has no endpoints of its own —
+  `POST /api/auth/login` falls through to a directory bind after local
+  password verification fails, behind the same rate limit. All paths issue
+  the same session local login does; admin provider CRUD lives at
+  `/api/admin/auth-providers` (`manage_auth_providers`). See
+  [SSO & external identity](/admin/sso/).
 - **REST calls** send `Authorization: Bearer <access-token>`.
 - **WebSockets** connect to `wss://<host>/ws/…` and send the same access
   token as the **first frame** after connect — never in the URL.
@@ -41,8 +50,9 @@ the contracts that don't change.
 
 ## Personal API tokens
 
-For scripts and integrations, mint a **personal API token** from
-`/profile` instead of capturing a browser session:
+For scripts and integrations, mint a **personal API token** from the
+**API tokens** tab of `/profile` (`/profile?tab=tokens`) instead of
+capturing a browser session:
 
 - `POST /api/api-tokens` mints one for **your own account** (the route has
   no holder field — tokens for other users are structurally impossible).
@@ -78,6 +88,7 @@ build clients accordingly.
 | `GET /api/public/competitions` | Directory of competitions that opted into the public scoreboard |
 | `GET /api/public/competitions/{id}/scoreboard` | Spectator scoreboard (respects freezes; 404 for private/non-opted-in) |
 | `GET /api/public/competitions/{id}/insights` | Spectator stats, highlights and the top-10 points timeline (freeze-parity with the board) |
+| `GET /api/public/competitions/{id}/activity` | Recent awarded solves, newest first (capped at 25), each tagged `is_first_blood` — drives the [venue-mode](/guides/scoreboard/#venue--projector-mode) first-blood splash. Freeze-aware, same opt-in/404 gating as the scoreboard (v1.3.0) |
 | `GET /api/public/competitions/{id}/ctftime` | [CTFtime scoreboard feed](https://ctftime.org/json-scoreboard-feed) |
 
 ## WebSocket rooms

@@ -13,7 +13,7 @@ Configuration lives in `.env` (copied from `.env.example`), read by
 | --- | --- | --- |
 | `HTTP_PORT` | `8080` | Host port the app is served on for local (non-domain) use. |
 | `SITE_ADDRESS` | `:80` | Caddy's site address. Set to your **domain** (`ctf.example.com`) for automatic TLS issuance and renewal; the `:80` default means plain HTTP on the mapped port. |
-| `PUBLIC_ORIGIN` | `http://localhost:8080` | The origin browsers use to reach the API. Baked into the frontend at **source-build** time (release images are same-origin and skip this); becomes the backend's allowed CORS origin **and its `PUBLIC_BASE_URL`**, which [OIDC redirect URIs](/admin/sso/) are built from — exactness matters with SSO. |
+| `PUBLIC_ORIGIN` | `http://localhost:8080` | The origin browsers use to reach the API. Baked into the frontend at **source-build** time (release images are same-origin and skip this); becomes the backend's allowed CORS origin **and its `PUBLIC_BASE_URL`**, which [OIDC redirect URIs](/admin/sso/) and [SAML ACS/metadata URLs](/admin/saml/) are built from — exactness matters with SSO, for both protocols. |
 
 ## Database, cache, storage
 
@@ -39,6 +39,7 @@ config, but those fallbacks are published in the repo — set real values
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `JWT_SECRET` | *(unset)* | Signing secret for access tokens. Unset, the app **derives a strong per-install secret and persists it** to the backend data volume (survives restarts). Set it explicitly for production, and always when running multiple backend hosts. |
+| `SECRET_ENCRYPTION_KEY` | *(unset)* | Encryption key for secrets stored **retrievably** in the database — SSO provider secrets and, since v1.3.0, the SMTP password ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)). Unset, a per-install key is derived and persisted to the backend data volume, same pattern as `JWT_SECRET`. Set it explicitly for production and always with multiple backend hosts — it must be a **Fernet key** (32 url-safe base64 bytes: `python3 -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'`), not an arbitrary string. **Losing the key is unrecoverable** — affected secrets must be cleared and re-entered. |
 
 ## Demo mode
 
@@ -63,5 +64,6 @@ recreate the stack on a schedule (`docker compose down -v && docker compose up -
 
 You'll see these on the backend service; they're derived and rarely need
 touching directly: `DATABASE_URL`, `REDIS_URL`, `MINIO_ENDPOINT`,
-`MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `CORS_ORIGINS`, `JWT_SECRET_FILE`.
+`MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `CORS_ORIGINS`, `JWT_SECRET_FILE`,
+`SECRET_ENCRYPTION_KEY_FILE`.
 Running [without Docker](/deploy/without-docker/), you set them yourself.

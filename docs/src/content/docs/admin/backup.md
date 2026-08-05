@@ -14,9 +14,14 @@ Choose any combination of sections:
 `site_settings` · `users` · `roles` · `competitions` · `automations` ·
 `audit_log`
 
-The export is **complete for what it covers** — including password hashes,
-flag hashes, and SMTP credentials — because a backup that can't actually
-restore your install isn't one.
+The export is **complete for what it covers** — including password hashes
+and flag hashes — because a backup that can't actually restore your
+install isn't one. The exception is **install-specific credentials
+encrypted at rest** ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)):
+SSO identity providers and their secrets have never been part of the
+export, and since v1.3.0 the SMTP password stays out too (the rest of the
+SMTP config — host, port, username, sender — still travels). Re-enter
+those on the new install after a restore.
 
 :::caution[The file is sensitive]
 Treat an export like a database dump: it contains credential hashes and
@@ -25,9 +30,11 @@ are gated on `manage_site_settings` for the same reason.
 :::
 
 Deliberately excluded: active login sessions, in-app notifications,
-collaborative-note snapshots, personal dashboard layouts, and division
+collaborative-note snapshots, personal dashboard layouts, division
 memberships — transient or per-subject state that doesn't belong in a
-portable backup.
+portable backup — and the encrypted-at-rest credentials above (SSO
+providers with their secrets; since v1.3.0 also the SMTP password), which
+are install-specific and re-entered on new infrastructure.
 
 ## Importing
 

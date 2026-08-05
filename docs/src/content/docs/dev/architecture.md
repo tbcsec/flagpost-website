@@ -57,9 +57,11 @@ Permissions are a
 [catalogued list](/reference/permissions/) checked by one shared
 `require_permission` dependency; roles are data; system roles re-sync from
 the catalogue at startup. Identity is username-first with optional email —
-arriving via local login, [OIDC SSO](/admin/sso/), or a personal API token,
-all of which resolve to the same `current_user` and the same session
-contract. Sessions are short-lived JWTs plus rotating hashed refresh
+arriving via local login (which also serves LDAP directory users through a
+bind fallback), [SSO](/admin/sso/) (OIDC or SAML, one `IdentityProvider`
+framework with a `kind` per protocol — ADR-0022 generalizing ADR-0021), or
+a personal API token, all of which resolve to the same `current_user` and
+the same session contract. Sessions are short-lived JWTs plus rotating hashed refresh
 sessions; secrets follow ADR-0020 (hash what's only verified, encrypt what
 must be retrieved).
 

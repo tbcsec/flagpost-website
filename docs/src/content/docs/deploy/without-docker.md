@@ -23,8 +23,10 @@ export MINIO_ENDPOINT="miniohost:9000"
 export MINIO_PUBLIC_ENDPOINT="files.example.com:9000"
 export MINIO_ACCESS_KEY="…" MINIO_SECRET_KEY="…"
 export CORS_ORIGINS="https://ctf.example.com"
-export PUBLIC_BASE_URL="https://ctf.example.com"   # OIDC redirect URIs build from this
+export PUBLIC_BASE_URL="https://ctf.example.com"   # OIDC redirect + SAML ACS URLs build from this
 export JWT_SECRET="a-long-random-value"
+# Encrypts stored SSO/SMTP secrets (ADR-0020) — must be a Fernet key, not an arbitrary string:
+export SECRET_ENCRYPTION_KEY="$(python3 -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')"
 
 .venv/bin/alembic upgrade head     # migrate + seed built-in roles
 .venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000

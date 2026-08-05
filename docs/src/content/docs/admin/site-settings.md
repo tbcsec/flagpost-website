@@ -27,10 +27,12 @@ on its own page: [Single sign-on](/admin/sso/).
   actions (buttons, focus rings) only; success-green and the logo never take
   the accent, so "solved" always reads as Flagpost green.
 - **Custom logo** — replace the built-in mark with your organisation's logo
-  (PNG/JPEG/WebP/GIF/SVG, up to 1 MB). It's stored in the database, so
-  branding renders before login and needs no object storage. A
-  **show wordmark** toggle hides the platform-name text for logos that bake
-  in their own name.
+  (PNG/JPEG/WebP/GIF/SVG, up to 1 MB). Since v1.3.0 the type is verified
+  from the file's **contents**, not its name or declared content type — a
+  renamed non-image is rejected, and PNG/JPEG/WebP rasters with excessive
+  pixel dimensions are refused. It's stored in the database, so branding renders before login
+  and needs no object storage. A **show wordmark** toggle hides the
+  platform-name text for logos that bake in their own name.
 
 **Attribution is mandatory and not configurable**: a subtle "Powered by
 Flagpost" footer (the built-in mark, linking to the source repository)
@@ -45,8 +47,12 @@ source-offer surfaces to your users.
   [Admin → Users](/admin/users-roles/); the register page shows a notice and
   the login page hides its register link automatically.
 - **Email-domain allowlist** — restrict public self-registration to listed
-  domains (e.g. your university's). Applies to self-registration only — not
-  to admin-minted accounts or [SSO sign-ins](/admin/sso/).
+  domains (e.g. your university's). Since v1.3.0 it also gates **new
+  accounts arriving through open-posture [SSO providers](/admin/sso/)**
+  (just-in-time provisioning), alongside the registration toggle. It never
+  applies to admin-minted accounts, users already linked, or closed
+  providers (SAML/LDAP directories) — enabling a directory *is* the
+  admission decision.
 - **Email verification** — when enabled (requires SMTP), a self-registered
   account must verify its address; verifying emits `user.email_verified`.
   Users manage their own address from `/profile` — add, change, or clear.
@@ -67,7 +73,8 @@ text; with no rules configured anywhere, there's no gate at all.
   [`send_email` automation action](/guides/automations/),
   [password resets](/admin/users-roles/), and email verification; all no-op
   quietly while SMTP is unset. The password is write-only — reads only
-  reveal *that* one is set.
+  reveal *that* one is set — and since v1.3.0 it's stored encrypted at
+  rest and [excluded from platform exports](/admin/backup/).
 - **Update checks** — the once-daily, version-only check that drives the
   "update available" notice. Toggle it here, or disable it outright via the
   environment for air-gapped installs; what it sends (and doesn't) is

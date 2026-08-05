@@ -133,15 +133,17 @@ effects are events like any other mutation's.
 | `identity.linked` / `identity.unlinked` | `user_id`, `provider_id`, `provider_slug` | `manage_users` |
 | `api_token.created` | `api_token_id`, `user_id`, `created_by_user_id` | `manage_api_tokens` |
 | `api_token.revoked` | `api_token_id`, `user_id` | `manage_api_tokens` |
-| `auth_provider.created` / `auth_provider.deleted` | `provider_id`, `slug`, `actor_user_id` | `manage_auth_providers` |
-| `auth_provider.updated` | `provider_id`, `slug`, `changed_fields`, `actor_user_id` | `manage_auth_providers` |
+| `auth_provider.created` / `auth_provider.deleted` | `provider_id`, `slug`, `kind`, `actor_user_id` | `manage_auth_providers` |
+| `auth_provider.updated` | `provider_id`, `slug`, `kind`, `changed_fields`, `actor_user_id` | `manage_auth_providers` |
 | `role.created` / `role.updated` / `role.deleted` | common | `manage_roles` |
 | `role.assigned` / `role.unassigned` | common | `manage_roles` |
 
 These are governed by **global** admin permissions — a competition-scoped
 role can never automate on them. `identity.*` records an external
-[SSO identity](/admin/sso/) being attached to or detached from a local
-account; `auth_provider.*` records provider configuration changes.
+[identity](/admin/sso/) — OIDC, SAML, or LDAP — being attached to or
+detached from a local account; `auth_provider.*` records provider
+configuration changes (`kind` is the provider protocol: `oidc`, `saml`,
+or `ldap`).
 
 ## Platform & modules
 

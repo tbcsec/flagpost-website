@@ -77,7 +77,8 @@ The bell in the top bar collects in-app notifications (ticket activity,
 automation `notify` actions) with per-user read state, delivered live over a
 per-user WebSocket room.
 
-Each user can tune delivery under **Profile → Notification preferences**:
+Each user can tune delivery under **Profile → Notifications**
+(`/profile?tab=notifications`):
 mute the ticket, automation, or announcement categories entirely
 (`critical` announcements override the announcement mute — see above), and
 toggle two delivery hints — browser (OS) notifications and the ticket

@@ -1,6 +1,6 @@
 ---
 title: Automation reference
-description: The complete rule schema — condition operators, all eleven action types with their configuration fields, and payload templating.
+description: The complete rule schema — condition operators, all twelve action types with their configuration fields, and payload templating.
 ---
 
 Reference for the automation engine's data model. The

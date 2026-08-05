@@ -23,7 +23,7 @@ const SITE = "https://docs.flagpost.io";
 const SECTIONS = [
   ["Start here", ["start/introduction", "start/quick-start", "start/concepts", "start/switching", "start/flagpost-vs-ctfd"]],
   ["Running competitions", ["guides/host-a-ctf", "guides/competitions", "guides/challenges", "guides/teams", "guides/scoreboard", "guides/automations", "guides/support", "guides/feedback", "guides/import-export"]],
-  ["Administration", ["admin/setup", "admin/users-roles", "admin/sso", "admin/site-settings", "admin/backup", "admin/audit-log"]],
+  ["Administration", ["admin/setup", "admin/users-roles", "admin/sso", "admin/saml", "admin/ldap", "admin/site-settings", "admin/backup", "admin/audit-log"]],
   ["Deployment", ["deploy/production", "deploy/upgrades", "deploy/configuration", "deploy/without-docker", "deploy/stack", "deploy/security"]],
   ["Reference", ["reference/events", "reference/automations", "reference/permissions", "reference/ctfcli", "reference/api"]],
   ["Development", ["dev/local", "dev/architecture", "dev/modules", "dev/events", "dev/testing", "dev/adrs"]],

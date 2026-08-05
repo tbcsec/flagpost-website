@@ -18,7 +18,7 @@ Set at minimum:
 | Variable | Set it to |
 | --- | --- |
 | `SITE_ADDRESS` | Your domain, e.g. `ctf.example.com`. Caddy obtains and renews TLS **automatically** once ports 80/443 are reachable. |
-| `PUBLIC_ORIGIN` | The browser-facing origin, e.g. `https://ctf.example.com`. Baked into the frontend at **source-build** time (release images are same-origin and don't need the rebuild), and it's what [OIDC redirect URIs](/admin/sso/) are built from — so it must be exact if you configure SSO. |
+| `PUBLIC_ORIGIN` | The browser-facing origin, e.g. `https://ctf.example.com`. Baked into the frontend at **source-build** time (release images are same-origin and don't need the rebuild), and it's what [OIDC redirect URIs](/admin/sso/) and [SAML ACS/metadata URLs](/admin/saml/) are built from — so it must be exact if you configure SSO. |
 | `JWT_SECRET` | A long random value. (Left unset, the app derives a strong per-install secret and persists it — fine for a single host, but set it explicitly for production and always for multi-host.) |
 | `POSTGRES_PASSWORD` | A real password — generate with `openssl rand -hex 24`. |
 | `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | Real credentials, same treatment. **The backend refuses to start** if it finds MinIO's published defaults on a deployment that looks reachable (non-local `PUBLIC_ORIGIN`, or `MINIO_PUBLIC_ENDPOINT` set) — default credentials there mean world read/write on every attachment, outside RBAC entirely. |

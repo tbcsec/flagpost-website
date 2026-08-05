@@ -16,10 +16,16 @@ Opening the app on a fresh install lands on the **setup wizard**, which:
    you choose on the spot (nothing is seeded or hard-coded).
 2. Sets initial **branding** — the platform name your users will see.
 
-The wizard is only available while the instance has no active Administrator;
-once the owner exists it's gone for good. Public registration then opens (if
-enabled) and **never grants more than the Participant role** — additional
-staff are promoted explicitly via [role assignment](/admin/users-roles/).
+The wizard is only available until the install is first provisioned:
+completing it (or seeding an owner any other way) stamps a one-way
+*setup completed* flag, and nothing clears it — even losing every active
+Administrator later does **not** reopen the wizard, which would turn an
+operator lockout into an anonymous takeover
+([GHSA-ccm4-9573-9965](https://github.com/tbcsec/Flagpost/security/advisories/GHSA-ccm4-9573-9965)).
+Recovery from admin lockout is operational, never via the public wizard.
+Public registration then opens (if enabled) and **never grants more than
+the Participant role** — additional staff are promoted explicitly via
+[role assignment](/admin/users-roles/).
 
 The reasoning is recorded in
 [ADR-0017](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0017-first-run-setup-wizard.md):

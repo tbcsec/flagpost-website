@@ -1,6 +1,6 @@
 ---
 title: Automations
-description: Build When → If → Then rules visually — triggers from the event catalogue, AND-ed conditions, and eleven actions from announcements to hardened webhooks.
+description: Build When → If → Then rules visually — triggers from the event catalogue, AND-ed conditions, and twelve actions from announcements to hardened webhooks.
 ---
 
 The automation engine turns any platform event into a rule you build
@@ -18,7 +18,7 @@ competition.
   against the event's payload, **AND-ed** together. Operators: equals, does
   not equal, contains, greater than, at least, less than, at most, is
   present, is absent.
-- **Then (actions)** — one or more of the eleven
+- **Then (actions)** — one or more of the twelve
   [action types](/reference/automations/#actions), executed in order.
 
 Rules live on the **Automations** page of a competition; the visual builder

@@ -69,7 +69,9 @@ export default defineConfig({
           items: [
             { label: "First-run setup", slug: "admin/setup" },
             { label: "Users & roles", slug: "admin/users-roles" },
-            { label: "Single sign-on (OIDC)", slug: "admin/sso" },
+            { label: "SSO & external identity", slug: "admin/sso" },
+            { label: "SAML 2.0 setup", slug: "admin/saml" },
+            { label: "LDAP / Active Directory", slug: "admin/ldap" },
             { label: "Site settings & branding", slug: "admin/site-settings" },
             { label: "Backup & restore", slug: "admin/backup" },
             { label: "Audit log", slug: "admin/audit-log" },

@@ -33,14 +33,29 @@ Flagpost's defaults reflect that.
   *before* grading.
 - **Credential endpoints are rate-limited** (v1.2.0): login, registration,
   password reset, and email verification all throttle.
-- **OIDC single sign-on** hardened by construction: mandatory PKCE, `state`
-  and `nonce`; ID-token signature and claim validation; JIT-provisioned
-  users get Participant with **no** competition scope; IdP group/role
-  claims are ignored so permission changes never bypass the audit log; and
-  provider secrets are stored encrypted
-  ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)),
-  while everything only ever *verified* — passwords, flags, API tokens,
-  reset tokens — is stored hashed.
+- **External identity** ([OIDC, SAML, LDAP](/admin/sso/)) hardened by
+  construction. OIDC: mandatory PKCE, `state` and `nonce`, ID-token
+  signature and claim validation, and `email_verified` parsed strictly
+  (since v1.3.0 a string `"false"` can no longer read as verified). SAML:
+  assertion signatures validated **before** any content is trusted,
+  unsolicited/IdP-initiated responses refused (`InResponseTo` bound to our
+  own AuthnRequest), transient NameIDs refused. LDAP: TLS with certificate
+  verification is mandatory (plaintext binds are unexpressible),
+  identifiers are escaped per RFC 4515, empty-password anonymous binds are
+  refused before network I/O, and the subject is a stable directory id —
+  never the DN. Directory/enterprise providers are **closed-posture**:
+  their email claims never link accounts unless the admin opts in, and
+  public providers' new-account provisioning honours the registration
+  toggle and email-domain allowlist (v1.3.0,
+  [#118](https://github.com/tbcsec/flagpost/issues/118)). JIT-provisioned
+  users hold **no role at all**; IdP group/role claims are ignored so
+  permission changes never bypass the audit log.
+- **Retrievable secrets are encrypted at rest** — SSO provider secrets and
+  (since v1.3.0) the SMTP password, under a per-install Fernet key
+  ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md))
+  — and are **excluded from platform exports**, while everything only ever
+  *verified* — passwords, flags, API tokens, reset tokens — is stored
+  hashed.
 - **Personal API tokens** are hash-stored, shown once at mint, self-mint
   only by route construction, and revocable by oversight
   (`manage_api_tokens`).
@@ -59,7 +74,10 @@ Flagpost's defaults reflect that.
   defanged, so a team named `@everyone` can't mass-ping your Discord.
 - **Attachments** serve via short-lived signed URLs issued only after the
   same permission check as viewing the challenge.
-- **Uploaded logos** stream with `nosniff` and a sandboxing CSP, so a
+- **Uploaded logos** are verified from their **bytes** at upload (v1.3.0):
+  magic-byte checks for rasters, a structural check for SVG — the client's
+  declared content type is discarded, so a renamed non-image is rejected —
+  and they stream with `nosniff` and a sandboxing CSP, so a
   direct-navigation SVG can't execute script.
 - **WebSocket auth** sends the token as the first frame after connect —
   never in the URL, where it would leak into proxy logs and history.
@@ -76,8 +94,11 @@ with the `webhook` action.
 
 ## Operator checklist
 
-1. Real secrets in `.env` (`JWT_SECRET`, Postgres, MinIO) — the defaults are
-   for local runs only.
+1. Real secrets in `.env` (`JWT_SECRET`, `SECRET_ENCRYPTION_KEY`, Postgres,
+   MinIO) — the defaults are for local runs only. If you leave the
+   encryption key derived, it lives on the backend data volume
+   (`/data/.secret_key`) — back it up; losing it means re-entering every
+   SSO secret and the SMTP password.
 2. TLS on (set `SITE_ADDRESS`; Caddy does the rest).
 3. Don't expose internals: only 80/443 (and MinIO's public endpoint for
    attachment downloads) need to be reachable; the MinIO **console** (`:9001`)

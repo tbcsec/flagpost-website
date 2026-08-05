@@ -11,10 +11,13 @@ This keeps sign-up frictionless and lets accounts exist without an email;
 role assignment still works for email-less accounts because Admin → Roles
 resolves people by username or email.
 
-Accounts can also arrive via **[OIDC single sign-on](/admin/sso/)** — linked
-to an existing local account by verified email on first contact, or created
-just-in-time holding Participant only. However a user signed up, RBAC alone
-decides what they can do.
+Accounts can also arrive via **[external identity](/admin/sso/)** — OIDC,
+SAML, or LDAP. On first contact the identity links to an existing local
+account only when its email claim is trusted (a verified email from an
+open provider, or the admin's *email is authoritative* opt-in on a closed
+directory); otherwise a user is created just-in-time holding **no role** —
+Participant, like every role, is earned per-competition on join. However a
+user signed up, RBAC alone decides what they can do.
 
 Self-service account management, from **/profile** and the login screen:
 

@@ -70,6 +70,17 @@ Settings → Challenges). Challenge metadata is validated against the vocab, so
 a typo can't invent a new tag. Competitors see difficulty badges and tag
 chips on the challenge cards.
 
+## Browsing: cards or list
+
+Competitors choose how the challenge page reads (v1.3.0): a **Cards /
+List** toggle sits at the right of the filter row. Cards — the default —
+keep the paginated grid; **List** groups challenges by category into
+collapsible sections of compact rows (name, difficulty, solve count,
+points), with a padlock on locked challenges and a tint on solved ones.
+The choice and per-category expand state persist per device (browser
+storage, not the account), and the category and availability filters apply
+identically in both views.
+
 ## Solves, first blood, and ratings
 
 Every challenge shows its solver list (earliest first) with the first solve

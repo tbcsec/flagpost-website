@@ -64,10 +64,12 @@ full-fidelity within Flagpost.
 ## 3. People — SSO, or fresh accounts by design
 
 If your organisation runs an identity provider,
-**[OIDC single sign-on](/admin/sso/)** dissolves this step entirely:
-connect Google, Okta, Keycloak, or Entra, and your people sign in with the
-accounts they already have — provisioned just-in-time on first login,
-nothing to migrate.
+**[single sign-on](/admin/sso/)** dissolves this step entirely: connect
+Google, Okta, Keycloak, or Entra over OIDC, a campus or enterprise IdP
+(Shibboleth, ADFS) over [SAML 2.0](/admin/saml/), or bind directly against
+Active Directory or OpenLDAP with the [LDAP provider](/admin/ldap/) — and
+your people sign in with the accounts they already have, provisioned
+just-in-time on first login, nothing to migrate.
 
 Without an IdP, accounts are the one thing that genuinely can't port: no
 platform can (or should) export usable password hashes into another.

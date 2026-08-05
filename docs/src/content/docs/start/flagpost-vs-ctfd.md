@@ -35,10 +35,10 @@ without plugins or paid tiers.
 | Support tickets | Built in — live queue, assignment, internal notes, attachments | External (Discord, forms) |
 | Collaborative team notes | Built in — CRDT co-editing per challenge | — |
 | Multiple-choice flags & guess caps | Built in | Via plugins |
-| Single sign-on | OIDC/OAuth2 built in, free — any discovery-document IdP | MajorLeagueCyber OAuth in core; broader SSO via plugins or hosted tiers |
+| Single sign-on | OIDC/OAuth2, SAML 2.0, and LDAP/Active Directory built in, free | MajorLeagueCyber OAuth in core; broader SSO via plugins or hosted tiers |
 | Surveys & post-solve ratings | Built in | — |
 | Analytics | Challenge/team analytics, insight cards, submissions browser | Score graphs and submission listings |
-| Public spectator board | Opt-in board with insight cards and a points timeline | Public scoreboard on public instances |
+| Public spectator board | Opt-in board with insight cards, a points timeline, and a full-screen venue/projector mode with first-blood splashes | Public scoreboard on public instances |
 
 ## Where CTFd is the better fit
 

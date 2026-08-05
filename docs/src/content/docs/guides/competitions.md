@@ -33,7 +33,10 @@ and **Modules**.
 - **Joining** — self-serve join for public events, or an invite code (the
   only way into a private one). The code can be regenerated.
 - **Public spectator scoreboard** — an explicit opt-in (`off` by default)
-  that exposes an unauthenticated, read-only scoreboard. See
+  that exposes an unauthenticated, read-only scoreboard — and, since
+  v1.3.0, the full-screen
+  [venue / projector mode](/guides/scoreboard/#venue--projector-mode) on
+  the same page (no separate setting). See
   [Scoreboard](/guides/scoreboard/#public-spectator-board).
 - **CTFtime feed** — a separate opt-in exposing a CTFtime-format JSON feed
   for rated events.

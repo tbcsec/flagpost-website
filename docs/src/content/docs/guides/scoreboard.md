@@ -67,6 +67,26 @@ An explicit per-competition opt-in (Settings → General) exposes a read-only,
   does every score-derived insight and the timeline, so the page never
   leaks what the frozen board hides.
 
+## Venue / projector mode
+
+Since **v1.3.0**, the spectator page carries a big-screen mode for live,
+in-person events. A **Venue mode** button on `/public/<competition-id>`
+(or `?venue=1` directly — bookmarkable and refresh-safe) switches to a
+full-screen display that **auto-rotates** through the scoreboard (top
+twelve), the insight stats and highlights, and the points timeline every
+15 seconds (`?interval=<seconds>` overrides, clamped 5–120).
+
+- **First-blood splashes** — a new first blood interrupts the rotation
+  with a five-second full-screen takeover, driven by a recent-solves feed
+  the page polls every few seconds.
+- **Controls** — arrow keys change slide, Space pauses, F toggles
+  fullscreen, Esc exits, with on-screen buttons and slide dots for the
+  mouse.
+- **Same opt-in, same freeze rules** — venue mode rides the spectator
+  board's per-competition opt-in (no separate setting), and a frozen
+  competition emits no post-cutoff solves, so no splash can leak what the
+  board hides.
+
 ## CTFtime feed
 
 A second per-competition opt-in exposes

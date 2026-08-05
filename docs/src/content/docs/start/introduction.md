@@ -29,20 +29,20 @@ free to run, and designed to be operated on your own infrastructure.
   the final stretch, a public spectator board, and a CTFtime feed.
 - **CTFd-compatible and portable.** Bulk challenge import/export in the ctfcli
   YAML format, plus a full-fidelity platform backup.
-- **Bring your own identity provider.** Full OIDC/OAuth2 single sign-on
-  (Google, Okta, Keycloak, Entra, …) alongside local accounts, with local
-  login surviving as break-glass.
+- **Bring your own identity provider.** OIDC/OAuth2, SAML 2.0, and
+  LDAP/Active Directory single sign-on (Google, Okta, Keycloak, Entra,
+  Shibboleth, AD, …) alongside local accounts, with local login surviving
+  as break-glass.
 - **Secure by default.** argon2 hashing, timing-safe auth, SSRF-hardened
   webhooks, ReDoS-contained regex flags — and no shipped credentials.
 
 ## What it deliberately is not (yet)
 
 Flagpost manages competitions, not challenge infrastructure — container
-hosting and remote service provisioning are out of scope. SAML and LDAP
-authentication and the AI assistant are on the
+hosting and remote service provisioning are out of scope. The AI assistant
+is on the
 [roadmap](https://github.com/tbcsec/flagpost/blob/main/docs/ROADMAP.md) but
-intentionally not built yet (sign-in today is local accounts or
-[OIDC/OAuth2 SSO](/admin/sso/)). Third-party marketplace modules are also not
+intentionally not built yet. Third-party marketplace modules are also not
 yet open — the module system currently runs trusted, in-repo code only.
 
 ## The stack
