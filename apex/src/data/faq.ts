@@ -49,6 +49,6 @@ export const faq: FaqEntry[] = [
   {
     question: "Is the scoreboard really real-time?",
     answer:
-      "Yes — standings, first-blood markers, presence and notifications stream over WebSockets rather than polling. There is a public spectator board for projectors, brackets for parallel divisions, a scoreboard freeze for the final stretch, and a CTFtime-compatible feed for rated events.",
+      "Yes — standings, first-blood markers, presence and notifications stream over WebSockets rather than polling. There is a public spectator board with a full-screen venue mode for projectors — rotating the board, insights and timeline, with first-blood splashes — plus brackets for parallel divisions, a scoreboard freeze for the final stretch, and a CTFtime-compatible feed for rated events.",
   },
 ];
