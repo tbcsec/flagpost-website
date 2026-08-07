@@ -91,11 +91,22 @@ async function pagePaths(dir, prefix = "") {
   return out;
 }
 const paths = (await pagePaths("")).filter((p) => p !== "/404").sort();
+
+// Friendly short-paths → canonical docs URLs. Neither the bare nor the
+// trailing-slash form is a real page, so both redirect.
+const SHORTCUTS = [["/sso", "/admin/sso/"]];
+const shortcutRules = SHORTCUTS.flatMap(([from, to]) => [
+  `${from} ${to} 301`,
+  `${from}/ ${to} 301`,
+]);
+
 const redirects =
   "# Legacy security.txt location → the RFC 9116 canonical path.\n" +
   "/security.txt /.well-known/security.txt 301\n" +
+  "# Friendly short-paths → canonical docs URLs.\n" +
+  shortcutRules.join("\n") + "\n" +
   "# Canonical trailing-slash 301s (Workers assets would otherwise 307).\n" +
   paths.map((p) => `${p} ${p}/ 301`).join("\n") + "\n";
 await writeFile(join(root, "dist/_redirects"), redirects);
 
-console.log(`postbuild ✓ llms.txt (${pages.size} pages), llms-full.txt, _redirects (${paths.length} rules)`);
+console.log(`postbuild ✓ llms.txt (${pages.size} pages), llms-full.txt, _redirects (${paths.length + shortcutRules.length} rules)`);
