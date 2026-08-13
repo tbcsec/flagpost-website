@@ -20,16 +20,21 @@ collab notes, users, roles, SSO, setup, site settings, audit log, teams, and
 the competitions module itself — sixteen modules. Organised as modules
 (same registration path as everything else) but not user-toggleable.
 
-**Optional modules** — currently **Automations**, **Feedback**, and
-**Analytics**: enabled by default, toggleable per competition. Marketplace /
+**Optional modules** — currently **Automations**, **Feedback**,
+**Analytics**, and **AI Assistants** (v1.4.0): toggleable per
+competition. The AI module is the odd one out — even when enabled for a
+competition it ships inert behind a site master switch
+(`ai_settings.enabled`, default off; ADR-0023). Marketplace /
 third-party modules are a future concern with an explicit sandboxing
 question to answer first — today's module system runs trusted, in-repo code.
 
 ## The event-driven core
 
 Every mutation emits a `<entity>.<verb>` event through an async in-process
-bus. Consumers subscribe independently — core code never knows who's
-listening:
+bus — per worker, under [multi-worker](/deploy/scaling/): each event's
+handlers run once, on the emitting worker; only the WebSocket fan-out
+crosses workers. Consumers subscribe independently — core code never
+knows who's listening:
 
 ```
 core mutation ─▶ event bus ─┬─▶ audit log        (synchronous lane)
@@ -77,6 +82,16 @@ must be retrieved).
   in an event-to-query-invalidation map, not a new socket.
 - Auth is a **first-frame handshake** — tokens never appear in URLs.
 - Presence is ephemeral WS state with debounced clearing.
+- Since v1.4.0 the layer is **multi-worker-capable**: with
+  `WEB_CONCURRENCY>1`, broadcast frames relay across workers over one
+  Redis pub/sub channel behind the existing manager singleton (ADR-0025 —
+  the broadcast call sites are untouched), and presence becomes a hybrid
+  of the local debounced model plus a Redis liveness store with
+  heartbeat-refreshed expiry, so a crashed worker's members age out
+  (ADR-0026). Single-worker attaches neither and is byte-for-byte the
+  ADR-0005 behaviour. The v1.4.0 read-path additions — the
+  TTL-backstopped scoreboard cache and the activity-burst coalescer —
+  are per-worker, efficiency-only.
 - Collaborative prose uses **Y.js CRDTs with a dumb-relay transport**
   (ADR-0014): the server relays opaque update frames and persists one
   snapshot blob per document — it never decodes the CRDT.

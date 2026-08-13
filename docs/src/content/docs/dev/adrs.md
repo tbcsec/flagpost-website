@@ -35,6 +35,10 @@ quietly working around it.
 | [0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md) | Hash what is only verified; encrypt what must be retrieved | Accepted |
 | [0021](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0021-oidc-identity-provider-framework.md) | External identity via OIDC, with local login as break-glass | Accepted |
 | [0022](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0022-saml-ldap-identity-providers.md) | SAML and LDAP identity providers — generalizing the provider model | Accepted |
+| [0023](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0023-ai-assistant-provider-and-execution-model.md) | AI assistant provider integration and execution model | Accepted |
+| [0024](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0024-builtin-sso-provider-presets.md) | Built-in SSO provider presets — configuration, never credentials | Accepted |
+| [0025](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0025-multi-worker-broadcast-relay.md) | Multi-worker via a Redis broadcast relay behind the connection manager | Accepted |
+| [0026](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0026-cross-worker-presence.md) | Cross-worker presence via heartbeat-TTL liveness in Redis | Accepted |
 
 Two threads are worth reading in sequence to see the project's decision
 style: the **bootstrap story** (0007 → 0010 → 0017 — from "first user wins"

@@ -51,6 +51,34 @@ the **last active Administrator**.
 All of it is evented (`user.created`, `.updated`, `.banned`, `.unbanned`,
 `.deleted`) into the [audit log](/admin/audit-log/).
 
+### Mass CSV import
+
+Since **v1.4.0**, **Admin → Users → Import CSV** (`manage_users`)
+bulk-creates a roster — up to **200 accounts per import** (5 MB file cap;
+split larger rosters into batches), with a downloadable template.
+
+- **Columns**: `display_name` (`name` accepted as a CTFd-style alias) and
+  `password` required; `email`, `role`, `competition` optional. Header
+  order doesn't matter, the file is BOM-tolerant, and unknown columns are
+  ignored but reported.
+- **Preview, then atomic commit** — every import dry-runs first, showing
+  each row as create / skip / error (with role warnings), writing
+  nothing; the commit is all-or-nothing, so there are no half-imported
+  rosters.
+- **Create-only and non-destructive** — an existing account
+  (case-insensitive name or email match) is a skip, never an update, so
+  re-running a corrected file is safe.
+- **Roles and competitions resolve by name** (a default-competition
+  selector covers roster-into-one-event imports; unknown or ambiguous
+  names are row errors). Role grants are bounded exactly like single-user
+  assignment: a role the importer couldn't grant by hand still creates
+  the account but skips the role, with a per-row warning — never
+  silently, never beyond the importer's own permissions.
+- **One summary event** — the import emits `users.imported` (created /
+  skipped / roles-assigned counts) rather than flooding `user.created`
+  per row, though each role grant still emits its own `role.assigned`
+  for the audit trail.
+
 ## Roles
 
 Roles are data — rows holding a list of permission keys from the

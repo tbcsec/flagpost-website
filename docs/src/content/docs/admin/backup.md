@@ -19,22 +19,29 @@ and flag hashes — because a backup that can't actually restore your
 install isn't one. The exception is **install-specific credentials
 encrypted at rest** ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)):
 SSO identity providers and their secrets have never been part of the
-export, and since v1.3.0 the SMTP password stays out too (the rest of the
-SMTP config — host, port, username, sender — still travels). Re-enter
-those on the new install after a restore.
+export; since v1.3.0 the SMTP password stays out too (the rest of the
+SMTP config — host, port, username, sender — still travels), and since
+v1.4.0 so does the [AI provider configuration](/admin/ai/) with its API
+key. Re-enter those on the new install after a restore.
 
 :::caution[The file is sensitive]
 Treat an export like a database dump: it contains credential hashes and
 secrets. Store it encrypted, restrict who can read it, and both endpoints
-are gated on `manage_site_settings` for the same reason.
+are gated on `manage_site_settings` for the same reason — and since
+v1.4.0 the `users` and `roles` sections additionally require the global
+`manage_users` / `manage_roles` permissions, on export and import alike,
+so a site-settings delegate can't read or write the account and RBAC
+graph.
 :::
 
 Deliberately excluded: active login sessions, in-app notifications,
 collaborative-note snapshots, personal dashboard layouts, division
-memberships — transient or per-subject state that doesn't belong in a
-portable backup — and the encrypted-at-rest credentials above (SSO
-providers with their secrets; since v1.3.0 also the SMTP password), which
-are install-specific and re-entered on new infrastructure.
+memberships, AI assistant conversations and transcripts (v1.4.0) —
+transient or per-subject state that doesn't belong in a portable backup —
+and the encrypted-at-rest credentials above (SSO providers with their
+secrets; since v1.3.0 also the SMTP password, and since v1.4.0 the AI
+provider key), which are install-specific and re-entered on new
+infrastructure.
 
 ## Importing
 

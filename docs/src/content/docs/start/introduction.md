@@ -33,17 +33,22 @@ free to run, and designed to be operated on your own infrastructure.
   LDAP/Active Directory single sign-on (Google, Okta, Keycloak, Entra,
   Shibboleth, AD, …) alongside local accounts, with local login surviving
   as break-glass.
+- **Optional AI assistants, your model.** An organiser assistant for
+  operational questions and a guard-railed competitor assistant with
+  organiser-set guidance levels and reviewable transcripts — off by
+  default, bring your own OpenAI-compatible endpoint (or a fully local
+  model, so nothing leaves your install).
 - **Secure by default.** argon2 hashing, timing-safe auth, SSRF-hardened
   webhooks, ReDoS-contained regex flags — and no shipped credentials.
 
 ## What it deliberately is not (yet)
 
 Flagpost manages competitions, not challenge infrastructure — container
-hosting and remote service provisioning are out of scope. The AI assistant
-is on the
-[roadmap](https://github.com/tbcsec/flagpost/blob/main/docs/ROADMAP.md) but
-intentionally not built yet. Third-party marketplace modules are also not
-yet open — the module system currently runs trusted, in-repo code only.
+hosting and remote service provisioning are out of scope. Third-party
+marketplace modules are not yet open — the module system currently runs
+trusted, in-repo code only (the
+[roadmap](https://github.com/tbcsec/flagpost/blob/main/docs/ROADMAP.md)
+tracks the module SDK and marketplace).
 
 ## The stack
 

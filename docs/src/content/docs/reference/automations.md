@@ -1,6 +1,6 @@
 ---
 title: Automation reference
-description: The complete rule schema — condition operators, all twelve action types with their configuration fields, and payload templating.
+description: The complete rule schema — condition operators, all thirteen action types with their configuration fields, and payload templating.
 ---
 
 Reference for the automation engine's data model. The
@@ -94,8 +94,17 @@ See [Security notes](/deploy/security/) for the full hardening list.
 ### `release_hint` / `unlock_challenge` / `open_survey`
 
 One required ID field each (`hint_id` / `challenge_id` / `survey_id`).
-Releasing a hint makes it free for everyone and emits `hint.released`;
-opening a survey emits `survey.opened`.
+Releasing a hint grants it, free, to the **event's subject** — the
+user/team on the triggering payload, idempotently per subject — and emits
+`hint.released`; opening a survey emits `survey.opened`. A
+[hidden hint](/guides/challenges/) can't be released until it's published.
+
+### `publish_hint` *(v1.4.0)*
+
+One required ID field (`hint_id`). Makes a hidden hint visible to
+**everyone** in the competition and emits `hint.published` — the
+all-subjects counterpart to `release_hint`. Idempotent: a hint that's
+already visible is left alone.
 
 ### `create_ticket`
 

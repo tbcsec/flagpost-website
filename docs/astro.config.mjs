@@ -58,6 +58,7 @@ export default defineConfig({
             { label: "Challenges", slug: "guides/challenges" },
             { label: "Teams & participants", slug: "guides/teams" },
             { label: "Scoreboard", slug: "guides/scoreboard" },
+            { label: "Staff dashboard", slug: "guides/dashboard" },
             { label: "Automations", slug: "guides/automations" },
             { label: "Support & communication", slug: "guides/support" },
             { label: "Feedback & analytics", slug: "guides/feedback" },
@@ -72,6 +73,7 @@ export default defineConfig({
             { label: "SSO & external identity", slug: "admin/sso" },
             { label: "SAML 2.0 setup", slug: "admin/saml" },
             { label: "LDAP / Active Directory", slug: "admin/ldap" },
+            { label: "AI assistants", slug: "admin/ai" },
             { label: "Site settings & branding", slug: "admin/site-settings" },
             { label: "Backup & restore", slug: "admin/backup" },
             { label: "Audit log", slug: "admin/audit-log" },
@@ -81,6 +83,7 @@ export default defineConfig({
           label: "Deployment",
           items: [
             { label: "Production deployment", slug: "deploy/production" },
+            { label: "Scaling for large events", slug: "deploy/scaling" },
             { label: "Releases & upgrades", slug: "deploy/upgrades" },
             { label: "Configuration reference", slug: "deploy/configuration" },
             { label: "Running without Docker", slug: "deploy/without-docker" },

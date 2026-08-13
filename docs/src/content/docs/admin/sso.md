@@ -84,6 +84,32 @@ Register the redirect URI at your IdP as:
 https://<your-domain>/api/auth/oidc/<slug>/callback
 ```
 
+### Google & Microsoft presets
+
+Since **v1.4.0**, the Auth tab carries **Quick set up** cards for Google
+and Microsoft that prefill the ordinary provider form — issuer, scopes,
+name, slug, posture — leaving only the per-install pieces
+([ADR-0024](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0024-builtin-sso-provider-presets.md):
+presets ship **configuration, never credentials**). You still register
+your own app at the IdP (the cards link to the right console), paste the
+client ID and secret, and register the same redirect URI as above —
+nothing about the callback changes, and everything prefilled is editable
+before saving.
+
+- **Google** — one click: issuer `https://accounts.google.com`, open
+  posture.
+- **Microsoft** — **single-tenant Entra only**: enter your Directory
+  (tenant) ID first, as the **GUID**, not a domain name — Entra's
+  discovery document advertises the GUID-form issuer (it's lowercased
+  automatically so an uppercase portal paste can't save fine and fail at
+  first sign-in). The preset defaults to a **closed** posture — tenant
+  membership is the admission decision — which you can flip. Multi-tenant
+  (`common`) Entra is deliberately not supported.
+
+Login buttons for Google and Microsoft providers carry the official brand
+mark, recognised from the configured issuer — including providers you
+configured by hand before v1.4.0.
+
 The flow is the standard authorization-code flow with **PKCE, `state`, and
 `nonce` mandatory**; the callback validates the ID token's signature (via
 cached JWKS) plus issuer, audience, and expiry. The IdP's `email_verified`

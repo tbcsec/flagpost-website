@@ -1,6 +1,6 @@
 ---
 title: Challenges
-description: Author CTF challenges with static, regex, or multiple-choice flags; dynamic decay scoring; hints, attachments, prerequisites, scheduled release and tags.
+description: Author CTF challenges with static, regex, or multiple-choice flags; dynamic decay scoring; hidden and scheduled hints, attachments, prerequisites, scheduled release and tags.
 ---
 
 Challenges are authored per competition by staff holding the
@@ -29,6 +29,23 @@ competitor/team or for everyone on a challenge. A reset records a cutoff
 rather than deleting anything, so submission history stays intact for
 analytics and audit. Resets emit `challenge.guesses_reset`.
 
+### Wrong-guess penalty
+
+Since **v1.4.0**, a second anti-brute-force lever beside the cap: an
+optional **wrong-guess penalty (%)** (next to the guess limit in
+Competition Settings → Challenges; blank = off, the default). Each
+incorrect multiple-choice guess lowers that challenge's value **for the
+guessing subject only** (the team in team mode) by that percentage of the
+base value, linearly, floored at zero — a later correct answer awards the
+reduced value. It composes with dynamic scoring (the percentage applies
+to the current dynamic worth, and each solver's own deduction survives
+later re-valuing), and competitors always see it happening: the detail
+dialog says "each wrong guess lowers this question's value by N%", the
+reduced value shows with the base struck through, and the value drops
+live the instant a wrong guess lands. Guess resets restore the value
+along with the attempts. Competition-wide, multiple-choice only, and an
+explicit opt-in — enabling it never silently changes existing scoring.
+
 ## Scoring
 
 - **Static** — a fixed point award.
@@ -42,9 +59,25 @@ analytics and audit. Resets emit `challenge.guesses_reset`.
 
 Challenges can carry hints, optionally with a point cost charged to the
 competitor/team that reveals them (`challenge.hint_requested` records the
-cost). Hints can also be **released** to everyone for free by staff or by the
-`release_hint` [automation action](/guides/automations/) — for example, a
-timed hint wave — emitting `hint.released`.
+cost). A hint can also be **granted free to a single competitor or
+team** by the `release_hint`
+[automation action](/guides/automations/) — it targets the triggering
+event's subject, emitting `hint.released` (there is deliberately no
+staff-facing "grant to person X" button; rules are the mechanism).
+
+Since **v1.4.0**, a hint can be authored **hidden**: a *Hidden until
+released* checkbox in the editor's hints panel, with an optional *Release
+at* time. Competitors never see a hidden hint — it isn't listed, and a
+direct reveal 404s so its existence can't leak — while staff see a
+**Hidden** or **Releases &lt;time&gt;** badge and a **Publish** button. A
+hidden hint becomes visible to everyone (**published** — the normal
+cost/reveal rules then apply) three ways: the Publish button, its
+`release_at` schedule, or the `publish_hint` automation action — each
+emitting `hint.published` exactly once on the hidden→visible transition,
+so follow-up automations can chain off it. That's the tool for **timed
+hint waves**. A still-hidden hint can't be `release_hint`-ed to a subject
+— publish first, then grant — and cloning a competition preserves
+hidden/schedule state, so a clone never publishes early.
 
 ## Attachments
 

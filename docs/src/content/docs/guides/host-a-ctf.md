@@ -61,7 +61,9 @@ read-only observer). Judges get the
 [operational dashboard](/guides/feedback/#challenge--team-analytics),
 the live [ticket queue](/guides/support/), and the
 [submissions browser](/guides/feedback/#challenge--team-analytics) for
-disputes.
+disputes. If the optional [AI module](/admin/ai/) is configured, staff can
+also ask the organiser assistant operational questions in plain
+language — standings, ticket load, which challenges are hurting.
 
 ## 5. Automate the event
 
@@ -69,7 +71,10 @@ Write the [When → If → Then rules](/guides/automations/) before the event,
 not during: first-blood announcements, timed hint waves, a T-60
 "open the survey" trigger, freeze-on-end, and a webhook into your staff
 chat for new tickets. Every rule you write is a checklist item your staff
-doesn't carry on game day.
+doesn't carry on game day. And if you enable the
+[competitor assistant](/admin/ai/) as a guard-railed hint channel, choose
+its guidance level deliberately and have a Judge skim the AI transcripts
+page during the event — every conversation is reviewable.
 
 ## 6. Open registration early
 

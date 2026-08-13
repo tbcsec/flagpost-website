@@ -74,11 +74,17 @@ unlimited), and the **challenge ratings** toggle. Details in
 
 ### Modules
 
-Optional modules — **Automations**, **Feedback**, **Analytics** — can be
-switched off for this competition. Required-core modules are listed but
-locked on. Disabling a module removes its navigation entries and 404s its
-API for this competition; disabling Automations also stops *global* rules
-firing for this competition's events.
+Optional modules — **Automations**, **Feedback**, **Analytics**, and
+(since v1.4.0) **[AI Assistants](/admin/ai/)**, which additionally sits
+behind a site-wide master switch — can be switched off for this
+competition. Since v1.4.0 the Modules tab and toggles require the
+competition-scoped `manage_modules` permission (previously part of
+`edit_competition`); built-in Judge and Administrator gained it
+automatically via the startup role re-sync, custom roles need it granted.
+Required-core modules are listed but locked on. Disabling a module
+removes its navigation entries and 404s its API for this competition;
+disabling Automations also stops *global* rules firing for this
+competition's events.
 
 ## Lifecycle operations
 

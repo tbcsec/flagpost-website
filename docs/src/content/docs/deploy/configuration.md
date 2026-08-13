@@ -41,6 +41,23 @@ config, but those fallbacks are published in the repo — set real values
 | `JWT_SECRET` | *(unset)* | Signing secret for access tokens. Unset, the app **derives a strong per-install secret and persists it** to the backend data volume (survives restarts). Set it explicitly for production, and always when running multiple backend hosts. |
 | `SECRET_ENCRYPTION_KEY` | *(unset)* | Encryption key for secrets stored **retrievably** in the database — SSO provider secrets and, since v1.3.0, the SMTP password ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)). Unset, a per-install key is derived and persisted to the backend data volume, same pattern as `JWT_SECRET`. Set it explicitly for production and always with multiple backend hosts — it must be a **Fernet key** (32 url-safe base64 bytes: `python3 -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'`), not an arbitrary string. **Losing the key is unrecoverable** — affected secrets must be cleared and re-entered. |
 
+## Scaling & tuning
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `WEB_CONCURRENCY` | `1` | Backend worker processes (v1.4.0). `1` = single process, no Redis needed for realtime. `>1` switches the real-time layer to the Redis cross-worker relay + presence (**requires** `REDIS_URL` — the backend refuses to boot multi-worker without it) and starts the singleton scheduler sidecar. The one scaling variable plumbed through `.env` by compose. See [Scaling for large events](/deploy/scaling/). |
+
+The finer-grained knobs (DB pool sizes and the multi-worker connection
+budget, the bounded Redis client pool, presence heartbeat/TTL, WebSocket
+handshake rate limit, scoreboard cache TTL, argon2 parameters) are read
+by the backend process directly — under compose, add them to the backend
+service's environment. They're tabulated with their defaults on the
+[scaling page](/deploy/scaling/#tuning-knobs). One more in that family:
+`MAX_REQUEST_BODY_BYTES` (default 100 MiB, v1.4.0) — an outermost
+middleware rejects larger request bodies with 413 before any route code
+runs; raise it for very large
+[platform-export restores](/admin/backup/).
+
 ## Demo mode
 
 | Variable | Default | Meaning |

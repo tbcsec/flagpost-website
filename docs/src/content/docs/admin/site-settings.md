@@ -1,6 +1,6 @@
 ---
 title: Site settings & branding
-description: Platform name, palettes and accent colour, custom logos with mandatory attribution, registration policy, and SMTP.
+description: Platform name, palettes and accent colour, custom logos with mandatory attribution, animated sign-in backgrounds, the sign-in notice, registration policy, and SMTP.
 ---
 
 Site settings are global — one configuration for the whole install, set by
@@ -9,10 +9,11 @@ an Administrator (`manage_site_settings`). Theming is deliberately
 (recorded in ADR-0011).
 
 **Admin → Settings** is tabbed — **General · Email · Auth · Rules · Backup ·
-Appearance** (plus an AI placeholder for a future release) — with the active
-tab in the URL, so a settings link lands where you meant it to. The Auth
-tab requires the separate `manage_auth_providers` permission and is covered
-on its own page: [Single sign-on](/admin/sso/).
+Appearance · AI** — with the active tab in the URL, so a settings link
+lands where you meant it to. Two tabs require their own permission and are
+covered on their own pages: Auth (`manage_auth_providers`,
+[Single sign-on](/admin/sso/)) and, since v1.4.0, AI (`manage_ai`,
+[AI assistants](/admin/ai/)).
 
 ## Appearance
 
@@ -33,6 +34,21 @@ on its own page: [Single sign-on](/admin/sso/).
   pixel dimensions are refused. It's stored in the database, so branding renders before login
   and needs no object storage. A **show wordmark** toggle hides the
   platform-name text for logos that bake in their own name.
+- **Sign-in background** (v1.4.0) — an optional animated backdrop for the
+  pages outside the app shell (sign-in, registration, first-run setup,
+  password reset, and the public spectator pages): **Aurora** (soft
+  drifting ribbons of light), **Gradient wash** (a slow colour field), or
+  **Constellation** (a particle network that reacts to the cursor);
+  **None**, a flat ground, is the default. It recolours itself from the
+  palette and accent you already chose, shows on dark palettes only
+  (falling back to the flat ground on light — the picker warns), never
+  renders inside the authenticated app, honours the OS reduced-motion
+  preference with a static frame, and pauses in hidden tabs.
+- **Sign-in notice** (v1.4.0) — a rich-text notice (same editor as the
+  rules) shown above the sign-in card: event instructions, "use your work
+  account", a support contact. It is served **unauthenticated** to anyone
+  who can reach the sign-in page, so it must contain only public
+  information; clearing the text removes it.
 
 **Attribution is mandatory and not configurable**: a subtle "Powered by
 Flagpost" footer (the built-in mark, linking to the source repository)
@@ -65,7 +81,10 @@ competition (emitting `competition.rules_accepted`, so organisers can audit
 who agreed and when). A **display-only** toggle shows the rules at join
 without gating. A competition can carry its own
 [rules override](/guides/competitions/#general) that supersedes the site
-text; with no rules configured anywhere, there's no gate at all.
+text; with no rules configured anywhere, there's no gate at all. Since
+v1.4.0 the rules a competitor sees at accept-time preserve the authored
+formatting — headings, lists, code, and alignment — rendered from the
+same schema the editor writes, never raw HTML.
 
 ## Operational settings
 

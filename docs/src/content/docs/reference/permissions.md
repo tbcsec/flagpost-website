@@ -21,6 +21,7 @@ truth.
 | `edit_competition` | Competition Management | competition |
 | `delete_competition` | Competition Management | competition |
 | `manage_schedule` | Competition Management | competition |
+| `manage_modules` | Competition Management | competition |
 | `challenge_view` | Challenges | competition |
 | `challenge_create` | Challenges | competition |
 | `challenge_edit` | Challenges | competition |
@@ -46,9 +47,11 @@ truth.
 | `manage_api_tokens` | Users & Roles | global |
 | `manage_site_settings` | Site Settings | global |
 | `manage_auth_providers` | Site Settings | global |
+| `manage_ai` | Site Settings | global |
+| `ai_view_transcripts` | AI Assistants | competition |
 | `view_competition_analytics` | Analytics | competition |
-| `view_submissions` | Analytics | competition |
 | `view_global_analytics` | Analytics | global |
+| `view_submissions` | Analytics | competition |
 | `customize_dashboard` | Dashboard | competition |
 | `manage_dashboard_widgets` | Dashboard | competition |
 | `automation_view` | Automations | competition |
@@ -63,15 +66,16 @@ truth.
 **Judge** (competition) — full operational control inside an assigned
 competition:
 
-`edit_competition` · `manage_schedule` · `challenge_view` ·
-`challenge_create` · `challenge_edit` · `challenge_delete` ·
-`challenge_publish` · `score_override` · `scoreboard_freeze` ·
-`team_view_all` · `team_edit_any` · `team_disqualify` · `ticket_view` ·
-`ticket_respond` · `ticket_assign` · `ticket_view_internal_notes` ·
-`announcement_create` · `announcement_delete` · `feedback_manage` ·
-`feedback_view_responses` · `feedback_submit` ·
-`view_competition_analytics` · `view_submissions` · `customize_dashboard` ·
-`automation_view` · `automation_create` · `automation_edit`
+`edit_competition` · `manage_schedule` · `manage_modules` ·
+`challenge_view` · `challenge_create` · `challenge_edit` ·
+`challenge_delete` · `challenge_publish` · `score_override` ·
+`scoreboard_freeze` · `team_view_all` · `team_edit_any` ·
+`team_disqualify` · `ticket_view` · `ticket_respond` · `ticket_assign` ·
+`ticket_view_internal_notes` · `announcement_create` ·
+`announcement_delete` · `feedback_manage` · `feedback_view_responses` ·
+`feedback_submit` · `view_competition_analytics` · `view_submissions` ·
+`ai_view_transcripts` · `customize_dashboard` · `automation_view` ·
+`automation_create` · `automation_edit`
 
 **Participant** (competition) — competitor-facing only:
 
@@ -83,12 +87,18 @@ competition:
   permission: submitting flags, managing your own team, replying to your own
   tickets, and minting your own API tokens. That's why the Participant list
   looks short.
-- Two of the newer grants are deliberately narrow: `manage_api_tokens` is
+- Several grants are deliberately narrow: `manage_api_tokens` is
   oversight-only (list/revoke anyone's token — never mint, which is
-  self-only by construction), and `manage_auth_providers` is separate from
-  `manage_site_settings` because deciding who can log in is materially more
-  sensitive than changing a palette. `view_submissions` splits raw
-  submission payloads from aggregate analytics.
+  self-only by construction); `manage_auth_providers` and `manage_ai` are
+  separate from `manage_site_settings` because deciding who can log in —
+  or holding an API key that sends data to an external endpoint — is
+  materially more sensitive than changing a palette; `manage_modules`
+  (v1.4.0) splits per-competition module toggles out of
+  `edit_competition` so they can be delegated or withheld independently;
+  and `ai_view_transcripts` (v1.4.0) is its own grant because assistant
+  transcripts are competitor content of a different sensitivity than
+  analytics or tickets. `view_submissions` splits raw submission payloads
+  from aggregate analytics.
 - System roles **re-sync from this catalogue on every startup**, so
   permissions added by an upgrade reach existing installs' built-in roles
   automatically. Custom roles are never touched by the sync.

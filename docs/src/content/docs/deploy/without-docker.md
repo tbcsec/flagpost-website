@@ -32,9 +32,28 @@ export SECRET_ENCRYPTION_KEY="$(python3 -c 'from cryptography.fernet import Fern
 .venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
-Run **exactly one process** — no `--reload`, no multi-worker `uvicorn`, no
-horizontal replicas. The WebSocket layer and event bus are in-process by
-design; a second worker would split the real-time state.
+A single process (the default) needs nothing extra — just no `--reload`.
+Since **v1.4.0** [multi-worker uvicorn on one host](/deploy/scaling/) is
+supported, with three things mandatory:
+
+1. `export WEB_CONCURRENCY=N` **and** pass the same N to
+   `uvicorn --workers N` — the **env var**, not the flag, is what the app
+   reads. If they disagree (say `--workers 4` with `WEB_CONCURRENCY`
+   unset), no cross-worker relay attaches: broadcasts reach only each
+   socket's own worker, presence fragments, and the scheduler fires in
+   every worker.
+2. `REDIS_URL` must be set — the app refuses to boot multi-worker
+   without it.
+3. Run the singleton scheduler as its own process with the same
+   environment: `.venv/bin/python -m scheduler` (from `backend/`) —
+   under multi-worker the web workers deliberately skip the in-process
+   scheduler, so without the sidecar timed automations, the daily update
+   check, and retention never fire.
+
+Size Postgres to match: each worker's pool is
+`DB_CONNECTION_BUDGET // N` plus half that as overflow (budget default
+100) — the Docker stack raises Postgres to `max_connections=200` for the
+same reason. Multi-machine replicas remain unsupported either way.
 
 ## Frontend
 

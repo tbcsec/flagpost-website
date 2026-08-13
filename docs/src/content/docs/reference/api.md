@@ -22,9 +22,11 @@ the contracts that don't change.
   returns a short-lived **JWT access token**; a rotating refresh session
   rides an httpOnly cookie. `POST /api/auth/refresh` rotates and re-issues.
 - **SSO** — `GET /api/auth/providers` lists the enabled redirect
-  providers as `{slug, name, kind}` (v1.3.0 — this **replaced**
+  providers as `{slug, name, kind, brand}` (v1.3.0 — this **replaced**
   `GET /api/auth/oidc/providers`, a breaking change for integrations on
-  the old path). `GET /api/auth/{kind}/{slug}/login` starts the redirect
+  the old path; `brand`, added in v1.4.0, is `"google"` / `"microsoft"` /
+  `null`, derived server-side from the issuer so the login page can draw
+  the official button mark). `GET /api/auth/{kind}/{slug}/login` starts the redirect
   flow for OIDC and SAML; OIDC completes at
   `GET /api/auth/oidc/{slug}/callback`, SAML at
   `POST /api/auth/saml/{slug}/acs`, with public SP metadata at
@@ -32,7 +34,9 @@ the contracts that don't change.
   `POST /api/auth/login` falls through to a directory bind after local
   password verification fails, behind the same rate limit. All paths issue
   the same session local login does; admin provider CRUD lives at
-  `/api/admin/auth-providers` (`manage_auth_providers`). See
+  `/api/admin/auth-providers` (`manage_auth_providers`), with the built-in
+  [preset catalogue](/admin/sso/#google--microsoft-presets) read-only at
+  `GET /api/admin/auth-providers/presets` (v1.4.0). See
   [SSO & external identity](/admin/sso/).
 - **REST calls** send `Authorization: Bearer <access-token>`.
 - **WebSockets** connect to `wss://<host>/ws/…` and send the same access
@@ -75,6 +79,15 @@ router per domain, mirroring the platform's
 enforcement happens server-side on every route — see the
 [permissions reference](/reference/permissions/).
 
+The v1.4.0 [AI assistants](/admin/ai/) follow the same shape: assistant
+conversations, availability, usage, per-competition settings, and
+transcript review live under `/api/competitions/{id}/ai/…`, and site
+provider config at `GET/PUT /api/admin/ai/settings` +
+`POST /api/admin/ai/test-connection` (gated `manage_ai`). Assistant
+messages are rate-limited per user (60/hour organiser, 20/hour
+competitor, one answer in flight) — back off on 429s. The OpenAPI console
+remains the endpoint-level source of truth.
+
 Flag submission is rate-limited per user/team with escalating backoff —
 build clients accordingly.
 
@@ -83,7 +96,7 @@ build clients accordingly.
 | Endpoint | Purpose |
 | --- | --- |
 | `GET /api/health` | Liveness — 200 once migrated and serving |
-| `GET /api/site-settings` | Public branding (name, palette, logo URL, registration state) so login screens brand themselves |
+| `GET /api/site-settings` | Public branding (name, palette, background style, sign-in notice, logo URL, registration state) so login screens brand themselves — the [background style and notice](/admin/site-settings/#appearance) are v1.4.0 |
 | `GET /api/site-settings/logo` | The uploaded logo (served sandboxed) |
 | `GET /api/public/competitions` | Directory of competitions that opted into the public scoreboard |
 | `GET /api/public/competitions/{id}/scoreboard` | Spectator scoreboard (respects freezes; 404 for private/non-opted-in) |
@@ -95,10 +108,20 @@ build clients accordingly.
 
 `wss://<host>/ws/<resource_type>/<resource_id>` — scoped rooms for shared
 resources (scoreboard, challenge presence, ticket threads), plus
-`/ws/user/<user_id>` for the personal notification stream and
-`note/<doc_key>` rooms relaying collaborative-note updates. A
-per-competition `activity/<competition_id>` room fans out tiny
-id-only event frames (never payload bodies) that clients use to refresh
-their own permission-filtered REST views — it's what keeps the whole UI
-live. After the first-frame auth handshake, rooms stream JSON updates;
-reconnect with exponential backoff and jitter, as the built-in client does.
+`/ws/user/<user_id>` for the personal notification stream, `note/<doc_key>`
+rooms relaying collaborative-note updates, and (v1.4.0)
+`ai/<conversation_id>` rooms streaming [assistant](/admin/ai/) answers —
+joinable by the conversation's owner or the matching oversight grant. A
+per-competition `activity/<competition_id>` room fans out tiny event
+frames that clients use to refresh their own permission-filtered REST
+views — it's what keeps the whole UI live. Most are id-only pings, but
+since v1.4.0 the solve ping carries a compact public delta
+(`{challenge_id, solve_count, value, team_id}` — all already-public
+fields) that clients patch in place instead of refetching; the delta
+falls back to a plain ping when the challenge isn't competitor-visible or
+the board is frozen, and same-event bursts are server-side coalesced.
+After the first-frame auth handshake, rooms stream JSON updates;
+reconnect with exponential backoff and jitter, as the built-in client
+does — the handshake itself is rate-limited per user since v1.4.0
+(default 60 per 30 s across all rooms), so a hammering reconnect loop is
+actively refused.

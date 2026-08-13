@@ -50,11 +50,16 @@ run the [setup wizard](/admin/setup/).
 ## Attachments and `MINIO_PUBLIC_ENDPOINT`
 
 Challenge files download via **pre-signed URLs directly from MinIO**, so the
-browser must be able to reach the MinIO S3 port. The compose file publishes
-it on host port `9000`; point `MINIO_PUBLIC_ENDPOINT` at a host:port that
-resolves for your competitors (e.g. `files.example.com:9000`, or front MinIO
-with its own TLS proxy). If competitors can't download attachments, this
-variable is almost always why.
+browser must be able to reach the MinIO S3 port. Since v1.4.0 the compose
+binds it to **loopback** (`127.0.0.1:9000`) — right for a single-host
+deploy where everything shares the box. If competitors must reach MinIO on
+a different host, deliberately publish the port (a compose override
+changing the binding to `9000:9000`, with real MinIO credentials) or front
+MinIO with its own TLS proxy, and point `MINIO_PUBLIC_ENDPOINT` at the
+browser-reachable host:port (e.g. `files.example.com:9000`) — a
+non-loopback value also activates the default-credential boot guard. If
+competitors can't download attachments, this variable is almost always
+why.
 
 ## Upgrades
 
@@ -71,11 +76,22 @@ security advisories, and the update check — is on
 
 ## Scaling expectations
 
-The backend runs as a **single process by design**: the WebSocket and
-event-bus layers are in-process, which is what keeps the stack a one-command
-deploy. Scale **vertically** (more CPU/RAM) rather than adding backend
-replicas. A single decent VM comfortably runs typical CTFs; for very large
-events, rehearse with realistic load first.
+The backend runs as a single process **by default** (`WEB_CONCURRENCY=1`):
+in-process WebSocket broadcast, no Redis needed for realtime, the
+one-command deploy unchanged. A single decent VM comfortably runs typical
+CTFs — in published load tests, one worker on 4 vCPU held ~200 concurrent
+users.
+
+Since **v1.4.0**, a busy event on a multi-core host can **scale out to
+multiple worker processes on the same box**: set `WEB_CONCURRENCY>1` in
+`.env` and the entrypoint starts that many workers, switches the
+real-time layer to a Redis-backed cross-worker relay and presence store,
+splits a fixed DB connection budget across workers, and runs the
+time-trigger scheduler as a single sidecar. In the 1,500-user A/B, four
+workers took steady-state 502s from 30–45% to 0%. Multi-machine replicas
+remain unsupported. The full story — when it helps, how to enable it, and
+the tuning knobs — is on [Scaling for large events](/deploy/scaling/);
+for very large events, rehearse with realistic load first.
 
 ## Health and monitoring
 

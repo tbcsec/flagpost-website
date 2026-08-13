@@ -29,16 +29,16 @@ at the images (a two-line override) and upgrading becomes changing a tag:
 # docker-compose.override.yml
 services:
   backend:
-    image: ghcr.io/tbcsec/flagpost-backend:v1.3.0
+    image: ghcr.io/tbcsec/flagpost-backend:v1.4.0
     build: !reset null
   frontend:
-    image: ghcr.io/tbcsec/flagpost-frontend:v1.3.0
+    image: ghcr.io/tbcsec/flagpost-frontend:v1.4.0
     build: !reset null
 ```
 
 **Which version am I running?** A release image reports its exact tag; a
 source build reports the release it's based on with an `-src` suffix
-(e.g. `1.3.0-src`), since `main` accumulates the next version as soon as a
+(e.g. `1.4.0-src`), since `main` accumulates the next version as soon as a
 tag is cut.
 
 ## Upgrading
@@ -56,7 +56,15 @@ procedure is short:
    sure the `SECRET_ENCRYPTION_KEY` or its key file is in place before
    migrations run — and [platform exports](/admin/backup/) taken on
    v1.3.0+ no longer contain the SMTP password, so re-enter it after
-   restoring one).
+   restoring one. v1.4.0's callouts: custom roles that toggled
+   per-competition modules through `edit_competition` must now be granted
+   the new `manage_modules` permission — built-in roles pick it up
+   automatically at startup; the compose now binds MinIO's S3 API to
+   loopback, so multi-host deployments relying on the previously
+   published `:9000` must [publish it deliberately](/deploy/production/#attachments-and-minio_public_endpoint);
+   and the new [AI assistants module](/admin/ai/) is off by default —
+   enabling it sends chat content to the operator-configured provider
+   endpoint).
 2. Take a [platform export](/admin/backup/) and a `pg_dump`.
 3. Bump the image tag (or `git pull` + `docker compose build` for source
    builds), then `docker compose up -d`.

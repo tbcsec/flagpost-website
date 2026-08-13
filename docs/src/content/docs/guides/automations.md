@@ -1,6 +1,6 @@
 ---
 title: Automations
-description: Build When → If → Then rules visually — triggers from the event catalogue, AND-ed conditions, and twelve actions from announcements to hardened webhooks.
+description: Build When → If → Then rules visually — triggers from the event catalogue, AND-ed conditions, and thirteen actions from announcements to hardened webhooks.
 ---
 
 The automation engine turns any platform event into a rule you build
@@ -18,12 +18,17 @@ competition.
   against the event's payload, **AND-ed** together. Operators: equals, does
   not equal, contains, greater than, at least, less than, at most, is
   present, is absent.
-- **Then (actions)** — one or more of the twelve
+- **Then (actions)** — one or more of the thirteen
   [action types](/reference/automations/#actions), executed in order.
 
 Rules live on the **Automations** page of a competition; the visual builder
 is generated from a server catalogue, so it always matches what the backend
-actually supports.
+actually supports. Since v1.4.0 the builder speaks human: condition fields
+show readable labels ("Minutes remaining", not `minutes_remaining`), and
+every ID field is a **searchable name dropdown** — challenges, hints,
+surveys, teams and users are picked by name while the rule still stores
+the id (a hint picker cascades competition → challenge → hint, and a
+global rule gets an inline competition selector).
 
 ## Rule scopes and who can create what
 
@@ -66,7 +71,10 @@ The full field-by-field list is in the
   every call, credential-header stripping, content-type-aware escaping, and
   chat-token defanging, because team names are adversarial input. See
   [Security notes](/deploy/security/).
-- **release_hint / unlock_challenge** — timed hint waves and bonus
+- **release_hint / publish_hint / unlock_challenge** — grant a hint free
+  to the event's user/team; publish a
+  [hidden hint](/guides/challenges/#hints) to everyone (v1.4.0 — the
+  timed-hint-wave tool, alongside scheduled release times); unlock bonus
   challenges.
 - **update_score / create_award** — point adjustments and titled,
   point-carrying awards.

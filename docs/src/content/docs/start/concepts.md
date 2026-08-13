@@ -46,10 +46,15 @@ registers through the same manifest-driven loader:
 - **Required-core modules** — challenges, scoring, hints, tickets,
   announcements, notifications, dashboard, collab notes, and friends. Always
   on; they are what makes the platform a CTF tool at all.
-- **Optional modules** — currently **Automations**, **Feedback**, and
-  **Analytics**. Enabled by default, and toggleable per competition under
-  **Competition Settings → Modules**. Disabled modules drop out of the
-  navigation and their APIs return 404 for that competition.
+- **Optional modules** — currently **Automations**, **Feedback**,
+  **Analytics**, and (since v1.4.0) **[AI Assistants](/admin/ai/)**. All
+  enabled per competition by default, and toggleable under **Competition
+  Settings → Modules** (gated on the `manage_modules` permission since
+  v1.4.0, previously part of general competition editing). AI Assistants
+  additionally sits behind a **site-wide master switch**, off until an
+  administrator configures a model endpoint — so it's inert everywhere
+  regardless of the per-competition toggle. Disabled modules drop out of
+  the navigation and their APIs return 404 for that competition.
 
 Developers: see [Developing modules](/dev/modules/).
 

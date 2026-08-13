@@ -38,7 +38,9 @@ until the unfreeze. This is the classic end-game tension mechanic.
 - The freeze covers **every competitor-visible solve surface**, not just the
   board: per-challenge solver lists and solve counts, dashboards, the
   participants roster, and the spectator insights all apply the same cutoff
-  (tightened in v1.2.0 — [GHSA-q69m-7mgh-r2gh](https://github.com/tbcsec/Flagpost/security/advisories/GHSA-q69m-7mgh-r2gh)),
+  (tightened in v1.2.0 — [GHSA-q69m-7mgh-r2gh](https://github.com/tbcsec/Flagpost/security/advisories/GHSA-q69m-7mgh-r2gh) —
+  and v1.4.0 closed the last gap: the per-challenge detail view's solve
+  count and dynamic value now clamp to the cutoff like every other read),
   so a frozen board can't be reconstructed from side channels.
 - Staff can still read the live board (`?live=true` — the UI does this for
   staff automatically).
@@ -80,8 +82,11 @@ twelve), the insight stats and highlights, and the points timeline every
   with a five-second full-screen takeover, driven by a recent-solves feed
   the page polls every few seconds.
 - **Controls** — arrow keys change slide, Space pauses, F toggles
-  fullscreen, Esc exits, with on-screen buttons and slide dots for the
-  mouse.
+  fullscreen, +/− nudge the display zoom (0.6×–2×, v1.4.0), Esc exits,
+  with on-screen buttons and slide dots for the mouse.
+- **Scales to the display** (v1.4.0) — type and layout grow with the
+  screen, from a laptop up to a 4K projector wall, with the +/− keys as
+  an operator fine-tune.
 - **Same opt-in, same freeze rules** — venue mode rides the spectator
   board's per-competition opt-in (no separate setting), and a frozen
   competition emits no post-cutoff solves, so no splash can leak what the

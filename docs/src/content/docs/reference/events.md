@@ -70,12 +70,18 @@ manual delete.
 | `challenge.rated` | `competition_id`, `challenge_id`, `user_id`, `rating` | `feedback_view_responses` |
 | `challenge.hint_requested` | `competition_id`, `challenge_id`, `hint_id`, `user_id`, `team_id`, `cost` | `challenge_view` |
 | `hint.released` | `competition_id`, `challenge_id`, `hint_id`, `user_id`, `team_id` | `challenge_view` |
+| `hint.published` | `competition_id`, `challenge_id`, `hint_id` | `challenge_view` |
 | `category.created` | common | `challenge_edit` |
 | `category.deleted` | common | `challenge_edit` |
 
 `challenge.solved` is the workhorse: `is_first_blood` makes first-blood
 automation a one-condition rule, and repeat-correct submissions never
 re-emit it.
+
+`hint.released` and `hint.published` (v1.4.0) are different moments: a
+*release* grants an existing hint to one event subject, a *publish* makes
+a [hidden hint](/guides/challenges/) visible to **everyone** — manually,
+on its `release_at` schedule, or via the `publish_hint` automation action.
 
 `challenge.attempted` fires on every **graded** flag submission, right or
 wrong — refusals *before* grading (the rate limit, an exhausted
@@ -137,13 +143,30 @@ effects are events like any other mutation's.
 | `auth_provider.updated` | `provider_id`, `slug`, `kind`, `changed_fields`, `actor_user_id` | `manage_auth_providers` |
 | `role.created` / `role.updated` / `role.deleted` | common | `manage_roles` |
 | `role.assigned` / `role.unassigned` | common | `manage_roles` |
+| `users.imported` | `user_id`, `created`, `skipped`, `roles_assigned` | `manage_users` |
 
 These are governed by **global** admin permissions — a competition-scoped
 role can never automate on them. `identity.*` records an external
 [identity](/admin/sso/) — OIDC, SAML, or LDAP — being attached to or
 detached from a local account; `auth_provider.*` records provider
 configuration changes (`kind` is the provider protocol: `oidc`, `saml`,
-or `ldap`).
+or `ldap`). `users.imported` (v1.4.0) is the [mass CSV
+import](/admin/users-roles/)'s single summary event — bulk creation
+deliberately doesn't flood `user.created` per row, though each role grant
+in the file still emits its own `role.assigned`; `user_id` is the
+importing admin.
+
+## AI assistants
+
+Added in v1.4.0 with the optional [AI assistants module](/admin/ai/).
+Usage metadata only — message content never rides an event.
+
+| Event | Payload fields | Trigger permission |
+| --- | --- | --- |
+| `ai.settings_updated` | `user_id`, `enabled` *(site-wide — no `competition_id`)* | `manage_ai` |
+| `ai.query` | `competition_id`, `conversation_id`, `user_id`, `assistant_type`, `input_tokens`, `output_tokens`, `tool_calls` | `view_competition_analytics` |
+| `ai.error` | `competition_id`, `conversation_id`, `user_id`, `assistant_type` | `view_competition_analytics` |
+| `ai.disclosure_accepted` | `competition_id`, `user_id` | `ai_view_transcripts` |
 
 ## Platform & modules
 
