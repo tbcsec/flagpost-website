@@ -1,7 +1,8 @@
 ---
 /**
- * The nine differentiators, straight from the repo README's Highlights —
- * every one built and working today. No roadmap features here.
+ * The differentiators, straight from the repo README's Highlights —
+ * every one built and working today. No roadmap features here. The tenth
+ * (AI assistants) closes the grid as a deliberate full-width card.
  */
 import Icon from "./Icon.astro";
 
@@ -52,6 +53,12 @@ const features = [
     body: "docker compose up brings up the app, Postgres, Redis, MinIO and Caddy behind one origin — with automatic HTTPS.",
   },
 ] as const;
+
+const aiFeature = {
+  icon: "message-circle",
+  title: "AI assistants, your model",
+  body: "An organiser assistant for live operational questions, and a guard-railed competitor assistant with organiser-set guidance levels and reviewable transcripts. Optional and off by default — bring any OpenAI-compatible endpoint, including a fully local model, so nothing leaves your install.",
+} as const;
 ---
 
 <section id="features" class="border-t border-border/60 py-20 sm:py-28">
@@ -82,6 +89,27 @@ const features = [
           <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
         </li>
       ))}
+      <li
+        class="reveal group rounded-lg border border-border bg-card p-6 shadow-sm transition hover:border-fp-green-dark/50 sm:col-span-2 lg:col-span-3"
+        style="--reveal-delay: 140ms"
+      >
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-fp-green-dark/10 text-fp-green-dark transition group-hover:bg-fp-green-dark/15">
+            <Icon name={aiFeature.icon} class="h-5 w-5" />
+          </span>
+          <div>
+            <h3 class="font-display text-base font-semibold">
+              <span class="inline-flex flex-wrap items-center gap-2.5">
+                {aiFeature.title}
+                <span class="whitespace-nowrap rounded-full bg-fp-green-dark/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-fp-green-dark">
+                  NEW · v1.4.0
+                </span>
+              </span>
+            </h3>
+            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">{aiFeature.body}</p>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 </section>
