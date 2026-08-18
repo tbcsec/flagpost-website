@@ -84,6 +84,7 @@ export default defineConfig({
           items: [
             { label: "Production deployment", slug: "deploy/production" },
             { label: "Scaling for large events", slug: "deploy/scaling" },
+            { label: "AWS (ECS Fargate + ALB)", slug: "deploy/fargate" },
             { label: "Releases & upgrades", slug: "deploy/upgrades" },
             { label: "Configuration reference", slug: "deploy/configuration" },
             { label: "Running without Docker", slug: "deploy/without-docker" },
