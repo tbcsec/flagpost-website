@@ -3,16 +3,6 @@ title: Deploying to AWS — ECS Fargate + ALB
 description: Run Flagpost as N backend tasks on AWS ECS Fargate behind an Application Load Balancer, with RDS, ElastiCache, and S3 — the multi-instance topology from ADR-0031.
 ---
 
-:::caution[Requires Flagpost v1.5.0 or later]
-This topology depends on the multi-instance deployment flags
-(`SCHEDULER_ENABLED`, `MULTI_INSTANCE`, `MINIO_IAM_AUTH`) and the WebSocket
-keepalive introduced in
-[ADR-0031](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0031-multi-instance-deployment.md).
-They ship in **v1.5.0** — until then, run a source build of `main` that
-includes ADR-0031. On v1.4.x these flags don't exist; use
-[single-host scaling](/deploy/scaling/) instead.
-:::
-
 The [single-command Compose stack](/deploy/production/) runs Flagpost on one
 box; [multi-worker](/deploy/scaling/) scales it across cores on that box.
 This page goes one step further: **N backend tasks across many hosts** on
