@@ -34,7 +34,16 @@ export const faq: FaqEntry[] = [
   {
     question: "Can I import my competition from CTFd?",
     answer:
-      "Yes. Flagpost bulk-imports and exports challenges in the ctfcli YAML format used by CTFd, so an existing challenge repository drops straight in. There is also a one-click, full-fidelity platform backup for exporting or importing an entire install.",
+      "Yes. Flagpost bulk-imports and exports challenges in the ctfcli YAML format used by CTFd, so an existing challenge repository drops straight in — including each challenge's live-service connection info, which round-trips faithfully. There is also a one-click, full-fidelity platform backup for exporting or importing an entire install.",
+  },
+  {
+    question: "Can I build a commercial module for Flagpost?",
+    answer:
+      "Yes. Flagpost is AGPL-3.0, but the Flagpost Module Exception lets a third-party module that plugs in solely through the documented module loader be licensed on its own terms — including proprietary ones — and deploying it over a network doesn't oblige you to release the module's source. The platform itself stays open source in full.",
+    link: {
+      href: "https://docs.flagpost.io/dev/modules/",
+      label: "Read about developing and licensing modules",
+    },
   },
   {
     question: "What do I need to self-host Flagpost?",
