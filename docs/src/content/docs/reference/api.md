@@ -24,18 +24,22 @@ the contracts that don't change.
 - **SSO** — `GET /api/auth/providers` lists the enabled redirect
   providers as `{slug, name, kind, brand}` (v1.3.0 — this **replaced**
   `GET /api/auth/oidc/providers`, a breaking change for integrations on
-  the old path; `brand`, added in v1.4.0, is `"google"` / `"microsoft"` /
-  `null`, derived server-side from the issuer so the login page can draw
-  the official button mark). `GET /api/auth/{kind}/{slug}/login` starts the redirect
-  flow for OIDC and SAML; OIDC completes at
-  `GET /api/auth/oidc/{slug}/callback`, SAML at
+  the old path). The provider `kind` set is now
+  `oidc | oauth2 | saml | ldap` — `oauth2` is new in v1.5.0. `brand`,
+  added in v1.4.0 and extended in v1.5.0, is `"google"` /
+  `"microsoft"` / `"github"` / `"discord"` / `null`, derived
+  server-side so the login page can draw the official button mark.
+  `GET /api/auth/{kind}/{slug}/login` starts the redirect
+  flow for OIDC, OAuth2 and SAML; OIDC completes at
+  `GET /api/auth/oidc/{slug}/callback`, OAuth2 at
+  `GET /api/auth/oauth2/{slug}/callback`, SAML at
   `POST /api/auth/saml/{slug}/acs`, with public SP metadata at
   `GET /api/auth/saml/{slug}/metadata`. LDAP has no endpoints of its own —
   `POST /api/auth/login` falls through to a directory bind after local
   password verification fails, behind the same rate limit. All paths issue
   the same session local login does; admin provider CRUD lives at
   `/api/admin/auth-providers` (`manage_auth_providers`), with the built-in
-  [preset catalogue](/admin/sso/#google--microsoft-presets) read-only at
+  [preset catalogue](/admin/sso/#built-in-presets) read-only at
   `GET /api/admin/auth-providers/presets` (v1.4.0). See
   [SSO & external identity](/admin/sso/).
 - **REST calls** send `Authorization: Bearer <access-token>`.
@@ -88,6 +92,18 @@ messages are rate-limited per user (60/hour organiser, 20/hour
 competitor, one answer in flight) — back off on 429s. The OpenAPI console
 remains the endpoint-level source of truth.
 
+v1.5.0 adds a few more domains. `GET /api/modules` returns the site-level
+optional-module catalogue (requires `create_competition`). Post-event
+[reports](/guides/reports/) live under `/api/competitions/{id}/reports`
+(all require `generate_report` and are module-gated), including
+`GET /{report_id}/download/{pdf|html}`, which **streams the file through
+the API** rather than handing back a presigned URL. Custom-page
+administration is CRUD under `/api/admin/pages` (requires `manage_pages`).
+Avatars have self-service `POST`/`DELETE /api/profile/avatar` for your own
+account, plus `DELETE /api/users/{id}/avatar` for moderators
+(`manage_users`); and competitors pull their own [certificates](/guides/certificates/)
+from `GET /api/me/certificates`.
+
 Flag submission is rate-limited per user/team with escalating backoff —
 build clients accordingly.
 
@@ -103,6 +119,9 @@ build clients accordingly.
 | `GET /api/public/competitions/{id}/insights` | Spectator stats, highlights and the top-10 points timeline (freeze-parity with the board) |
 | `GET /api/public/competitions/{id}/activity` | Recent awarded solves, newest first (capped at 25), each tagged `is_first_blood` — drives the [venue-mode](/guides/scoreboard/#venue--projector-mode) first-blood splash. Freeze-aware, same opt-in/404 gating as the scoreboard (v1.3.0) |
 | `GET /api/public/competitions/{id}/ctftime` | [CTFtime scoreboard feed](https://ctftime.org/json-scoreboard-feed) |
+| `GET /api/pages` | Custom-page nav entries (v1.5.0) — anonymous callers see public pages only; signed-in callers also see members-only pages |
+| `GET /api/pages/{slug}` | A single [custom page](/admin/pages/) (v1.5.0); hidden or draft pages fail closed to 404 |
+| `GET /api/users/{id}/avatar` | A user's avatar image (v1.5.0), immutable-cached with a `?v=<epoch>` cache-buster |
 
 ## WebSocket rooms
 

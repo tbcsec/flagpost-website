@@ -10,21 +10,31 @@ each fully isolated from the others.
 ## Creating a competition
 
 Creating a competition requires the global `create_competition` permission
-(Administrator by default). Pick a name and a **participation mode**:
+(Administrator by default). The create dialog is a short onboarding flow
+rather than a bare name field — it captures enough to make the event usable
+without a detour into settings:
 
-- **Team** — competitors form teams; scoring, ranks, and collab notes are
-  per-team.
-- **Individual** — every account competes alone; the roster lives on the
-  Participants page.
+- **Name and participation mode** — **Team** (competitors form teams;
+  scoring, ranks and collab notes are per-team) or **Individual** (every
+  account competes alone; the roster lives on the Participants page). The
+  mode is not switchable mid-event, so decide before opening registration.
+- **Visibility** — public (appears in the lobby) or private (invite code
+  only).
+- **Public scoreboard** — the spectator-board opt-in, up front.
+- **Schedule** — optional start and end times (UTC).
+- **Modules** — which [optional modules](#modules) to run. All optional
+  modules are **on by default**; you tick the ones to *disable*. The picker
+  is fed by the site-level module catalogue (`GET /api/modules`), so it
+  works before the competition exists.
 
-The mode is a per-competition choice — one install can run both kinds at the
-same time. It is not switchable mid-event, so decide before opening
-registration.
+Everything here is editable afterwards from Settings — the dialog is a head
+start, not a lock-in.
 
 ## Settings
 
-Competition Settings is tabbed: **General**, **Schedule**, **Challenges**,
-and **Modules**.
+Competition Settings is tabbed: **General**, **Controls**, **Challenges**,
+**Rules**, **Modules**, and — when their optional modules are enabled —
+**Assistant** and **Certificates**.
 
 ### General
 
@@ -51,17 +61,45 @@ and **Modules**.
   acceptance before joining (`competition.rules_accepted` gives you the
   audit trail).
 
-### Schedule
+### Controls — status and schedule
 
-Start and end times. The scheduler emits `competition.started` and
-`competition.ended` events when the clock crosses them — both usable as
-[automation triggers](/guides/automations/) (for example, *on end → freeze
-the scoreboard and open the feedback survey*).
+Every competition carries an explicit **status** — **Not started → Running
+→ Ended** — and that status is **the gameplay gate**. New competitions
+start **Not started**.
 
-**Pause** is separate from scheduling: while paused, flag submission returns
-403 for competitors (staff with `challenge_edit` bypass it, so you can test
-during the pause). A banner tells competitors the competition is paused.
-Pausing is *not* a scoreboard freeze — see
+- **Play** (viewing and opening challenges, submitting flags) is open only
+  while **Running**. Before it starts, competitors see an empty challenge
+  page; after it ends, play closes but results stay readable.
+- **Results** (the scoreboard and the dashboard solve ticker) open at start
+  and **stay readable after the end** as a final, read-only board.
+- Staff holding `challenge_edit` **bypass** the gate in both directions — so
+  you can build challenges before the doors open and review them after they
+  close (the same bypass **pause**, below, uses).
+
+Joining and registration are **not** gated by status — competitors can
+register while the competition is still Not started, ready for the off.
+
+**Run-day controls.** The **Controls** tab has **Start competition** and
+**Stop competition** buttons, gated on `manage_schedule`. A manual action
+is **authoritative**: once you Start or Stop by hand, the scheduler won't
+overturn it (a still-scheduled `end_at`, for instance, won't auto-close a
+competition you manually re-started).
+
+**The schedule drives status.** Set start and end times (UTC) on the same
+tab and the scheduler transitions the competition automatically — to
+Running at `start_at` (if still Not started) and to Ended at `end_at`. This
+is a change from earlier releases, where the schedule was purely
+informational: a scheduled competition now genuinely opens and closes play
+on the clock. `competition.started` and `competition.ended` fire once each
+over the competition's lifetime — the first time it starts or ends, manual
+or scheduled — so [automations](/guides/automations/) hung off them
+(*on end → freeze the scoreboard and open the feedback survey*) never
+double-run when you flip status back and forth.
+
+**Pause** is a separate, orthogonal axis — not part of status. While
+paused, flag submission returns 403 for competitors (staff with
+`challenge_edit` bypass it, so you can test during the pause) and a banner
+says so. Pausing is *not* a scoreboard freeze — see
 [Scoreboard](/guides/scoreboard/#freezing-the-board) for the difference.
 
 ### Challenges
@@ -74,17 +112,18 @@ unlimited), and the **challenge ratings** toggle. Details in
 
 ### Modules
 
-Optional modules — **Automations**, **Feedback**, **Analytics**, and
-(since v1.4.0) **[AI Assistants](/admin/ai/)**, which additionally sits
-behind a site-wide master switch — can be switched off for this
-competition. Since v1.4.0 the Modules tab and toggles require the
-competition-scoped `manage_modules` permission (previously part of
-`edit_competition`); built-in Judge and Administrator gained it
-automatically via the startup role re-sync, custom roles need it granted.
-Required-core modules are listed but locked on. Disabling a module
-removes its navigation entries and 404s its API for this competition;
-disabling Automations also stops *global* rules firing for this
-competition's events.
+Six optional modules can be switched off for this competition:
+**Automations**, **Feedback**, **Analytics**, **[AI Assistants](/admin/ai/)**
+(which additionally sits behind a site-wide master switch),
+**[Certificates](/guides/certificates/)**, and
+**[Post-event reports](/guides/reports/)**. Certificates and reports both
+need [object storage](/deploy/production/#attachments-and-minio_public_endpoint).
+The Modules tab and toggles require the competition-scoped `manage_modules`
+permission (previously part of `edit_competition`); built-in Judge and
+Administrator hold it. Required-core modules are listed but locked on.
+Disabling a module removes its navigation entries and 404s its API for
+this competition; disabling Automations also stops *global* rules firing
+for this competition's events.
 
 ## Lifecycle operations
 

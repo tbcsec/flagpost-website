@@ -22,6 +22,7 @@ backend/plugins/scorefeed/
 id: scorefeed
 name: Score Feed
 version: 1.0.0
+description: Streams solves to a live scores feed.   # optional, v1.5.0
 required_core: false      # false ⇒ per-competition toggleable
 provides:
   routes: true
@@ -31,10 +32,12 @@ dependencies:
   - scoring
 ```
 
-Required fields: `id`, `name`, `version`. The loader validates the manifest,
-**topologically orders modules by `dependencies`**, and fails fast on a
-missing dependency, duplicate id, or dependency cycle — a competition never
-ends up half-configured.
+Required fields: `id`, `name`, `version`. Optional since v1.5.0:
+`description`, a one-line human-readable summary surfaced by
+`GET /api/modules` and the at-creation module picker. The loader validates
+the manifest, **topologically orders modules by `dependencies`**, and fails
+fast on a missing dependency, duplicate id, or dependency cycle — a
+competition never ends up half-configured.
 
 ### The setup entry point
 
@@ -124,3 +127,17 @@ TanStack Query hook module under `src/lib/hooks/`, components under a domain
 directory, design-system tokens only. Navigation entries for optional
 modules carry a module tag so the shell can hide them when the module is
 disabled for the active competition.
+
+## Licensing your module
+
+Flagpost is AGPL-3.0, but the **Flagpost Module Exception** (v1.0, the
+[`MODULE-EXCEPTION`](https://github.com/tbcsec/flagpost/blob/main/MODULE-EXCEPTION)
+file at the repo root) grants an additional permission under
+[AGPL-3.0 §7](https://www.gnu.org/licenses/agpl-3.0.en.html#section7): a
+third-party module that extends Flagpost **solely through the loader
+contract** — a `plugin.yaml` plus a `setup(app, event_bus, db_factory)`
+entry point, invoked at runtime without modifying, patching, or embedding
+the Program — may be licensed on its own terms, **including proprietary
+ones**. Deploying such a module over a network does not oblige the operator
+to release the module's source. The Program itself stays AGPL-3.0 in full;
+the moment a module modifies or embeds it, the exception no longer applies.

@@ -3,27 +3,31 @@ title: Single sign-on & external identity
 description: Bring your own identity — OIDC/OAuth2, SAML 2.0, or an LDAP/Active Directory bind — on one provider framework, with local login surviving as break-glass.
 ---
 
-Flagpost supports three kinds of external identity provider, all managed on
+Flagpost supports four kinds of external identity provider, all managed on
 one framework:
 
 | Kind | How users sign in | Typical IdPs |
 | --- | --- | --- |
-| **OIDC / OAuth2** (v1.2.0) | A button on the login page redirects to the IdP | Google, Okta, Keycloak, Microsoft Entra — anything with an OIDC discovery document |
-| **SAML 2.0** (v1.3.0) | A button on the login page redirects to the IdP | Shibboleth, ADFS, Entra, Okta — campus and enterprise IdPs |
-| **LDAP / Active Directory** (v1.3.0) | No button — directory credentials go straight into the ordinary login form | Active Directory, OpenLDAP, FreeIPA |
+| **OIDC** | A button on the login page redirects to the IdP | Google, Okta, Keycloak, Microsoft Entra — anything with an OIDC discovery document |
+| **OAuth2** | A button on the login page redirects to the IdP | GitHub, Discord — OAuth 2.0 servers that aren't OpenID Connect |
+| **SAML 2.0** | A button on the login page redirects to the IdP | Shibboleth, ADFS, Entra, Okta — campus and enterprise IdPs |
+| **LDAP / Active Directory** | No button — directory credentials go straight into the ordinary login form | Active Directory, OpenLDAP, FreeIPA |
 
-OIDC and SAML are *redirect* kinds; LDAP is a directory *bind* inside the
-normal login request, so it never grows a dead button. Any mix of providers
-can be enabled at once. The design is recorded in
+OIDC, OAuth2 and SAML are *redirect* kinds; LDAP is a directory *bind*
+inside the normal login request, so it never grows a dead button. Any mix
+of providers can be enabled at once. The design is recorded in
 [ADR-0021](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0021-oidc-identity-provider-framework.md)
-(the OIDC framework) and
+(the OIDC framework),
 [ADR-0022](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0022-saml-ldap-identity-providers.md)
-(its generalization to SAML and LDAP).
+(SAML and LDAP) and
+[ADR-0033](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0033-generic-oauth2-provider-kind.md)
+(the generic OAuth2 kind).
 
-This page covers what's common to every kind, and OIDC specifics. The two
+This page covers what's common to every kind, and OIDC specifics. The three
 config-heavier kinds have their own walkthroughs:
-**[SAML 2.0 setup](/admin/saml/)** and
-**[LDAP / Active Directory setup](/admin/ldap/)**.
+**[SAML 2.0 setup](/admin/saml/)**,
+**[LDAP / Active Directory setup](/admin/ldap/)** and
+**[OAuth2 sign-in](/admin/oauth2/)**.
 
 ## Adding a provider
 
@@ -32,13 +36,13 @@ dedicated global permission `manage_auth_providers` — deliberately separate
 from `manage_site_settings`, because this surface decides who can log in at
 all. Every provider, whatever its kind, has:
 
-- **A kind**, fixed at creation — OIDC, SAML 2.0, or LDAP.
+- **A kind**, fixed at creation — OIDC, OAuth2, SAML 2.0, or LDAP.
 - **A name and a URL-safe slug** — the name labels the login button (for
   redirect kinds); the slug is part of the provider's URLs.
 - **One write-only secret**, stored **encrypted, not hashed**
   ([ADR-0020](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0020-secret-storage-encrypt-vs-hash.md)):
-  the OIDC client secret, the SAML SP private key, or the LDAP bind
-  password. Reads only reveal *that* a secret is set, never the value.
+  the OIDC or OAuth2 client secret, the SAML SP private key, or the LDAP
+  bind password. Reads only reveal *that* a secret is set, never the value.
 - **Kind-specific configuration, validated on write** — a provider can't be
   switched on half-configured (an LDAP provider, for example, refuses to
   enable without its bind password).
@@ -59,8 +63,8 @@ able to sign in at the IdP, by itself, permission to have an account here?*
   email-matches to existing accounts, are never blocked.
 - **Closed** — an admin-configured directory: **enabling the provider is
   the admission decision**, so the signup gate is skipped. SAML and LDAP
-  providers are always closed (the API enforces it); OIDC providers choose,
-  defaulting to open.
+  providers are always closed (the API enforces it); OIDC and OAuth2
+  providers choose, defaulting to open.
 
 Closed providers have one extra switch, **email is authoritative** (off by
 default): a directory's `mail` attribute or a SAML email attribute is
@@ -84,31 +88,44 @@ Register the redirect URI at your IdP as:
 https://<your-domain>/api/auth/oidc/<slug>/callback
 ```
 
-### Google & Microsoft presets
+### Built-in presets
 
-Since **v1.4.0**, the Auth tab carries **Quick set up** cards for Google
-and Microsoft that prefill the ordinary provider form — issuer, scopes,
-name, slug, posture — leaving only the per-install pieces
+The Auth tab carries **Quick set up** cards that prefill the ordinary
+provider form — issuer/endpoints, scopes, name, slug, posture — leaving
+only the per-install pieces
 ([ADR-0024](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0024-builtin-sso-provider-presets.md):
 presets ship **configuration, never credentials**). You still register
 your own app at the IdP (the cards link to the right console), paste the
-client ID and secret, and register the same redirect URI as above —
-nothing about the callback changes, and everything prefilled is editable
-before saving.
+client ID and secret, and register the redirect URI — nothing about the
+callback changes, and everything prefilled is editable before saving.
 
-- **Google** — one click: issuer `https://accounts.google.com`, open
-  posture.
-- **Microsoft** — **single-tenant Entra only**: enter your Directory
-  (tenant) ID first, as the **GUID**, not a domain name — Entra's
-  discovery document advertises the GUID-form issuer (it's lowercased
-  automatically so an uppercase portal paste can't save fine and fail at
-  first sign-in). The preset defaults to a **closed** posture — tenant
-  membership is the admission decision — which you can flip. Multi-tenant
-  (`common`) Entra is deliberately not supported.
+- **Google** (OIDC) — one click: issuer `https://accounts.google.com`,
+  open posture.
+- **Microsoft** (OIDC, single-tenant) — enter your Directory (tenant) ID
+  first, as the **GUID**, not a domain name (it's lowercased automatically
+  so an uppercase portal paste can't save fine and fail at first sign-in).
+  Defaults to a **closed** posture — tenant membership is the admission
+  decision — which you can flip.
+- **Microsoft (multi-tenant)** (OIDC) — "sign in with any Microsoft
+  account", for the `common`/`organizations` Entra authorities
+  ([ADR-0032](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0032-multi-tenant-entra-issuer-validation.md)).
+  No tenant to enter; the issuer is validated per-login against the token's
+  own tenant. Defaults to **open** posture — see the caution below.
+- **GitHub** and **Discord** (OAuth2) — one-click presets covered on the
+  [OAuth2 page](/admin/oauth2/#presets).
 
-Login buttons for Google and Microsoft providers carry the official brand
-mark, recognised from the configured issuer — including providers you
-configured by hand before v1.4.0.
+:::caution[Multi-tenant Microsoft admits every Entra tenant]
+The multi-tenant preset trusts every Microsoft Entra tenant on Earth for
+*authentication* — that's what `common` means. It is correctly **open**
+posture, so **admission is controlled by the [registration toggle and
+email-domain allowlist](/admin/site-settings/#registration)**, never by the
+tenant claim. Relying on the tenant id to gate access would admit the
+entire Microsoft consumer population.
+:::
+
+Login buttons for Google, Microsoft, GitHub and Discord providers carry the
+official brand mark, recognised from the configured issuer or authorize
+endpoint — including providers you configured by hand.
 
 The flow is the standard authorization-code flow with **PKCE, `state`, and
 `nonce` mandatory**; the callback validates the ID token's signature (via
@@ -126,8 +143,8 @@ this is the first thing to check when SSO "doesn't work". See the
 
 ## How a login resolves
 
-However the identity arrives — OIDC callback, SAML assertion, or LDAP
-bind — it resolves in the same order:
+However the identity arrives — OIDC callback, OAuth2 userinfo, SAML
+assertion, or LDAP bind — it resolves in the same order:
 
 1. **Known identity** — the provider + subject pair matches an existing
    link → that user signs in.
@@ -166,6 +183,9 @@ emits `identity.linked` / `.unlinked` — all in the
 ## For API consumers
 
 The login page reads `GET /api/auth/providers`, which lists enabled
-redirect-kind providers as `{slug, name, kind}` — this **replaced
-`GET /api/auth/oidc/providers` in v1.3.0**, and admin provider CRUD moved
-to `/api/admin/auth-providers`. See the [API reference](/reference/api/).
+redirect-kind providers as `{slug, name, kind, brand}` — `kind` is now one
+of `oidc`, `oauth2` or `saml`, and `brand` is `google` / `microsoft` /
+`github` / `discord` / `null` for the login button's mark. This
+**replaced `GET /api/auth/oidc/providers` in v1.3.0**, and admin provider
+CRUD lives at `/api/admin/auth-providers`. See the
+[API reference](/reference/api/).

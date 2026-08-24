@@ -39,7 +39,8 @@ inside, attachment files alongside it.
 | `hints` | Hints (with costs) |
 | `files` | Attachment file references within the zip |
 | `state` | Visible/hidden state |
-| `requirements` | Prerequisites, referenced **by challenge title** and resolved in a second pass after all challenges import |
+| `connection_info` | Where the live service lives — a URL, `host:port`, or short instructions. A **top-level** key (not under `extra`), mirroring the ctfcli/CTFd spec verbatim, so a real `challenge.yml` round-trips. Optional, free-form; import coerces it to a string and clamps to 500 characters |
+| `prerequisites` | Prerequisites, referenced **by challenge title** and resolved in a second pass after all challenges import |
 
 ## Semantics worth knowing
 

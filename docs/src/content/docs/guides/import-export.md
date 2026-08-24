@@ -21,6 +21,9 @@ straight in.
   unioned into the competition vocabulary, hints/files/state come along, and
   prerequisites are resolved by title in a second pass. Static flags supplied
   in the YAML are hashed on the way in, so authoring → import is lossless.
+  The top-level `connection_info` key (a challenge's live-service address)
+  now round-trips with real ctfcli/CTFd bundles too — it was dropped on
+  import before v1.5.0, a data-loss fix for CTFd migrators.
 
 Field-by-field details: [ctfcli YAML format](/reference/ctfcli/).
 

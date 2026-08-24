@@ -124,6 +124,22 @@ effects are events like any other mutation's.
 | `survey.opened` | `competition_id`, `survey_id`, `title` | `challenge_view` |
 | `survey.submitted` | `competition_id`, `user_id`, `survey_id`, `response_id` | `feedback_view_responses` |
 
+## Certificates & reports
+
+From the optional [certificates](/guides/certificates/) and
+[reports](/guides/reports/) modules.
+
+| Event | Payload fields | Trigger permission |
+| --- | --- | --- |
+| `certificate.template_updated` | `competition_id`, `certificate_template_id` | `manage_certificates` |
+| `certificate.released` | `competition_id`, `certificate_template_id` | `challenge_view` |
+| `report.generated` | `competition_id`, `report_id`, `version`, `user_id` | `generate_report` |
+
+`certificate.released` is gated at `challenge_view` — the member-visible
+baseline — because every participant receives a certificate; a common rule
+is *on `certificate.released` → notify*. `report.generated` fires once the
+async render of a [post-event report](/guides/reports/) completes.
+
 ## Users & roles (site-wide)
 
 | Event | Payload fields | Trigger permission |
@@ -136,6 +152,9 @@ effects are events like any other mutation's.
 | `user.deleted` | `user_id`, `actor_user_id` | `manage_users` |
 | `user.password_changed` | common | `manage_users` |
 | `user.email_verified` | `user_id` | `manage_users` |
+| `user.renamed` | `user_id`, `old_name`, `new_name`, `actor_user_id` | `manage_users` |
+| `user.avatar_updated` | `user_id`, `actor_user_id` | `manage_users` |
+| `user.avatar_removed` | `user_id`, `actor_user_id` | `manage_users` |
 | `identity.linked` / `identity.unlinked` | `user_id`, `provider_id`, `provider_slug` | `manage_users` |
 | `api_token.created` | `api_token_id`, `user_id`, `created_by_user_id` | `manage_api_tokens` |
 | `api_token.revoked` | `api_token_id`, `user_id` | `manage_api_tokens` |
@@ -149,12 +168,15 @@ These are governed by **global** admin permissions — a competition-scoped
 role can never automate on them. `identity.*` records an external
 [identity](/admin/sso/) — OIDC, SAML, or LDAP — being attached to or
 detached from a local account; `auth_provider.*` records provider
-configuration changes (`kind` is the provider protocol: `oidc`, `saml`,
-or `ldap`). `users.imported` (v1.4.0) is the [mass CSV
+configuration changes (`kind` is the provider protocol: `oidc`, `oauth2`,
+`saml`, or `ldap`). `users.imported` is the [mass CSV
 import](/admin/users-roles/)'s single summary event — bulk creation
 deliberately doesn't flood `user.created` per row, though each role grant
 in the file still emits its own `role.assigned`; `user_id` is the
-importing admin.
+importing admin. `user.renamed` carries both `old_name` and `new_name` —
+it is the **only** record of a prior username, since every other surface
+renames retroactively; `actor_user_id` distinguishes a self-service change
+from an admin rename.
 
 ## AI assistants
 
@@ -174,6 +196,14 @@ Usage metadata only — message content never rides an event.
 | --- | --- | --- |
 | `site.settings_updated` | *(site-wide — no `competition_id`)* | `manage_site_settings` |
 | `module.enabled` / `module.disabled` | common | `edit_competition` |
+| `page.created` / `page.deleted` | `page_id`, `slug`, `actor_user_id` | `manage_pages` |
+| `page.updated` | `page_id`, `slug`, `fields`, `actor_user_id` | `manage_pages` |
+
+`page.*` records [custom-page](/admin/pages/) authoring — site-level, so
+no `competition_id`; `fields` on an update is the list of changed field
+names, and no payload ever carries the page body. Governed by
+`manage_pages` so a Judge can't automate on — and thereby observe —
+unpublished page changes.
 
 ## Friendly companion fields
 

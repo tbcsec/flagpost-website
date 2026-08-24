@@ -22,9 +22,12 @@ already uses.
 - Your challenge repo is already ctfcli-format? Zip the challenge
   directories and import (Manage challenges → Import). Titles, categories,
   descriptions, point values, dynamic-decay settings, static and regex
-  flags, hints, attachment files, tags, difficulty, visibility state, and
-  title-referenced prerequisites all come across; categories are created
-  and tags join the competition vocabulary automatically.
+  flags, hints, attachment files, tags, difficulty, visibility state,
+  title-referenced prerequisites, and a challenge's `connection_info`
+  (its live-service address) all come across; categories are created and
+  tags join the competition vocabulary automatically. As of v1.5.0
+  `connection_info` round-trips through ctfcli import — before that it was
+  silently dropped.
 - Challenges only live inside a CTFd instance? Pull them out with
   [ctfcli](https://github.com/CTFd/ctfcli) first (`ctf challenge pull`),
   then zip and import.
@@ -98,6 +101,12 @@ there's no honest way to translate another platform's scoring history into
 Flagpost's event-sourced records. Keep the old instance around read-only
 (or export its data to cold storage) if you need the archive; start the
 new era clean.
+
+CTFd's custom pages don't carry over as raw markup either. Flagpost has
+its own [custom pages](/admin/pages/), but they're **structured rich
+text** — a deliberate security stance — not the raw HTML/CSS/script CTFd
+lets you paste, so recreate any custom pages in the editor rather than
+expecting a copy-paste import.
 
 ## 5. Cutover checklist
 

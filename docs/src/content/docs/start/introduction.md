@@ -27,6 +27,10 @@ free to run, and designed to be operated on your own infrastructure.
   managed tags and difficulty; per-competition guess caps.
 - **A scoreboard done right.** First blood, brackets/divisions, a freeze for
   the final stretch, a public spectator board, and a CTFtime feed.
+- **Recognition and wrap-up.** Shareable [certificates](/guides/certificates/)
+  for participants and post-event [reports](/guides/reports/) for organisers.
+- **Speaks four languages.** The interface ships in
+  [four languages](/guides/languages/), switchable per device.
 - **CTFd-compatible and portable.** Bulk challenge import/export in the ctfcli
   YAML format, plus a full-fidelity platform backup.
 - **Bring your own identity provider.** OIDC/OAuth2, SAML 2.0, and

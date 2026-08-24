@@ -67,6 +67,11 @@ ESLint:
    components (ESLint-enforced, brand mark excepted).
 6. **New backend features register through the module loader** — see
    [Developing modules](/dev/modules/).
+7. **Every new frontend page/surface is "born extracted"** — its
+   user-facing strings go into `frontend/messages/en.json` via `t()` from
+   the first commit (that file is Crowdin's translation source), or
+   they're invisible to translators. See
+   [Interface languages](/guides/languages/).
 
 ## Bugs, features, and questions
 

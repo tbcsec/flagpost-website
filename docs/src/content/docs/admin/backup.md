@@ -12,7 +12,10 @@ sections you pick per operation.
 Choose any combination of sections:
 
 `site_settings` · `users` · `roles` · `competitions` · `automations` ·
-`audit_log`
+`audit_log` · `pages`
+
+[Custom pages](/admin/pages/) travel in the backup too (the `pages`
+section, v1.5.0), matched by `slug` on an additive restore.
 
 The export is **complete for what it covers** — including password hashes
 and flag hashes — because a backup that can't actually restore your
@@ -36,19 +39,22 @@ graph.
 
 Deliberately excluded: active login sessions, in-app notifications,
 collaborative-note snapshots, personal dashboard layouts, division
-memberships, AI assistant conversations and transcripts (v1.4.0) —
-transient or per-subject state that doesn't belong in a portable backup —
-and the encrypted-at-rest credentials above (SSO providers with their
-secrets; since v1.3.0 also the SMTP password, and since v1.4.0 the AI
-provider key), which are install-specific and re-entered on new
-infrastructure.
+memberships, AI assistant conversations and transcripts (v1.4.0),
+generated [post-event report](/guides/reports/) files (v1.5.0) —
+transient or per-subject state that doesn't belong in a portable backup;
+the report files in particular are transient artefacts cleaned up by
+retention or deletion, so they're never bundled — and the
+encrypted-at-rest credentials above (SSO providers with their secrets;
+since v1.3.0 also the SMTP password, and since v1.4.0 the AI provider
+key), which are install-specific and re-entered on new infrastructure.
 
 ## Importing
 
 Import is **additive — it creates, never modifies or deletes**:
 
 - Top-level entities are skipped if they already exist, matched by natural
-  key: users by username/email, roles and competitions by name.
+  key: users by username/email, roles and competitions by name, custom
+  pages by `slug`.
 - A **competition is atomic** — if its name exists, its whole subtree is
   skipped; otherwise everything under it imports together.
 - Fresh IDs are minted and every reference is rewritten through ID maps;

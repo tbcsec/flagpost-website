@@ -22,6 +22,7 @@ truth.
 | `delete_competition` | Competition Management | competition |
 | `manage_schedule` | Competition Management | competition |
 | `manage_modules` | Competition Management | competition |
+| `generate_report` | Competition Management | competition |
 | `challenge_view` | Challenges | competition |
 | `challenge_create` | Challenges | competition |
 | `challenge_edit` | Challenges | competition |
@@ -41,6 +42,7 @@ truth.
 | `feedback_manage` | Feedback | competition |
 | `feedback_view_responses` | Feedback | competition |
 | `feedback_submit` | Feedback | competition |
+| `manage_certificates` | Certificates | competition |
 | `manage_users` | Users & Roles | global |
 | `manage_roles` | Users & Roles | global |
 | `view_all_users` | Users & Roles | global |
@@ -48,6 +50,7 @@ truth.
 | `manage_site_settings` | Site Settings | global |
 | `manage_auth_providers` | Site Settings | global |
 | `manage_ai` | Site Settings | global |
+| `manage_pages` | Site Settings | global |
 | `ai_view_transcripts` | AI Assistants | competition |
 | `view_competition_analytics` | Analytics | competition |
 | `view_global_analytics` | Analytics | global |
@@ -67,15 +70,16 @@ truth.
 competition:
 
 `edit_competition` · `manage_schedule` · `manage_modules` ·
-`challenge_view` · `challenge_create` · `challenge_edit` ·
-`challenge_delete` · `challenge_publish` · `score_override` ·
-`scoreboard_freeze` · `team_view_all` · `team_edit_any` ·
-`team_disqualify` · `ticket_view` · `ticket_respond` · `ticket_assign` ·
-`ticket_view_internal_notes` · `announcement_create` ·
+`generate_report` · `challenge_view` · `challenge_create` ·
+`challenge_edit` · `challenge_delete` · `challenge_publish` ·
+`score_override` · `scoreboard_freeze` · `team_view_all` ·
+`team_edit_any` · `team_disqualify` · `ticket_view` · `ticket_respond` ·
+`ticket_assign` · `ticket_view_internal_notes` · `announcement_create` ·
 `announcement_delete` · `feedback_manage` · `feedback_view_responses` ·
-`feedback_submit` · `view_competition_analytics` · `view_submissions` ·
-`ai_view_transcripts` · `customize_dashboard` · `automation_view` ·
-`automation_create` · `automation_edit`
+`feedback_submit` · `manage_certificates` ·
+`view_competition_analytics` · `view_submissions` · `ai_view_transcripts` ·
+`customize_dashboard` · `automation_view` · `automation_create` ·
+`automation_edit`
 
 **Participant** (competition) — competitor-facing only:
 

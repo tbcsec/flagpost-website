@@ -32,6 +32,16 @@ export SECRET_ENCRYPTION_KEY="$(python3 -c 'from cryptography.fernet import Fern
 .venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
+:::note[Reports need WeasyPrint's system libraries]
+Generating [post-event reports](/guides/reports/) renders PDFs through
+WeasyPrint, which relies on native libraries the pip install won't pull
+in — install them at the OS level (Debian/Ubuntu package names shown):
+`libpango-1.0-0`, `libpangoft2-1.0-0`, `libcairo2`,
+`libgdk-pixbuf-2.0-0`, and `shared-mime-info`, plus a DejaVu font as a
+fallback face. The official Docker image already bundles all of these; a
+source or native install must add them before reports will render.
+:::
+
 A single process (the default) needs nothing extra — just no `--reload`.
 Since **v1.4.0** [multi-worker uvicorn on one host](/deploy/scaling/) is
 supported, with three things mandatory:

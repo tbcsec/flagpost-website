@@ -22,8 +22,8 @@ const SITE = "https://docs.flagpost.io";
 
 const SECTIONS = [
   ["Start here", ["start/introduction", "start/quick-start", "start/concepts", "start/switching", "start/flagpost-vs-ctfd"]],
-  ["Running competitions", ["guides/host-a-ctf", "guides/competitions", "guides/challenges", "guides/teams", "guides/scoreboard", "guides/dashboard", "guides/automations", "guides/support", "guides/feedback", "guides/import-export"]],
-  ["Administration", ["admin/setup", "admin/users-roles", "admin/sso", "admin/saml", "admin/ldap", "admin/ai", "admin/site-settings", "admin/backup", "admin/audit-log"]],
+  ["Running competitions", ["guides/host-a-ctf", "guides/competitions", "guides/challenges", "guides/teams", "guides/scoreboard", "guides/dashboard", "guides/automations", "guides/support", "guides/feedback", "guides/certificates", "guides/reports", "guides/languages", "guides/import-export"]],
+  ["Administration", ["admin/setup", "admin/users-roles", "admin/sso", "admin/saml", "admin/ldap", "admin/oauth2", "admin/ai", "admin/pages", "admin/site-settings", "admin/backup", "admin/audit-log"]],
   ["Deployment", ["deploy/production", "deploy/scaling", "deploy/fargate", "deploy/upgrades", "deploy/configuration", "deploy/without-docker", "deploy/stack", "deploy/security"]],
   ["Reference", ["reference/events", "reference/automations", "reference/permissions", "reference/ctfcli", "reference/api"]],
   ["Development", ["dev/local", "dev/architecture", "dev/modules", "dev/events", "dev/testing", "dev/adrs"]],

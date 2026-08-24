@@ -16,15 +16,19 @@ itself. Everything else is built on these.
 
 **Required core** — what makes the platform a CTF tool at all: challenges,
 scoring/scoreboard, hints, tickets, announcements, notifications, dashboard,
-collab notes, users, roles, SSO, setup, site settings, audit log, teams, and
-the competitions module itself — sixteen modules. Organised as modules
-(same registration path as everything else) but not user-toggleable.
+collab notes, users, roles, SSO, setup, site settings, audit log, teams,
+[custom pages](/admin/pages/), and the competitions module itself —
+seventeen modules. Organised as modules (same registration path as
+everything else) but not user-toggleable. Custom pages is required-core
+with no toggle because content is the on/off switch — an install with no
+pages renders no sidebar section.
 
-**Optional modules** — currently **Automations**, **Feedback**,
-**Analytics**, and **AI Assistants** (v1.4.0): toggleable per
-competition. The AI module is the odd one out — even when enabled for a
-competition it ships inert behind a site master switch
-(`ai_settings.enabled`, default off; ADR-0023). Marketplace /
+**Optional modules** — six of them: **Automations**, **Feedback**,
+**Analytics**, **AI Assistants**, **Certificates**, and **Post-event
+reports**: toggleable per competition. Twenty-three modules in all. The AI
+module is the odd one out — even when enabled for a competition it ships
+inert behind a site master switch (`ai_settings.enabled`, default off;
+ADR-0023). Marketplace /
 third-party modules are a future concern with an explicit sandboxing
 question to answer first — today's module system runs trusted, in-repo code.
 

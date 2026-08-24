@@ -86,8 +86,14 @@ event is spectated or rated.
 
 ## 7. Game day
 
-- The schedule runs itself: `competition.started` fires, challenges release
-  in their waves, automations do the announcing.
+- **Start the competition.** A competition begins as *Not started*, and
+  **that status is the gate** — until it's running, competitors see an
+  empty challenge page. If you set a start time, the scheduler opens the
+  doors on the clock; otherwise hit **Start competition** on the
+  [Controls tab](/guides/competitions/#controls--status-and-schedule). (This
+  is the single most-missed step of the day.)
+- Then the schedule runs itself: `competition.started` fires, challenges
+  release in their waves, automations do the announcing.
 - Staff live in the dashboard and ticket queue; presence shows who's
   looking at what.
 - **Pause** halts submissions if something breaks;
@@ -100,10 +106,20 @@ event is spectated or rated.
 
 ## 8. Afterwards
 
-The [survey](/guides/feedback/) you scheduled at T-60 is already
-collecting; post-solve ratings tell you which challenges landed. Export
-results and analytics for the retro, [archive](/guides/competitions/#lifecycle-operations)
-the competition (retention policy permitting), and
+**Stop the competition** (or let `end_at` do it) — play closes, the board
+stays readable as a final result. Then wrap up:
+
+- **[Certificates](/guides/certificates/)** — release the template you
+  designed; every participant downloads theirs from Profile → Certificates,
+  or export them all as a ZIP.
+- **[Post-event report](/guides/reports/)** — once the competition has
+  ended, generate a branded PDF/HTML wrap-up for your sponsors and retro.
+- The [survey](/guides/feedback/) you scheduled at T-60 is already
+  collecting; post-solve ratings tell you which challenges landed.
+
+Export results and analytics for the retro,
+[archive](/guides/competitions/#lifecycle-operations) the competition
+(retention policy permitting), and
 [clone](/guides/competitions/#lifecycle-operations) it as the starting
 point for next year — the second run is always easier.
 

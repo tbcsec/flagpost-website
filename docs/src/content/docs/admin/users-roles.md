@@ -12,7 +12,7 @@ role assignment still works for email-less accounts because Admin → Roles
 resolves people by username or email.
 
 Accounts can also arrive via **[external identity](/admin/sso/)** — OIDC,
-SAML, or LDAP. On first contact the identity links to an existing local
+OAuth2, SAML, or LDAP. On first contact the identity links to an existing local
 account only when its email claim is trusted (a verified email from an
 open provider, or the admin's *email is authoritative* opt-in on a closed
 directory); otherwise a user is created just-in-time holding **no role** —
@@ -28,6 +28,16 @@ Self-service account management, from **/profile** and the login screen:
 - **Email add / change / clear** — users manage their own address; if
   [email verification](/admin/site-settings/#registration) is enabled, a
   changed address must be re-verified (emits `user.email_verified`).
+- **Username change** — since the username is the primary login handle
+  ([ADR-0015](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0015-username-primary-optional-email.md)),
+  a self-service change asks for the current password and is **rate-limited
+  with a 30-day cooldown** (a fixing of case — `alice` → `Alice` — is
+  allowed). Sessions are **not** revoked: identity keys on the immutable
+  user id, so a rename invalidates nothing and login simply follows the new
+  handle. Emits `user.renamed`.
+- **Profile picture** — a self-service avatar upload (see the
+  [directory](#the-user-directory-admin--users) for the hardening and admin
+  removal).
 - **Personal API tokens** — self-minted, `flp_`-prefixed tokens for
   programmatic access; see the [API reference](/reference/api/#personal-api-tokens).
   Administrators holding `manage_api_tokens` can list **every** token on the
@@ -43,13 +53,26 @@ Self-service account management, from **/profile** and the login screen:
 - **Ban / unban** — a soft ban: the account stays (with its history), but
   live tokens stop working immediately, login is refused, and active
   sessions are revoked. Unban restores access.
+- **Rename** — an admin can change any user's username; the rename stamps
+  the same 30-day cooldown (so a moderation rename can't immediately be
+  reverted by the user) while bypassing the check itself.
+- **Remove a profile picture** — moderation for an inappropriate avatar,
+  under the existing `manage_users` grant (no separate permission).
 - **Delete** — permanent removal.
 
 Two guards protect every install: you cannot ban or delete **yourself**, or
 the **last active Administrator**.
 
 All of it is evented (`user.created`, `.updated`, `.banned`, `.unbanned`,
-`.deleted`) into the [audit log](/admin/audit-log/).
+`.deleted`, `.renamed`, `.avatar_updated`, `.avatar_removed`) into the
+[audit log](/admin/audit-log/) — `actor_user_id` distinguishes a
+self-service change from an admin action.
+
+Avatars are hardened at upload: they're **magic-byte sniffed** (PNG / JPEG /
+WebP only — never SVG or GIF), bounded by a byte cap and a pixel budget,
+then **re-encoded server-side to a 256 px square WebP** with EXIF (including
+GPS) stripped — the stored image is never the uploaded bytes. The public
+read is under an unguessable id with defensive headers.
 
 ### Mass CSV import
 

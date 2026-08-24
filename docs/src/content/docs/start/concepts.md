@@ -46,15 +46,15 @@ registers through the same manifest-driven loader:
 - **Required-core modules** — challenges, scoring, hints, tickets,
   announcements, notifications, dashboard, collab notes, and friends. Always
   on; they are what makes the platform a CTF tool at all.
-- **Optional modules** — currently **Automations**, **Feedback**,
-  **Analytics**, and (since v1.4.0) **[AI Assistants](/admin/ai/)**. All
-  enabled per competition by default, and toggleable under **Competition
-  Settings → Modules** (gated on the `manage_modules` permission since
-  v1.4.0, previously part of general competition editing). AI Assistants
-  additionally sits behind a **site-wide master switch**, off until an
-  administrator configures a model endpoint — so it's inert everywhere
-  regardless of the per-competition toggle. Disabled modules drop out of
-  the navigation and their APIs return 404 for that competition.
+- **Optional modules** — six of them: **Automations**, **Feedback**,
+  **Analytics**, **[AI Assistants](/admin/ai/)**,
+  **[Certificates](/guides/certificates/)**, and
+  **[Post-event reports](/guides/reports/)**. All enabled per competition by
+  default, and toggleable under **Competition Settings → Modules** (gated on
+  the `manage_modules` permission). AI Assistants additionally sits behind a
+  **site-wide master switch**, off until an administrator configures a model
+  endpoint. Disabled modules drop out of the navigation and their APIs
+  return 404 for that competition.
 
 Developers: see [Developing modules](/dev/modules/).
 
@@ -75,3 +75,10 @@ WebSockets: the scoreboard, presence ("3 others viewing"), ticket threads,
 announcements, and the notification bell. Collaborative prose fields (team
 scratchpads, staff ticket notes) go further, using CRDTs so everyone can type
 at once without conflicts.
+
+## The UI speaks four languages
+
+The interface is available in [four languages](/guides/languages/), chosen
+per device (a cookie, so each person picks their own). Only the UI chrome is
+translated — operator content (challenge text, announcements, pages,
+certificate templates) stays in the language its author wrote it in.

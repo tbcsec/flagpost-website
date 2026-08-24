@@ -27,6 +27,8 @@ config, but those fallbacks are published in the repo — set real values
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `flagpost` / `flagpost` / `flagpost` | Postgres credentials; compose derives the backend's `DATABASE_URL` from them. |
 | `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | `minioadmin` / `minioadmin` | MinIO credentials; also the backend's S3 keys. **The backend refuses to boot on these defaults when the deployment looks reachable** — see [Production deployment](/deploy/production/#1-configure-env). |
 | `MINIO_PUBLIC_ENDPOINT` | `localhost:9000` | The host **browsers** hit for signed attachment downloads — must be reachable by competitors. See [Production deployment](/deploy/production/#attachments-and-minio_public_endpoint). |
+| `MINIO_REGION` | `us-east-1` | SigV4 region for the object-storage client. Set it to your bucket's region so signed URLs sign **offline**; unset, the client makes a `GetBucketLocation` call at sign time, which can't reach a browser-only endpoint. Relevant when the store is real S3. |
+| `MINIO_IAM_AUTH` | `false` | Authenticate to object storage with an **AWS IAM role** (ECS task role / EC2 instance profile) resolved from the metadata endpoint, instead of static keys — no long-lived storage secret to distribute. Only meaningful against real S3; see [Deploying to AWS (Fargate + ALB)](/deploy/fargate/). |
 
 ## Update check
 
@@ -46,6 +48,8 @@ config, but those fallbacks are published in the repo — set real values
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `WEB_CONCURRENCY` | `1` | Backend worker processes (v1.4.0). `1` = single process, no Redis needed for realtime. `>1` switches the real-time layer to the Redis cross-worker relay + presence (**requires** `REDIS_URL` — the backend refuses to boot multi-worker without it) and starts the singleton scheduler sidecar. The one scaling variable plumbed through `.env` by compose. See [Scaling for large events](/deploy/scaling/). |
+| `MULTI_INSTANCE` | `false` | Declares that this backend runs as **more than one container/host behind a load balancer** ([ADR-0031](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0031-multi-instance-deployment.md)). Forces the cross-process realtime layer (Redis relay + shared presence) on regardless of local worker count — without it, N single-worker tasks each think they're the whole deployment and silently stop relaying. Requires `REDIS_URL`. See [Deploying to AWS (Fargate + ALB)](/deploy/fargate/). |
+| `SCHEDULER_ENABLED` | `true` | Whether **this** process/container may run the singleton background scheduler (time-trigger automations, report and certificate-export jobs, retention purge, the update check). Set `false` on the web tasks of a multi-instance deployment, where one dedicated `python -m scheduler` service is the scheduler; `python -m scheduler` itself ignores the flag. |
 
 The finer-grained knobs (DB pool sizes and the multi-worker connection
 budget, the bounded Redis client pool, presence heartbeat/TTL, WebSocket

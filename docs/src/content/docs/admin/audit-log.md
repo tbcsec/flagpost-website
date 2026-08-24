@@ -26,6 +26,13 @@ The [event catalogue](/reference/events/) is the complete list; highlights:
 
 - Every solve (`challenge.solved`), score adjustment, and award.
 - Every admin action: role changes, user bans, competition lifecycle.
+- Account changes: `user.renamed` (payload `user_id`, `old_name`,
+  `new_name`, `actor_user_id`), `user.avatar_updated` and
+  `user.avatar_removed` (each `user_id`, `actor_user_id`) — new in v1.5.0.
+  `actor_user_id` distinguishes a self-service change from admin
+  moderation, and **`user.renamed` is the only record of a prior
+  username** — every other surface renames retroactively, so it's the
+  trail a judge follows when chasing a rule-breaker who changed handle.
 - Every automation fire (`automation.rule_triggered`) — including what the
   rule did, so rule debugging starts here.
 - Module toggles, backup imports, settings changes.

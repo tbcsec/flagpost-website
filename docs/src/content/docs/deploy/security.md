@@ -109,6 +109,14 @@ Flagpost's defaults reflect that.
   declared content type is discarded, so a renamed non-image is rejected —
   and they stream with `nosniff` and a sandboxing CSP, so a
   direct-navigation SVG can't execute script.
+- **Avatar uploads** (v1.5.0) are magic-byte sniffed and accept only
+  **PNG, JPEG, or WebP** — never SVG or GIF — bounded by a byte cap and a
+  ~40 MP pixel budget computed from header arithmetic (nothing is decoded
+  server-side to measure it), then **re-encoded server-side** to a 256px
+  square WebP with EXIF/GPS metadata stripped. The stored blob is never
+  the uploaded bytes, so an image polyglot is dead on arrival. Public read
+  is under an unguessable id with defensive headers (CSP `default-src
+  'none'`, `sandbox`, `nosniff`).
 - **WebSocket auth** sends the token as the first frame after connect —
   never in the URL, where it would leak into proxy logs and history. Since
   v1.4.0, revocation applies to sockets already open: a ban or account

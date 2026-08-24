@@ -35,11 +35,13 @@ without plugins or paid tiers.
 | Support tickets | Built in — live queue, assignment, internal notes, attachments | External (Discord, forms) |
 | Collaborative team notes | Built in — CRDT co-editing per challenge | — |
 | Multiple-choice flags, guess caps & wrong-guess penalties | Built in | Via plugins |
-| Single sign-on | OIDC/OAuth2, SAML 2.0, and LDAP/Active Directory built in, free | MajorLeagueCyber OAuth in core; broader SSO via plugins or hosted tiers |
+| Single sign-on | OIDC, OAuth2 (incl. GitHub/Discord), SAML 2.0, and LDAP/Active Directory built in, free | MajorLeagueCyber OAuth in core; broader SSO via plugins or hosted tiers |
 | Surveys & post-solve ratings | Built in | — |
 | AI assistants | Optional module (v1.4.0) — organiser Q&A and a guard-railed competitor assistant, bring your own model | — |
 | Analytics | Challenge/team analytics, insight cards, submissions browser | Score graphs and submission listings |
 | Public spectator board | Opt-in board with insight cards, a points timeline, and a full-screen venue/projector mode with first-blood splashes | Public scoreboard on public instances |
+| Custom pages | Built in — structured rich text, with a delegable editor grant that can't inject script | Built in — raw HTML/CSS/JS |
+| Interface languages | Four maintained UI locales (English, Français, Español, Polski) on a Crowdin workflow | Community translations, coverage varies |
 
 ## Where CTFd is the better fit
 
@@ -53,8 +55,10 @@ Honesty cuts both ways:
   modules only, with a marketplace on the roadmap.
 - **Hosted service.** If you want someone else to run the infrastructure,
   ctfd.io exists; Flagpost is self-hosted only.
-- **Custom content pages** ship in CTFd core; Flagpost doesn't do
-  free-form pages.
+- **Free-form HTML pages.** Both platforms have custom pages, but CTFd
+  lets you author raw HTML/CSS/JS; Flagpost's pages are structured rich
+  text by design, so if you need arbitrary markup or embedded scripts on a
+  page, CTFd allows it and Flagpost deliberately doesn't.
 
 ## Where Flagpost pulls ahead
 

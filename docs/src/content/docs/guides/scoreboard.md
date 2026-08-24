@@ -6,6 +6,12 @@ description: The live CTF scoreboard — first blood, dynamic values, divisions,
 The scoreboard streams over WebSockets: solves, score adjustments, and awards
 move the board the moment they land, for everyone watching.
 
+The board opens when the competition
+[starts](/guides/competitions/#controls--status-and-schedule) and **stays
+readable after it ends** as a final, read-only result — competition status
+is a separate axis from both pause and freeze. While a competition is still
+*Not started*, the scoreboard is closed to competitors (staff can see it).
+
 ## What the board shows
 
 - **Standings** per team (team mode) or competitor (individual mode) —
@@ -48,7 +54,7 @@ until the unfreeze. This is the classic end-game tension mechanic.
   both exist as [automation actions](/guides/automations/) — a common rule is
   *on `competition.ended` → freeze the board*.
 
-Freezing is different from [pausing](/guides/competitions/#schedule): a pause
+Freezing is different from [pausing](/guides/competitions/#controls--status-and-schedule): a pause
 stops competitors submitting; a freeze only stops the public board moving.
 
 ## Public spectator board

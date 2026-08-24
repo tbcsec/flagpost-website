@@ -86,8 +86,39 @@ Files attach per challenge and are stored in MinIO/S3. Downloads go through
 viewing the challenge, so a pasted link stops working once the challenge is
 unpublished or the event ends.
 
+## Connection info
+
+A challenge that runs a **live service** carries an optional
+`connection_info` field — a URL, a `host:port`, or a short instruction
+("`nc chal.example.org 1337`"). It's free-form (up to 500 characters, no
+format validation), it's a real field now rather than something smuggled
+into the description, and it mirrors the ctfcli/CTFd spec exactly, so a
+`challenge.yml` from a real ctfcli repository
+[round-trips](/reference/ctfcli/) — previously an imported challenge's
+connection info was silently dropped.
+
+Competitors see it as a **copyable chip**, only once the challenge is
+unlocked for them; `http(s)` addresses become links (through a stricter URL
+check than CTFd's, so `javascript:`/`data:` values stay inert text).
+[Cloning](/guides/competitions/#lifecycle-operations) a competition copies
+connection info (unlike a scheduled release time, which is cleared).
+
+## Authoring on the manage route
+
+Challenge authoring lives on a dedicated **/challenges/manage** surface
+(the *Manage challenges* action on the challenges page): a persistent,
+searchable list on the left, the editor for the selected challenge on the
+right, and Save / Publish / Delete in a top action bar. Secondary fields —
+connection info, scheduled release, prerequisites, difficulty, tags — fold
+into a **More options** section. Your selection persists across a save, and
+creating a challenge selects it for editing straight away.
+
 ## Gating what competitors see
 
+- **Competition status** — the outermost gate. While a competition is
+  [Not started](/guides/competitions/#controls--status-and-schedule), the
+  challenge list is empty and challenge detail is closed to competitors;
+  play opens when it starts. Staff holding `challenge_edit` bypass it.
 - **Prerequisites** — a challenge can require other challenges to be solved
   first. Locked challenges are **shown locked** (visible, not openable), the
   lock is enforced server-side on submission, and the dialog names the
@@ -134,7 +165,7 @@ and it is treated accordingly:
 - **Every attempt is logged**, not just successes — failed attempts feed
   challenge-health analytics.
 - Submissions are refused while the competition is
-  [paused](/guides/competitions/#schedule) or the challenge is locked.
+  [paused](/guides/competitions/#controls--status-and-schedule) or the challenge is locked.
 
 ## Bulk import and export
 
