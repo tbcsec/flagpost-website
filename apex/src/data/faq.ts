@@ -20,7 +20,7 @@ export const faq: FaqEntry[] = [
   {
     question: "Is Flagpost free?",
     answer:
-      "Yes. Flagpost is open source under the AGPL-3.0 licence. There is no hosted tier, no feature gate and no telemetry — you run it on your own infrastructure and your competition data stays yours.",
+      "Yes. Flagpost is open source under the Apache-2.0 licence — permissive, with an explicit patent grant. There is no hosted tier, no feature gate and no telemetry — you run it on your own infrastructure and your competition data stays yours.",
   },
   {
     question: "Is Flagpost an alternative to CTFd?",
@@ -39,10 +39,10 @@ export const faq: FaqEntry[] = [
   {
     question: "Can I build a commercial module for Flagpost?",
     answer:
-      "Yes. Flagpost is AGPL-3.0, but the Flagpost Module Exception lets a third-party module that plugs in solely through the documented module loader be licensed on its own terms — including proprietary ones — and deploying it over a network doesn't oblige you to release the module's source. The platform itself stays open source in full.",
+      "Yes. Flagpost is Apache-2.0 — a permissive licence — so you can build modules on top of it, or embed the platform itself, under any terms you like, including proprietary ones, with no copyleft obligation. The only thing the licence doesn't grant is the Flagpost name and marks, which stay reserved.",
     link: {
       href: "https://docs.flagpost.io/dev/modules/",
-      label: "Read about developing and licensing modules",
+      label: "Read about developing modules",
     },
   },
   {
