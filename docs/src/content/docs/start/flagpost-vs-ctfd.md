@@ -15,7 +15,7 @@ decade of production events, a large plugin/theme ecosystem, and a hosted
 offering. Flagpost's case is the **event-operations layer being built in**
 — a live board with presence and notifications, an automation engine,
 support tickets, granular RBAC, and many competitions per install — with
-every feature free under AGPL-3.0.
+every feature free and self-hosted under Apache-2.0.
 
 ## Side by side
 
@@ -24,7 +24,7 @@ without plugins or paid tiers.
 
 | Capability | Flagpost | CTFd |
 | --- | --- | --- |
-| Licence & model | AGPL-3.0 — every feature, self-hosted, free | Apache-2.0 core, free self-hosted; hosted paid tiers |
+| Licence & model | Apache-2.0 — every feature, self-hosted, free | Apache-2.0 core, free self-hosted; some features on hosted/paid tiers |
 | Scoring essentials — dynamic decay, freeze, hints | Built in | Built in |
 | First-blood recognition | Marker on the board + automation trigger, built in | Webhook events on Hosted/Enterprise tiers |
 | Challenge import/export | ctfcli-format YAML (CTFd-compatible) | ctfcli (native) |

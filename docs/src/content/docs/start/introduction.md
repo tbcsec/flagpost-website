@@ -7,7 +7,7 @@ Flagpost is an open-source, self-hosted CTF platform — a complete
 competition system for capture-the-flag organisers: publish challenges,
 score solves the moment they land, support competitors, and automate the
 whole event from one app you run yourself. It is licensed
-under the [AGPL-3.0](https://github.com/tbcsec/flagpost/blob/main/LICENSE),
+under the [Apache-2.0 licence](https://github.com/tbcsec/flagpost/blob/main/LICENSE),
 free to run, and designed to be operated on your own infrastructure.
 
 ## What sets it apart

@@ -130,14 +130,11 @@ disabled for the active competition.
 
 ## Licensing your module
 
-Flagpost is AGPL-3.0, but the **Flagpost Module Exception** (v1.0, the
-[`MODULE-EXCEPTION`](https://github.com/tbcsec/flagpost/blob/main/MODULE-EXCEPTION)
-file at the repo root) grants an additional permission under
-[AGPL-3.0 §7](https://www.gnu.org/licenses/agpl-3.0.en.html#section7): a
-third-party module that extends Flagpost **solely through the loader
-contract** — a `plugin.yaml` plus a `setup(app, event_bus, db_factory)`
-entry point, invoked at runtime without modifying, patching, or embedding
-the Program — may be licensed on its own terms, **including proprietary
-ones**. Deploying such a module over a network does not oblige the operator
-to release the module's source. The Program itself stays AGPL-3.0 in full;
-the moment a module modifies or embeds it, the exception no longer applies.
+Flagpost is [Apache-2.0](https://github.com/tbcsec/flagpost/blob/main/LICENSE)
+(since v1.5.1, [ADR-0035](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0035-relicense-apache-2.0.md)),
+a permissive licence — so a third-party module can carry **any licence you
+like, including a proprietary one**, with no copyleft obligation and no
+special instrument. (The earlier AGPL-3.0 releases needed a "Module
+Exception" to allow this; a permissive licence retires it.) The one thing
+Apache-2.0 doesn't grant is the **Flagpost name and marks** (§6) — the code
+is yours to build on, the trademark isn't.

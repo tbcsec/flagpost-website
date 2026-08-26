@@ -53,8 +53,10 @@ covered on their own pages: Auth (`manage_auth_providers`,
 **Attribution is mandatory and not configurable**: a subtle "Powered by
 Flagpost" footer (the built-in mark, linking to the source repository)
 renders on every page. An organisation may fully rebrand the platform;
-Flagpost stays visibly the underlying software — this is also how the AGPL's
-source-offer surfaces to your users.
+Flagpost stays visibly the underlying software. The
+[Apache-2.0 licence](https://github.com/tbcsec/flagpost/blob/main/LICENSE)
+grants no rights to the Flagpost name or marks, so the credit stays even
+though the code is free to modify and self-host.
 
 ## Registration
 

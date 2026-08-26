@@ -47,6 +47,7 @@ quietly working around it.
 | [0032](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0032-multi-tenant-entra-issuer-validation.md) | Multi-tenant Entra issuer validation via a tenant-substituted issuer template | Accepted |
 | [0033](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0033-generic-oauth2-provider-kind.md) | A generic `oauth2` provider kind, with userinfo as the identity source | Accepted |
 | [0034](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0034-custom-pages-render-as-a-react-tree.md) | Custom pages store rich text and render as a React tree, never as HTML | Accepted |
+| [0035](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0035-relicense-apache-2.0.md) | Relicense from AGPL-3.0 to Apache 2.0; module exception retired | Accepted |
 
 Two threads are worth reading in sequence to see the project's decision
 style: the **bootstrap story** (0007 → 0010 → 0017 — from "first user wins"
