@@ -48,9 +48,11 @@ const milestones: Milestone[] = [
     shippedIn: "v1.5.0",
   },
   {
-    icon: "layers",
+    icon: "check",
     title: "On-demand challenge instances",
-    body: "An isolated, containerised copy of a challenge per team, spun up on demand — unique flags injected per instance, TTL reaping, Docker and Kubernetes provisioners. Live infrastructure for pwn- and web-heavy events.",
+    body: "An isolated, containerised copy of a challenge for each team or player, spun up on demand and reaped on a TTL — reached over TCP or a per-instance HTTPS subdomain, with unique per-instance flags and a Docker or Kubernetes provisioner behind one least-privilege contract. Live infrastructure for pwn-, web- and cloud-heavy events.",
+    variant: "done",
+    shippedIn: "v1.6.0",
   },
   {
     icon: "package",

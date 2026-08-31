@@ -60,4 +60,13 @@ export const faq: FaqEntry[] = [
     answer:
       "Yes — standings, first-blood markers, presence and notifications stream over WebSockets rather than polling. There is a public spectator board with a full-screen venue mode for projectors — rotating the board, insights and timeline, with first-blood splashes — plus brackets for parallel divisions, a scoreboard freeze for the final stretch, and a CTFtime-compatible feed for rated events.",
   },
+  {
+    question: "Can Flagpost run per-team challenge instances?",
+    answer:
+      "Yes. An optional module hands each team or player its own isolated, containerised copy of a challenge — launched on demand, reaped on a timer, with unique per-instance flags so a leaked flag doesn't unlock the challenge for everyone. It runs on your own Docker host or a Kubernetes cluster behind a least-privilege provisioner, exposes challenges over TCP or a per-instance HTTPS subdomain, and stays off until you configure it.",
+    link: {
+      href: "https://docs.flagpost.io/deploy/challenge-instances/",
+      label: "Read the challenge-instances guide",
+    },
+  },
 ];
