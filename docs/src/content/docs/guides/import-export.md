@@ -25,6 +25,12 @@ straight in.
   now round-trips with real ctfcli/CTFd bundles too — it was dropped on
   import before v1.5.0, a data-loss fix for CTFd migrators.
 
+An instanced challenge's **deployment spec** — image, ports, exposure, flag
+mode, and the resource guardrails — round-trips through both ctfcli
+import/export and the platform backup, so an instanced challenge moves
+between installs intact. Live instances themselves are runtime state and are
+never exported. See [Challenge instances](/deploy/challenge-instances/).
+
 Field-by-field details: [ctfcli YAML format](/reference/ctfcli/).
 
 **Migrating from CTFd?** Export your challenges with

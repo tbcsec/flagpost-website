@@ -35,6 +35,8 @@ the audit log, the automation engine, and the rule-builder UI.
 | `competition.time_remaining` | `competition_id`, `minutes_remaining` | `edit_competition` |
 | `competition.member_joined` | `competition_id`, `user_id` | `challenge_view` |
 | `competition.rules_accepted` | `competition_id`, `user_id` | `challenge_view` |
+| `registration_field.updated` | `competition_id`, `count` | `edit_competition` |
+| `registration_field.value_set` | `competition_id`, `subject_id` | `challenge_view` |
 | `competition.archived` | `competition_id` | `edit_competition` |
 | `competition.unarchived` | `competition_id` | `edit_competition` |
 | `competition.deleted` | `competition_id`, `user_id`, `auto` | `delete_competition` |
@@ -45,7 +47,11 @@ the same scheduler and is the platform's one
 [time-based trigger](/guides/automations/#time-based-triggers).
 On `competition.deleted`, `auto: true` marks a
 [retention purge](/guides/competitions/#lifecycle-operations) rather than a
-manual delete.
+manual delete. `registration_field.updated` (v1.6.0) fires when an organiser
+edits the [custom registration fields](/guides/teams/#custom-registration-fields)
+set (`count` is the new field count); `registration_field.value_set` fires
+when a subject saves their answers, at entry or later (`subject_id` is the
+user in individual mode, the team in team mode).
 
 ## Teams
 
@@ -92,6 +98,35 @@ because others' attempts — including failures — are staff analytics data,
 not member-visible play state. Volume is bounded by the submission rate
 limit.
 
+## Challenge instances
+
+Added in v1.6.0 with the optional
+[challenge instances](/deploy/challenge-instances/) module. Payloads carry
+**ids only** — never the flag or the connection detail.
+
+| Event | Payload fields | Trigger permission |
+| --- | --- | --- |
+| `challenge.instance_requested` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_started` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_extended` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_expired` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_destroyed` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_provision_failed` | `competition_id`, `challenge_id`, `instance_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.instance_launch_throttled` | `competition_id`, `challenge_id`, `user_id`, `team_id` | `instance_view` |
+| `challenge.flag_shared_detected` | `competition_id`, `challenge_id`, `user_id`, `team_id`, `matched_user_id`, `matched_team_id`, `instance_id` | `view_submissions` |
+
+The lifecycle runs on the background lane: `instance_requested` on launch,
+`instance_started` when it goes live, `instance_extended` on a TTL renewal,
+then `instance_expired` (TTL reached), `instance_destroyed` (manual teardown),
+or `instance_provision_failed`. `instance_launch_throttled` fires when the
+per-subject [spawn rate-limit](/deploy/challenge-instances/#guardrails-and-reaping)
+refuses a launch — no instance was created, so there's no `instance_id`.
+`flag_shared_detected` fires when a wrong submission carried *another*
+subject's live
+[unique per-instance flag](/deploy/challenge-instances/#unique-per-instance-flags)
+(`matched_*` names the leak source) — provable flag sharing, surfaced as a
+signal with no automatic penalty.
+
 ## Scoring & scoreboard
 
 | Event | Payload fields | Trigger permission |
@@ -116,6 +151,16 @@ effects are events like any other mutation's.
 | `ticket.attachment_added` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id`, `is_internal` | `ticket_view` |
 | `ticket.attachment_deleted` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id` | `ticket_view` |
 | `announcement.published` | `competition_id`, `announcement_id`, `title`, `body`, `severity`, `audience_type` | `challenge_view` |
+| `announcement.updated` | `competition_id`, `announcement_id` | `announcement_create` |
+| `announcement.deleted` | `competition_id`, `announcement_id` | `announcement_create` |
+
+`announcement.published` also fires when a
+[scheduled announcement](/guides/support/#announcements) reaches its publish
+time — identically to an immediate post. `announcement.updated` /
+`announcement.deleted` (v1.6.0) fire only when a still-**scheduled** draft is
+edited or cancelled; they're staff-domain (the draft was never
+competitor-visible), so they gate on `announcement_create`, not
+`challenge_view`.
 
 ## Feedback
 
@@ -198,12 +243,20 @@ Usage metadata only — message content never rides an event.
 | `module.enabled` / `module.disabled` | common | `edit_competition` |
 | `page.created` / `page.deleted` | `page_id`, `slug`, `actor_user_id` | `manage_pages` |
 | `page.updated` | `page_id`, `slug`, `fields`, `actor_user_id` | `manage_pages` |
+| `theme.created` / `theme.updated` | `theme_id`, `name`, `actor_user_id` *(site-wide)* | `manage_site_settings` |
+| `theme.deleted` | `theme_id`, `actor_user_id` *(site-wide)* | `manage_site_settings` |
+| `instance.settings_updated` | `actor_user_id`, `enabled` *(site-wide)* | `manage_instance_infra` |
 
 `page.*` records [custom-page](/admin/pages/) authoring — site-level, so
 no `competition_id`; `fields` on an update is the list of changed field
 names, and no payload ever carries the page body. Governed by
 `manage_pages` so a Judge can't automate on — and thereby observe —
-unpublished page changes.
+unpublished page changes. `theme.*` (v1.6.0) records
+[custom brand theme](/admin/site-settings/#custom-brand-themes) CRUD, and
+`instance.settings_updated` records a
+[challenge-instance](/deploy/challenge-instances/) provisioner-config change —
+both site-level, and the latter carries only *who* and the new `enabled` flag,
+never the endpoint or credential.
 
 ## Friendly companion fields
 

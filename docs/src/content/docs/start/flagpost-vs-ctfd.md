@@ -35,7 +35,9 @@ without plugins or paid tiers.
 | Support tickets | Built in — live queue, assignment, internal notes, attachments | External (Discord, forms) |
 | Collaborative team notes | Built in — CRDT co-editing per challenge | — |
 | Multiple-choice flags, guess caps & wrong-guess penalties | Built in | Via plugins |
+| On-demand challenge instances | Built-in optional module — Docker or Kubernetes, per-team isolated containers, unique per-instance flags, TTL reaping | Via third-party add-ons such as CTFd-Whale |
 | Single sign-on | OIDC, OAuth2 (incl. GitHub/Discord), SAML 2.0, and LDAP/Active Directory built in, free | MajorLeagueCyber OAuth in core; broader SSO via plugins or hosted tiers |
+| Custom registration fields | Built in — per-competition, four field types, required enforcement, CSV export | Global account fields in core; not per-competition |
 | Surveys & post-solve ratings | Built in | — |
 | AI assistants | Optional module (v1.4.0) — organiser Q&A and a guard-railed competitor assistant, bring your own model | — |
 | Analytics | Challenge/team analytics, insight cards, submissions browser | Score graphs and submission listings |
@@ -67,7 +69,9 @@ than refreshing one; automation rules doing announcements, hint waves and
 the end-of-event freeze instead of a human with a checklist; competitor
 questions arriving as tickets in a live queue instead of a Discord channel;
 judges holding exactly the permissions you gave them; and the next event
-being a clone or a second tenant instead of a second server. The
+being a clone or a second tenant instead of a second server. For the people
+running the box, there's an opt-in, token- or allowlist-gated Prometheus
+`/metrics` endpoint (off by default) exposing operational metrics only. The
 [apex comparison](https://flagpost.io/#compare) is the one-page version of
 this list.
 

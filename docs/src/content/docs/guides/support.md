@@ -51,6 +51,27 @@ first-blood celebrations without a human typing.
   also lands as a bell notification per recipient — looking away doesn't
   mean missing it.
 
+### Scheduled announcements
+
+Since **v1.6.0**, an organiser with `announcement_create` can pre-write a post
+and give it a **future publish time** instead of sending it now.
+
+- **It stays hidden until it fires** — a scheduled post is a staff-only draft:
+  invisible to competitors and unnotified, absent from the live feed (and from
+  the reconnect snapshot) whether or not it has fired. When its time arrives it
+  auto-publishes exactly like an immediate post — the same banner, the same bell
+  notification, the same audience.
+- **Manage the pending ones** — scheduled drafts have their own list where you
+  can **edit** or **cancel** them before they fire. Editing changes the text,
+  severity, or timing; it does **not** change the audience — to retarget, cancel
+  the draft and repost it. A cancelled draft never reaches a competitor.
+- **A past or empty time posts immediately** — scheduling is opt-in; leave the
+  time blank (or set one already in the past) and the announcement goes out at
+  once, as before.
+- **Release is scheduler-driven** — a released draft publishes on the platform
+  scheduler's tick (roughly every 60 seconds), so it lands **within about a
+  minute** of the set time, not to the second.
+
 ## Presence
 
 Shared resources show who's looking: "N others viewing" on a challenge, "a

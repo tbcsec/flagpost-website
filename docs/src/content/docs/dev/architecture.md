@@ -23,12 +23,14 @@ everything else) but not user-toggleable. Custom pages is required-core
 with no toggle because content is the on/off switch — an install with no
 pages renders no sidebar section.
 
-**Optional modules** — six of them: **Automations**, **Feedback**,
-**Analytics**, **AI Assistants**, **Certificates**, and **Post-event
-reports**: toggleable per competition. Twenty-three modules in all. The AI
-module is the odd one out — even when enabled for a competition it ships
-inert behind a site master switch (`ai_settings.enabled`, default off;
-ADR-0023). Marketplace /
+**Optional modules** — seven of them: **Automations**, **Feedback**,
+**Analytics**, **AI Assistants**, **Certificates**, **Post-event
+reports**, and **Challenge Instances** (v1.6.0): toggleable per competition.
+Twenty-four modules in all. Two ship inert even when enabled for a
+competition, behind a site master switch: **AI Assistants**
+(`ai_settings.enabled`, default off; ADR-0023) and **Challenge Instances**,
+which stays refused until an operator configures a container backend and
+flips its site-level switch (ADR-0036). Marketplace /
 third-party modules are a future concern with an explicit sandboxing
 question to answer first — today's module system runs trusted, in-repo code.
 

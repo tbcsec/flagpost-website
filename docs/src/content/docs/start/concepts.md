@@ -46,15 +46,18 @@ registers through the same manifest-driven loader:
 - **Required-core modules** — challenges, scoring, hints, tickets,
   announcements, notifications, dashboard, collab notes, and friends. Always
   on; they are what makes the platform a CTF tool at all.
-- **Optional modules** — six of them: **Automations**, **Feedback**,
+- **Optional modules** — seven of them: **Automations**, **Feedback**,
   **Analytics**, **[AI Assistants](/admin/ai/)**,
-  **[Certificates](/guides/certificates/)**, and
-  **[Post-event reports](/guides/reports/)**. All enabled per competition by
-  default, and toggleable under **Competition Settings → Modules** (gated on
-  the `manage_modules` permission). AI Assistants additionally sits behind a
-  **site-wide master switch**, off until an administrator configures a model
-  endpoint. Disabled modules drop out of the navigation and their APIs
-  return 404 for that competition.
+  **[Certificates](/guides/certificates/)**,
+  **[Post-event reports](/guides/reports/)**, and
+  **[Challenge Instances](/deploy/challenge-instances/)**. All enabled per
+  competition by default, and toggleable under **Competition Settings →
+  Modules** (gated on the `manage_modules` permission). AI Assistants
+  additionally sits behind a **site-wide master switch**, off until an
+  administrator configures a model endpoint; Challenge Instances is likewise
+  provisioner-backed and stays inert until an administrator configures a
+  container backend, so it ships off by default. Disabled modules drop out
+  of the navigation and their APIs return 404 for that competition.
 
 Developers: see [Developing modules](/dev/modules/).
 

@@ -25,6 +25,14 @@ free to run, and designed to be operated on your own infrastructure.
 - **A deep challenge model.** Static, regex, and multiple-choice flags;
   dynamic (decay) scoring; prerequisite unlock chains; scheduled release;
   managed tags and difficulty; per-competition guess caps.
+- **On-demand challenge instances.** An optional module gives each
+  competitor or team an isolated, TTL-reaped container copy of a challenge
+  on a Docker or Kubernetes backend, with unique-per-instance flags and
+  staff kill/extend controls — off by default until an operator wires up a
+  backend.
+- **Custom brand themes.** Beyond the built-in palettes and accent colours,
+  upload or author a full colour-token theme and apply it site-wide with no
+  rebuild.
 - **A scoreboard done right.** First blood, brackets/divisions, a freeze for
   the final stretch, a public spectator board, and a CTFtime feed.
 - **Recognition and wrap-up.** Shareable [certificates](/guides/certificates/)
@@ -47,8 +55,10 @@ free to run, and designed to be operated on your own infrastructure.
 
 ## What it deliberately is not (yet)
 
-Flagpost manages competitions, not challenge infrastructure — container
-hosting and remote service provisioning are out of scope. Third-party
+Flagpost is a competition system first. On-demand
+[challenge instances](/deploy/challenge-instances/) are an optional module —
+off by default, and inert until an operator connects a container backend —
+not a general-purpose hosting platform for arbitrary services. Third-party
 marketplace modules are not yet open — the module system currently runs
 trusted, in-repo code only (the
 [roadmap](https://github.com/tbcsec/flagpost/blob/main/docs/ROADMAP.md)

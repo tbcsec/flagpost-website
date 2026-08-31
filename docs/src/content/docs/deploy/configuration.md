@@ -36,6 +36,30 @@ config, but those fallbacks are published in the repo — set real values
 | --- | --- | --- |
 | `UPDATE_CHECK_URL` | the project endpoint | Where the once-daily, version-only update check calls home ([PRIVACY.md](https://github.com/tbcsec/flagpost/blob/main/PRIVACY.md) documents exactly what's sent — the version number, nothing else). Set **empty** to disable outright for air-gapped installs; administrators can also toggle it off in Admin → Settings. See [Releases & upgrades](/deploy/upgrades/#the-update-check). |
 
+## Metrics
+
+Off by default (v1.6.0). The Prometheus `/metrics` endpoint **404s until
+`METRICS_ENABLED=true`**, and enabling it demands a gate — see
+[Observability](/deploy/observability/) for the scrape config and the
+exposed metric families.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `METRICS_ENABLED` | `false` | Master switch for the `/metrics` endpoint. While `false` the route is fully inert (**404**, not merely unauthorized). |
+| `METRICS_TOKEN` | *(empty)* | Static bearer secret a scraper presents in `Authorization: Bearer …`; compared **constant-time**. Empty means no token gate. |
+| `METRICS_ALLOWED_IPS` | *(empty)* | Comma-separated IPs/CIDRs allowed to scrape without a token (bare IP → `/32` or `/128`; malformed entries are dropped). Empty means no IP gate. |
+
+The gate is **OR** at scrape time: a request is authorized if it presents
+the matching token **or** its client IP is allowlisted (so a
+trusted-network scraper needs no token, and a token-holder works from any
+IP).
+
+:::caution[Enabling without a gate refuses startup]
+`METRICS_ENABLED=true` with **both** `METRICS_TOKEN` and
+`METRICS_ALLOWED_IPS` empty raises a config error and **the app will not
+boot** — the endpoint must never be public. Set at least one.
+:::
+
 ## Auth
 
 | Variable | Default | Meaning |

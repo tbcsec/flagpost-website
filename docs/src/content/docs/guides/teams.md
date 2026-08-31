@@ -30,6 +30,44 @@ Everyone competes solo. Joining is self-serve (public competitions) or by
 competition invite code. The **Participants** page lists the roster with join
 time, distinct solves, and current standing.
 
+## Custom registration fields
+
+An organiser (`edit_competition`) can define extra questions collected at
+entry — a waiver checkbox, dietary needs, a Discord handle, a division
+preference. Fields come in four types:
+
+- **text** — a single line.
+- **textarea** — free-form multi-line.
+- **select** — a fixed choice; needs **at least one option**.
+- **checkbox** — a boolean opt-in (a submitted `false`/`0` stores *no*, so
+  an unticked box is never misread as consent).
+
+Each field has a subject-facing label and can be marked **required**. Who
+answers depends on the competition's mode: in individual mode the competitor
+answers at join; in team mode the **captain** answers once at team creation
+(the team is the subject). Subjects — or the captain, in team mode — can edit
+their answers later.
+
+**When answers are collected** depends on how someone joins:
+
+- **Public self-join** — required fields **block the join** until they're
+  answered; the form renders before membership.
+- **Private / invite-code join** — the fields can't be pre-rendered while the
+  competition is undisclosed, so the competitor joins first and is prompted
+  for the fields **immediately after**. Required-ness is enforced on that
+  first save rather than at the door.
+
+Organisers export every subject's answers as a **CSV** (one row per subject,
+labelled columns; booleans render `yes`/`no`).
+
+:::caution
+Registration answers are **personal data**. They are never shown publicly —
+the only way to read them is the organiser's authenticated CSV export. They
+are **not** included in the platform backup either: a backup carries the
+field *definitions* (so the questionnaire moves between installs), but **not**
+the collected answers.
+:::
+
 ## Divisions (brackets)
 
 If the competition defines division names (Settings → General), **staff**

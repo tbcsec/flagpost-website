@@ -89,9 +89,11 @@ export default defineConfig({
           items: [
             { label: "Production deployment", slug: "deploy/production" },
             { label: "Scaling for large events", slug: "deploy/scaling" },
+            { label: "Challenge instances", slug: "deploy/challenge-instances" },
             { label: "AWS (ECS Fargate + ALB)", slug: "deploy/fargate" },
             { label: "Releases & upgrades", slug: "deploy/upgrades" },
             { label: "Configuration reference", slug: "deploy/configuration" },
+            { label: "Observability & metrics", slug: "deploy/observability" },
             { label: "Running without Docker", slug: "deploy/without-docker" },
             { label: "Stack architecture", slug: "deploy/stack" },
             { label: "Security notes", slug: "deploy/security" },

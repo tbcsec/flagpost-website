@@ -58,6 +58,39 @@ Flagpost stays visibly the underlying software. The
 grants no rights to the Flagpost name or marks, so the credit stays even
 though the code is free to modify and self-host.
 
+### Custom brand themes
+
+Since v1.6.0, a **custom brand theme** is a third theming axis alongside
+the five built-in palettes and the accent picker — and, like both, it is
+site-wide and admin-only, gated on the same `manage_site_settings`
+permission. A theme is a **complete pack of the 24 UI colour tokens**
+(surfaces, text, brand/action colour, status colours, borders) plus a
+dark or light mode. It is deliberately **colours only** — never CSS,
+JavaScript, fonts, or markup. That limit is the security boundary: a
+theme recolours the existing components, it never restyles or moves them.
+
+Custom themes are **additive** — they appear as cards in the same palette
+picker as the built-ins, not a replacement. **Activate** a theme by
+selecting its card; it becomes the site's default palette. Selecting a
+custom theme replaces the accent picker with a note, because the theme
+owns its own action colour. A live preview shows while you configure, and
+changes don't persist until you save. You **cannot delete the active
+theme** — switch the site to another palette or theme first.
+
+Themes upload and download as a **portable JSON file** — an object of
+exactly `{id, name, mode, tokens}`. The `id` is an immutable lowercase
+slug (it is what the site default points at, so renaming would dangle it)
+and cannot collide with a built-in palette id
+(`harbor`/`eclipse`/`umbra`/`daybreak`/`sandstone`); `mode` is `dark` or
+`light`; `tokens` must carry all 24 keys, each a `#RRGGBB` hex, with no
+extras. Uploading loads the file into the editor for review before
+saving; downloading exports `<id>.theme.json` in the same format. What
+you rename is the display **name**, never the `id`.
+
+Three example themes ship — **Corporate blue**, **Midnight**, and
+**Neon** — as editable starting points to clone, edit, or delete. They
+re-seed only if the theme library is completely empty.
+
 ## Registration
 
 - **Registration policy** — leave public self-registration open, or close

@@ -17,6 +17,16 @@ Choose any combination of sections:
 [Custom pages](/admin/pages/) travel in the backup too (the `pages`
 section, v1.5.0), matched by `slug` on an additive restore.
 
+Since v1.6.0, [custom brand themes](/admin/site-settings/#custom-brand-themes)
+ride inside the `site_settings` section (there is no separate themes
+checkbox), so moving or restoring an install keeps its themes; imported
+themes are re-validated and their local authorship is dropped.
+Per-competition
+[custom registration fields](/guides/teams/#custom-registration-fields)
+carry their **definitions** with the `competitions` section — but the
+collected **answers** do not (they are personal data, available only
+through the organiser's per-competition CSV export, never a backup).
+
 The export is **complete for what it covers** — including password hashes
 and flag hashes — because a backup that can't actually restore your
 install isn't one. The exception is **install-specific credentials
@@ -47,6 +57,9 @@ retention or deletion, so they're never bundled — and the
 encrypted-at-rest credentials above (SSO providers with their secrets;
 since v1.3.0 also the SMTP password, and since v1.4.0 the AI provider
 key), which are install-specific and re-entered on new infrastructure.
+The [challenge-instance](/deploy/challenge-instances/) provisioner
+settings are excluded on the same footing — infrastructure-specific
+operator config, re-entered per install.
 
 ## Importing
 

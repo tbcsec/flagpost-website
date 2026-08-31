@@ -104,6 +104,70 @@ account, plus `DELETE /api/users/{id}/avatar` for moderators
 (`manage_users`); and competitors pull their own [certificates](/guides/certificates/)
 from `GET /api/me/certificates`.
 
+v1.6.0 adds several more domains.
+
+[Challenge instances](/deploy/challenge-instances/) are competition-scoped.
+A competitor launches, polls, extends and destroys **their own** instance of
+a challenge (all `instance_launch`):
+
+- `POST /api/competitions/{cid}/challenges/{chid}/instance` launches one
+  (`201`, returns the instance with connection details hidden until it is
+  running). It answers `429` when the site spawn rate-limit refuses the
+  launch, `409` when a concurrency cap is reached (per-subject, per-competition
+  or the global ceiling), and `403` on the demo (instancing is force-disabled
+  there) or before the competition is running (staff holding `instance_manage`
+  bypass the running gate to test-launch pre-publish).
+- `GET /api/competitions/{cid}/challenges/{chid}/instance` polls your active
+  instance (`404` if none).
+- `POST /api/competitions/{cid}/challenges/{chid}/instance/extend` renews its
+  lifetime by one session length, up to five times.
+- `DELETE /api/competitions/{cid}/challenges/{chid}/instance` tears it down
+  (`202 {status: "destroying"}`).
+
+Staff manage instances competition-wide: `GET /api/competitions/{cid}/instances`
+lists every active instance with its resolved challenge title, subject label
+and backend handle (`instance_view`), and
+`DELETE /api/competitions/{cid}/instances/{id}` force-kills any one of them
+(`202`, `instance_manage`). An author defines the per-challenge deployment
+spec with `GET`/`PUT`/`DELETE /api/competitions/{cid}/challenges/{chid}/deployment`
+(`challenge_edit`).
+
+Site instancing infrastructure is admin-only:
+`GET`/`PUT /api/admin/instances/settings` reads and updates the provisioner
+backend, endpoint URL, public host, credentials and limits, and
+`POST /api/admin/instances/test-connection` runs the saved provisioner's
+staged connection probe leg-by-leg — all gated `manage_instance_infra`, its
+own grant (Administrator-only) because it holds infrastructure credentials.
+
+[Custom brand themes](/admin/site-settings/#custom-brand-themes) are site-wide CRUD
+under `/api/admin/themes` (`GET`/`POST`, and `PUT`/`DELETE /api/admin/themes/{id}`),
+all gated `manage_site_settings` — no per-competition scope. The endpoints
+only curate the theme library; a theme becomes the active site theme by
+pointing `default_palette` at its id through the site-settings update.
+
+The authenticated scoreboard gains a cumulative points-over-time series:
+`GET /api/competitions/{cid}/scoreboard/timeline` (`challenge_view`, same as
+the board read) plots the top entrants as running-total lines. Query params
+`live`, `bracket` and `top` mirror the board — `?live=true` only bypasses a
+freeze for a `scoreboard_freeze` holder, `bracket` scopes to one division,
+and `top` is clamped server-side (default 10, hard cap 25).
+
+[Scheduled announcements](/guides/support/#scheduled-announcements) add three staff routes on
+`/api/competitions/{cid}/announcements` (all `announcement_create`):
+`GET /scheduled` lists pending drafts, `PATCH /{id}` edits a still-scheduled
+draft's content or timing, and `DELETE /{id}` cancels one. `PATCH`/`DELETE`
+return `409` on a row that has already published — only a still-scheduled
+draft can be edited or cancelled.
+
+[Custom registration fields](/guides/teams/#custom-registration-fields) are
+competition-scoped under `/api/competitions/{cid}/registration-fields`:
+`GET`/`PUT` on the collection reads the visible field definitions / replaces
+the set as an organiser (`edit_competition`); `GET`/`PUT /me` reads and edits an
+individual's own answers (`challenge_view`, individual-mode competitions only
+— `400` in team mode, where answers are edited through the team); and
+`GET /export` streams the organiser's CSV of every subject's answers
+(`edit_competition`).
+
 Flag submission is rate-limited per user/team with escalating backoff —
 build clients accordingly.
 
@@ -122,6 +186,22 @@ build clients accordingly.
 | `GET /api/pages` | Custom-page nav entries (v1.5.0) — anonymous callers see public pages only; signed-in callers also see members-only pages |
 | `GET /api/pages/{slug}` | A single [custom page](/admin/pages/) (v1.5.0); hidden or draft pages fail closed to 404 |
 | `GET /api/users/{id}/avatar` | A user's avatar image (v1.5.0), immutable-cached with a `?v=<epoch>` cache-buster |
+
+## Metrics scrape endpoint
+
+`GET /metrics` (v1.6.0) is a Prometheus exposition target for operators. It
+is a kernel route, **not** under `/api`, and it is **off by default** — it
+returns `404` until you set `METRICS_ENABLED=true`. It does **not** use the
+RBAC permission system: a scraper has no interactive session, so access is
+gated by a static bearer token and/or an IP allowlist instead. An enabled but
+unauthorised scrape gets `401` with `WWW-Authenticate: Bearer`; an authorised
+one gets `200 text/plain`. Enabling it without a token or an allowlist is a
+hard startup refusal, so the endpoint can never be public. It exposes bounded
+operational numbers only (request timing, event-bus lanes, WebSocket and
+challenge-instance counts, scheduler liveness, DB-pool depth) — never
+competitor content or personal data. See
+[observability](/deploy/observability/) for the metric families and a sample
+scrape config.
 
 ## WebSocket rooms
 

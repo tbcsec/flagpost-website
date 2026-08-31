@@ -103,6 +103,27 @@ check than CTFd's, so `javascript:`/`data:` values stay inert text).
 [Cloning](/guides/competitions/#lifecycle-operations) a competition copies
 connection info (unlike a scheduled release time, which is cleared).
 
+## Live instances
+
+Since **v1.6.0**, instead of pointing every team at one shared endpoint a
+challenge can hand each competitor/team its **own isolated running
+container** — spun up on demand, torn down on a TTL. You author this as a
+per-challenge **deployment spec** (at most one per challenge) in the
+editor's **Deployment** section (`challenge_edit`): the container backend
+(Docker or Kubernetes), the image, how it's exposed (`tcp`, `http`, or
+`none`), which ports, environment, resource limits, lifetime, and a
+per-subject cap on concurrent instances. A challenge with a spec shows
+competitors a **Launch instance** panel; the `instances` module (optional,
+off by default per competition) and a site-level provisioner must both be
+configured first.
+
+The spec also carries a **flag mode**: `static` keeps the challenge's
+ordinary flag, while `unique_per_instance` renders a distinct flag into each
+container from a template and grades a submission against the submitter's
+own live instance — so a leaked flag is provably not the submitter's.
+
+See [Challenge instances](/deploy/challenge-instances/) for the full setup.
+
 ## Authoring on the manage route
 
 Challenge authoring lives on a dedicated **/challenges/manage** surface

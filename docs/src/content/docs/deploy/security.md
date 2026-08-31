@@ -122,7 +122,32 @@ Flagpost's defaults reflect that.
   v1.4.0, revocation applies to sockets already open: a ban or account
   deletion closes all of the user's live WebSockets immediately, and
   removal from a team closes that user's sockets to the team's
-  collaborative-note documents.
+  collaborative-note documents. Since v1.6.0 the same eviction fires on
+  **role revocation**: unassigning a staff member's role, or editing a
+  role so its permission set shrinks, force-closes the affected users'
+  open sockets so they re-handshake and re-authorize — no staff-only room
+  (ticket internal notes most sensitively) keeps streaming to a demoted
+  session.
+- **Challenge instancing runs adversary-controlled code under
+  least-privilege** (v1.6.0, optional module). The platform never mounts
+  the raw Docker socket: it talks to an operator-run least-privilege
+  socket proxy (only container/image/network verbs; no `exec`, no volume
+  mount, no build) or a namespace-scoped Kubernetes ServiceAccount (no
+  `secrets`, no `pods/exec`, nothing cluster-scoped). Every instance runs
+  under a hardened spec **Flagpost composes itself** — capabilities
+  dropped, no-new-privileges, read-only root FS, default seccomp,
+  non-privileged, resource-capped — from nothing but the author's image
+  ref, ports, and non-secret env. Egress is isolated (a host firewall on
+  Docker; an enforced per-instance NetworkPolicy on Kubernetes). See
+  [Deploying challenge instances](/deploy/challenge-instances/#security-posture--threat-model)
+  for the full trust boundary and the operator-owned gaps.
+- **The [`/metrics` endpoint](/deploy/observability/) is off by default**
+  (v1.6.0). When enabled it is token- and/or IP-allowlisted (the app
+  refuses to boot if enabled with neither) and exposes only
+  bounded-cardinality operational numbers — request counts and latencies,
+  WebSocket and instance counts, DB-pool depth — never competitor content
+  or personal data. It is an **inbound pull**, not telemetry: nothing
+  leaves unless a scraper you control reads it.
 - **Security headers** ship from Caddy: HSTS, `nosniff`, frame options,
   referrer policy, a baseline CSP.
 
@@ -163,6 +188,15 @@ with affected-version ranges (v1.2.0 shipped four). The
 [update check](/deploy/upgrades/#the-update-check) tells administrators
 when they're behind; if you've disabled it, watch the advisories feed —
 security releases are the ones not to sit on.
+
+Separately, v1.6.0 landed an **internal hardening pass** — four findings
+from our own review, not externally-reported CVEs: registry-credential
+scoping on image pulls (a private-registry credential is now forwarded
+only to its own registry, never to an author-named one), first-run
+setup re-arm hardening (the one-way setup flag can't be cleared by a
+crafted backup import, plus a zero-admin guard), SSO login-CSRF /
+session-fixation binding (a browser-bound state cookie now backs the
+callback), and the WebSocket eviction on role revocation noted above.
 
 ## Reporting vulnerabilities
 

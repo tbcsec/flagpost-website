@@ -48,6 +48,9 @@ platform is a single backend process by design, so scale up, not out.
 - Use the model: categories, tags and difficulty tiers for navigation;
   [prerequisite chains and scheduled release](/guides/challenges/#gating-what-competitors-see)
   for pacing; multiple-choice guess caps where brute force is trivial.
+- For anything that needs a live target per team, give the challenge its
+  own [on-demand instance](/deploy/challenge-instances/) — each subject gets
+  an isolated container instead of sharing one endpoint.
 - **Rehearse every flag** in a scratch competition — regex flags
   especially. Attach files and download them the way a competitor would.
 - Set hint costs deliberately: free hints released on a timer beat
@@ -71,7 +74,10 @@ Write the [When → If → Then rules](/guides/automations/) before the event,
 not during: first-blood announcements, timed hint waves, a T-60
 "open the survey" trigger, freeze-on-end, and a webhook into your staff
 chat for new tickets. Every rule you write is a checklist item your staff
-doesn't carry on game day. And if you enable the
+doesn't carry on game day. You can also
+[pre-schedule announcements](/guides/support/#announcements) to post
+themselves at a set time — a welcome banner at kickoff, a halftime
+reminder — without a rule or anyone at the keyboard. And if you enable the
 [competitor assistant](/admin/ai/) as a guard-railed hint channel, choose
 its guidance level deliberately and have a Judge skim the AI transcripts
 page during the event — every conversation is reviewable.
@@ -80,7 +86,10 @@ page during the event — every conversation is reviewable.
 
 Open sign-ups days ahead so teams form, divisions get assigned, and SSO or
 [email verification](/admin/site-settings/#registration) quirks surface
-before the clock starts. Publish the
+before the clock starts. If you need more than a name at the door — a
+waiver, a Discord handle, a division preference — define
+[custom registration fields](/guides/teams/#custom-registration-fields) to
+collect them at entry. Publish the
 [public scoreboard and CTFtime feed](/guides/scoreboard/) opt-ins if the
 event is spectated or rated.
 

@@ -61,6 +61,10 @@ truth.
 | `automation_create` | Automations | competition |
 | `automation_edit` | Automations | competition |
 | `view_audit_log` | Audit | global |
+| `manage_instance_infra` | Site Settings | global |
+| `instance_launch` | Challenge Instances | competition |
+| `instance_view` | Challenge Instances | competition |
+| `instance_manage` | Challenge Instances | competition |
 
 ## What the built-in roles hold
 
@@ -79,11 +83,12 @@ competition:
 `feedback_submit` · `manage_certificates` ·
 `view_competition_analytics` · `view_submissions` · `ai_view_transcripts` ·
 `customize_dashboard` · `automation_view` · `automation_create` ·
-`automation_edit`
+`automation_edit` · `instance_view` · `instance_manage` · `instance_launch`
 
 **Participant** (competition) — competitor-facing only:
 
-`challenge_view` · `ticket_view` · `ticket_respond` · `feedback_submit`
+`challenge_view` · `ticket_view` · `ticket_respond` · `feedback_submit` ·
+`instance_launch`
 
 ## Notes
 
@@ -102,7 +107,17 @@ competition:
   and `ai_view_transcripts` (v1.4.0) is its own grant because assistant
   transcripts are competitor content of a different sensitivity than
   analytics or tickets. `view_submissions` splits raw submission payloads
-  from aggregate analytics.
+  from aggregate analytics; and `manage_instance_infra` (v1.6.0) is its own
+  Administrator-only grant — separate from `manage_site_settings` — because
+  it points the platform at a container-runtime endpoint and holds a registry
+  credential, the same higher-stakes reasoning as auth providers and AI.
+- The three [challenge-instance](/deploy/challenge-instances/) grants
+  (v1.6.0) split by audience: `instance_launch` is a competitor **floor** — a
+  Participant holds it, but every launch is *also* re-checked server-side for
+  challenge eligibility and a `running` competition; `instance_view` and
+  `instance_manage` are the staff ops grants (see and force-kill/extend any
+  subject's instance). A Judge holds all three; site provisioner config stays
+  behind `manage_instance_infra`.
 - System roles **re-sync from this catalogue on every startup**, so
   permissions added by an upgrade reach existing installs' built-in roles
   automatically. Custom roles are never touched by the sync.

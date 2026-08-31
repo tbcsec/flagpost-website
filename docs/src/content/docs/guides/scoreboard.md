@@ -28,6 +28,16 @@ is a separate axis from both pause and freeze. While a competition is still
   board.
 - **The top-10 chart** — a bar chart of the leaders above the table, with
   per-bar labels and a detail tooltip on hover or keyboard focus.
+- **Score over time** (v1.6.0) — beside the standings, a line chart plots the
+  top ten entrants' **cumulative** score as it climbed over the event, so you
+  can watch overtakes and stalls instead of just the final ordering. Each
+  series ends exactly on that subject's table total — the chart and the table
+  are the same numbers, drawn two ways. It respects the freeze and the
+  division filter like the rest of the board: competitors see the frozen
+  picture, and a `scoreboard_freeze` holder viewing the live board sees the
+  live lines; a bracket filter scopes the series to that division. It rides
+  the **same activity connection as the board** — no manual refresh — needs
+  `challenge_view`, and only appears once the competition has started.
 
 ## Freezing the board
 
