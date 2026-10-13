@@ -4,7 +4,7 @@ description: Take the default Docker Compose stack to a real domain — TLS, sec
 ---
 
 The default `docker compose up` **is** the production stack: built images
-behind Caddy, with PostgreSQL, Redis, and MinIO. Going live is mostly
+behind Caddy, with PostgreSQL, Redis, and RustFS. Going live is mostly
 configuration.
 
 ## 1. Configure `.env`
@@ -21,13 +21,15 @@ Set at minimum:
 | `PUBLIC_ORIGIN` | The browser-facing origin, e.g. `https://ctf.example.com`. Baked into the frontend at **source-build** time (release images are same-origin and don't need the rebuild), and it's what [OIDC redirect URIs](/admin/sso/) and [SAML ACS/metadata URLs](/admin/saml/) are built from — so it must be exact if you configure SSO. |
 | `JWT_SECRET` | A long random value. (Left unset, the app derives a strong per-install secret and persists it — fine for a single host, but set it explicitly for production and always for multi-host.) |
 | `POSTGRES_PASSWORD` | A real password — generate with `openssl rand -hex 24`. |
-| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | Real credentials, same treatment. **The backend refuses to start** if it finds MinIO's published defaults on a deployment that looks reachable (non-local `PUBLIC_ORIGIN`, or `MINIO_PUBLIC_ENDPOINT` set) — default credentials there mean world read/write on every attachment, outside RBAC entirely. |
-| `MINIO_PUBLIC_ENDPOINT` | A browser-reachable MinIO host for signed attachment downloads (see below). |
+| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | Real credentials, same treatment. **The backend refuses to start** if it finds the object store's published defaults on a deployment that looks reachable (non-local `PUBLIC_ORIGIN`, or `S3_PUBLIC_ENDPOINT` set) — default credentials there mean world read/write on every attachment, outside RBAC entirely. |
+| `S3_PUBLIC_ENDPOINT` | A browser-reachable object-storage host for signed attachment downloads (see below). |
 
-Note that `MINIO_ROOT_*` **initialise** the MinIO server rather than
-reconfigure it: changing them after first boot needs
-`docker compose up -d --force-recreate minio`, and rotating credentials on a
-stack that already holds data must also be done inside MinIO.
+To rotate the object-storage credentials, change `S3_ACCESS_KEY` /
+`S3_SECRET_KEY` and run
+`docker compose up -d --force-recreate rustfs backend`: RustFS reads the
+pair from its environment on every start, so that *is* the rotation — the
+old pair is rejected immediately, with nothing to reconfigure inside the
+server.
 
 Full variable semantics: [Configuration reference](/deploy/configuration/).
 
@@ -47,19 +49,19 @@ On boot the backend applies migrations and seeds the built-in roles; Caddy
 waits for its health check before routing traffic. Then open your domain and
 run the [setup wizard](/admin/setup/).
 
-## Attachments and `MINIO_PUBLIC_ENDPOINT`
+## Attachments and `S3_PUBLIC_ENDPOINT`
 
-Challenge files download via **pre-signed URLs directly from MinIO**, so the
-browser must be able to reach the MinIO S3 port. Since v1.4.0 the compose
-binds it to **loopback** (`127.0.0.1:9000`) — right for a single-host
-deploy where everything shares the box. If competitors must reach MinIO on
-a different host, deliberately publish the port (a compose override
-changing the binding to `9000:9000`, with real MinIO credentials) or front
-MinIO with its own TLS proxy, and point `MINIO_PUBLIC_ENDPOINT` at the
-browser-reachable host:port (e.g. `files.example.com:9000`) — a
-non-loopback value also activates the default-credential boot guard. If
-competitors can't download attachments, this variable is almost always
-why.
+Challenge files download via **pre-signed URLs directly from the object
+store**, so the browser must be able to reach the RustFS S3 port. Since
+v1.4.0 the compose binds it to **loopback** (`127.0.0.1:9000`) — right for
+a single-host deploy where everything shares the box. If competitors must
+reach RustFS on a different host, deliberately publish the port (a compose
+override changing the binding to `9000:9000`, with real
+`S3_ACCESS_KEY` / `S3_SECRET_KEY`) or front RustFS with its own TLS proxy,
+and point `S3_PUBLIC_ENDPOINT` at the browser-reachable host:port (e.g.
+`files.example.com:9000`) — a non-loopback value also activates the
+default-credential boot guard. If competitors can't download attachments,
+this variable is almost always why.
 
 ## Upgrades
 

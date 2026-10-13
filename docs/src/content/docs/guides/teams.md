@@ -85,6 +85,22 @@ emit `achievement.awarded`, exactly like awards granted by an
 [automation rule](/guides/automations/), so audit and automations treat both
 the same.
 
+## Cross-competition skills
+
+Since v1.7.0 a **skills web** spans every competition on the install, not just
+one event — a consolidation view gated site-wide by a `skills_enabled` switch.
+
+- **For competitors** — a personal **skills radar** and an at-a-glance stats
+  strip (most- and least-solved category, totals) on the profile, built from
+  the categories they've solved across every event they've entered.
+- **For organisers** — an Administrator **users × skills matrix** that answers
+  who's proficient, who's struggling, and who's fresh: **difficulty-weighted**
+  scores (decay rarity priced in at solve time), **coverage** against each
+  player's genuine opportunity, a **percentile heat-map** as the
+  cross-competition comparator, **efficiency** (attempts and hints per solve)
+  and **first-blood** signals, activity-window filters, a per-user drill-down,
+  and **CSV export**.
+
 ## Staff controls
 
 Staff with the team permissions (`team_view_all`, `team_edit_any`,

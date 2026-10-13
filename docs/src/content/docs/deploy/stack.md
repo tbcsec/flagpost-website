@@ -15,7 +15,7 @@ description: What each service in the Flagpost stack does, how traffic flows thr
                     └─┬─────┬────┬─┘  └──────────────┘
                       │     │    │
               ┌───────▼─┐ ┌─▼───┐ ┌▼──────┐
-              │postgres │ │redis│ │ minio │◀── signed URLs, direct
+              │postgres │ │redis│ │ rustfs│◀── signed URLs, direct
               └─────────┘ └─────┘ └───────┘    from the browser
 ```
 
@@ -39,9 +39,9 @@ certificates automatically.
 | `backend` | built from `backend/` | FastAPI REST + WebSockets + event bus + automation engine; runs `alembic upgrade head` before serving |
 | `postgres` | `postgres:16-alpine` | All persistent data |
 | `redis` | `redis:7-alpine` | Rate-limit store; pub/sub relay + presence liveness for [multi-worker](/deploy/scaling/) realtime |
-| `minio` | `minio/minio` | S3-compatible attachment storage (`:9000` bound to loopback since v1.4.0; publish deliberately for multi-host deploys) |
+| `rustfs` | `rustfs/rustfs:1.0.1` | S3-compatible attachment storage (`:9000` bound to loopback since v1.4.0; publish deliberately for multi-host deploys). RustFS replaces the retired MinIO since v1.7.0 (ADR-0041). |
 
-Every stateful service has a named volume (`postgres-data`, `minio-data`,
+Every stateful service has a named volume (`postgres-data`, `rustfs-data`,
 `backend-data` for the derived JWT secret, Caddy's cert storage), and every
 service has a healthcheck — Caddy won't route to the backend until
 migrations have applied and `/api/health` answers.

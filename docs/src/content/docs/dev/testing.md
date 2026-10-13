@@ -17,7 +17,7 @@ cd backend && .venv/bin/pytest
   transport — real request/response cycles, no server process.
 - **SQLite (aiosqlite)** as the test database: the suite builds the schema
   from `Base.metadata` and seeds the same role specs the migrations use.
-  No Postgres, Redis, or MinIO needed.
+  No Postgres, Redis, or RustFS needed.
 - Test fixtures seed an admin account (`admin@example.com` / `changeme`) —
   **fixtures only**: production installs have
   [no seeded credentials](/admin/setup/).

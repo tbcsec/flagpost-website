@@ -87,9 +87,9 @@ Flagpost's defaults reflect that.
   (`manage_api_tokens`).
 - **The stack refuses dangerous defaults**: no shipped JWT secret
   ([ADR-0019](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0019-jwt-secret-hardening.md)),
-  the backend won't boot on MinIO's default credentials when the
-  deployment looks reachable — and since v1.4.0 the compose doesn't
-  expose MinIO's S3 API beyond loopback in the first place.
+  the backend won't boot on the object store's default credentials when
+  the deployment looks reachable — and since v1.4.0 the compose doesn't
+  expose the RustFS S3 API beyond loopback in the first place.
 - **Regex flags** are contained against catastrophic backtracking (ReDoS)
   ([ADR-0018](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0018-regex-flag-redos-containment.md)).
 - **Webhook egress** ([ADR-0013](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0013-webhook-egress-hardening.md)):
@@ -162,19 +162,18 @@ with the `webhook` action.
 ## Operator checklist
 
 1. Real secrets in `.env` (`JWT_SECRET`, `SECRET_ENCRYPTION_KEY`, Postgres,
-   MinIO) — the defaults are for local runs only. If you leave the
+   object storage) — the defaults are for local runs only. If you leave the
    encryption key derived, it lives on the backend data volume
    (`/data/.secret_key`) — back it up; losing it means re-entering every
    SSO secret and the SMTP password.
 2. TLS on (set `SITE_ADDRESS`; Caddy does the rest).
 3. Don't expose internals: only 80/443 need to be reachable — since
-   v1.4.0 the compose binds MinIO's S3 API to loopback (`127.0.0.1:9000`),
-   so signed attachment URLs work on a single-host deploy with nothing
-   else exposed. Publish the port deliberately (real credentials,
-   `MINIO_PUBLIC_ENDPOINT` set — a non-loopback value trips the
-   default-credential boot guard) only when browsers must reach MinIO on
-   a separate host. The MinIO **console** (`:9001`) should never be
-   public.
+   v1.4.0 the compose binds the RustFS S3 API to loopback
+   (`127.0.0.1:9000`), so signed attachment URLs work on a single-host
+   deploy with nothing else exposed. Publish the port deliberately (real
+   credentials, `S3_PUBLIC_ENDPOINT` set — a non-loopback value trips the
+   default-credential boot guard) only when browsers must reach RustFS on
+   a separate host.
 4. [Back up](/admin/backup/) before upgrades; guard export files like
    database dumps.
 5. Watch the [audit log](/admin/audit-log/) during events — every mutation
