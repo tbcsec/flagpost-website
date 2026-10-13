@@ -8,8 +8,8 @@ pointed at the matching folder).
 | Directory | Site | Stack | Worker | Status |
 | --------- | ---- | ----- | ------ | ------ |
 | [`apex/`](apex/) | https://flagpost.io | Astro 7 (static) | `flagpost-apex` | live |
-| [`docs/`](docs/) | https://docs.flagpost.io | Astro Starlight | `flagpost-docs` | built, awaiting Worker + domain |
-| [`updates/`](updates/) | https://updates.flagpost.io | Worker script + D1 | `flagpost-updates` | built, awaiting Worker + domain |
+| [`docs/`](docs/) | https://docs.flagpost.io | Astro Starlight | `flagpost-docs` | live |
+| [`updates/`](updates/) | https://updates.flagpost.io | Worker script + D1 | `flagpost-updates` | live |
 
 `updates/` is the odd one out: a **script** Worker (it has `main` and a D1
 binding) rather than an assets-only site. It answers the update check Flagpost
