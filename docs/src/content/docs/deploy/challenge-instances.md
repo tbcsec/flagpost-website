@@ -134,7 +134,7 @@ optional for a public event:
   [the instance metadata service](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html)
   can often steal cloud credentials — this is the single most important rule.
 - **Keep the control plane unreachable** from the instance subnet — Postgres,
-  Redis, MinIO and the API must not sit on any address an instance can dial.
+  Redis, RustFS and the API must not sit on any address an instance can dial.
 
 Test connection's `network_isolation` leg *reminds* you of this, but it cannot
 verify your firewall — that responsibility is yours.

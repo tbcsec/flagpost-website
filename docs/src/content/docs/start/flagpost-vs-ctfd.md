@@ -53,8 +53,10 @@ Honesty cuts both ways:
   years; Flagpost went public in July 2026. If "battle-tested above all"
   is your requirement, CTFd earned that.
 - **Ecosystem.** CTFd's plugin and theme ecosystem is large and
-  community-maintained; Flagpost's module system currently runs first-party
-  modules only, with a marketplace on the roadmap.
+  community-maintained. Flagpost has a signed, trust-tiered content-pack
+  marketplace and an authoring SDK as of v1.7.0, but third-party **code**
+  modules (and a module sandbox) are still to come, and its catalogue is
+  young next to CTFd's.
 - **Hosted service.** If you want someone else to run the infrastructure,
   ctfd.io exists; Flagpost is self-hosted only.
 - **Free-form HTML pages.** Both platforms have custom pages, but CTFd

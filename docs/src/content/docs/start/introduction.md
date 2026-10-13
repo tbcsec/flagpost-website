@@ -58,18 +58,20 @@ free to run, and designed to be operated on your own infrastructure.
 Flagpost is a competition system first. On-demand
 [challenge instances](/deploy/challenge-instances/) are an optional module —
 off by default, and inert until an operator connects a container backend —
-not a general-purpose hosting platform for arbitrary services. Third-party
-marketplace modules are not yet open — the module system currently runs
-trusted, in-repo code only (the
-[roadmap](https://github.com/tbcsec/flagpost/blob/main/docs/ROADMAP.md)
-tracks the module SDK and marketplace).
+not a general-purpose hosting platform for arbitrary services. Since v1.7.0
+you can install signed, trust-tiered **content packs** (challenges and
+themes) from an open, mirrorable [marketplace](/admin/site-settings/#marketplace--content-packs) —
+off until an operator opts in — and author modules with a documented SDK.
+Third-party **code** modules are still not installable: the module system
+runs trusted, in-repo code, and the declarative and signed-code module tiers
+(and sandboxing) are designed in ADR-0040 but not yet built.
 
 ## The stack
 
 | Layer | Technology |
 | --- | --- |
 | Backend | Python · FastAPI (async) · SQLAlchemy 2 · Alembic |
-| Data | PostgreSQL · Redis · MinIO (S3-compatible) |
+| Data | PostgreSQL · Redis · RustFS (S3-compatible) |
 | Frontend | Next.js (App Router) · React · TypeScript · Tailwind v4 |
 | Real-time | Native WebSockets · Y.js (CRDT) |
 | Deployment | Docker Compose behind a Caddy reverse proxy |

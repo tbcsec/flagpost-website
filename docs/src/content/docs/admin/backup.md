@@ -85,6 +85,6 @@ exactly what happened.
 
 For challenge-only portability use the
 [ctfcli zip flow](/guides/import-export/); for disaster recovery, also keep
-ordinary PostgreSQL backups (`pg_dump`) and MinIO volume snapshots — the
+ordinary PostgreSQL backups (`pg_dump`) and RustFS volume snapshots — the
 platform export is an application-level tool, not a substitute for
 infrastructure backups.

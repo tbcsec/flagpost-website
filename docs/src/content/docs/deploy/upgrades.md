@@ -49,7 +49,7 @@ procedure is short:
 1. Read the release notes for the versions you're crossing — they call out
    anything upgrade-relevant (v1.2.0, for example, notes that scores
    inflated by the fixed submission race are corrected by a dedupe
-   migration, and that reachable deployments must set real MinIO
+   migration, and that reachable deployments must set real object-storage
    credentials or the backend refuses to boot; v1.3.0's migration
    transparently encrypts any stored SMTP password — no action under
    compose, but [running without Docker](/deploy/without-docker/) make
@@ -59,12 +59,15 @@ procedure is short:
    restoring one. v1.4.0's callouts: custom roles that toggled
    per-competition modules through `edit_competition` must now be granted
    the new `manage_modules` permission — built-in roles pick it up
-   automatically at startup; the compose now binds MinIO's S3 API to
-   loopback, so multi-host deployments relying on the previously
-   published `:9000` must [publish it deliberately](/deploy/production/#attachments-and-minio_public_endpoint);
+   automatically at startup; the compose now binds the object store's S3 API
+   to loopback, so multi-host deployments relying on the previously
+   published `:9000` must [publish it deliberately](/deploy/production/#attachments-and-s3_public_endpoint);
    and the new [AI assistants module](/admin/ai/) is off by default —
    enabling it sends chat content to the operator-configured provider
-   endpoint).
+   endpoint. And **v1.7.0** retires MinIO for RustFS and renames every
+   `MINIO_*` variable to `S3_*` as a hard break — the backend refuses to
+   start while any `MINIO_*` remains set; see [the object-store
+   migration](#swapping-minio-for-rustfs-v170) below).
 2. Take a [platform export](/admin/backup/) and a `pg_dump`.
 3. Bump the image tag (or `git pull` + `docker compose build` for source
    builds), then `docker compose up -d`.
@@ -72,6 +75,31 @@ procedure is short:
    `/api/health`.
 
 Skipping versions is fine — migrations apply in sequence.
+
+### Swapping MinIO for RustFS (v1.7.0)
+
+v1.7.0 retires MinIO for **RustFS** as the default object store
+([ADR-0041](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0041-object-storage-rustfs-replaces-minio.md)),
+with vendor-neutral `S3_*` configuration. It's a **hard break**: the
+`MINIO_*` variables were renamed — `MINIO_ROOT_USER`→`S3_ACCESS_KEY`,
+`MINIO_ROOT_PASSWORD`→`S3_SECRET_KEY`,
+`MINIO_PUBLIC_ENDPOINT`→`S3_PUBLIC_ENDPOINT`, `MINIO_ENDPOINT`→`S3_ENDPOINT`,
+`MINIO_REGION`→`S3_REGION`, `MINIO_IAM_AUTH`→`S3_IAM_AUTH` — and the backend
+**refuses to start while any `MINIO_*` variable is still set**, printing the
+mapping, so a stale `.env` fails safe instead of silently falling back to
+default credentials.
+
+Objects are **not** migrated automatically. Do the upgrade in this order:
+
+1. With the old stack still running, copy the objects out — `rclone sync`
+   from the old `minio-data` server to a scratch location (or straight to the
+   new server once it's up).
+2. `docker compose down --remove-orphans`. The old `minio` container is gone
+   from the compose file, so a plain `up -d` would leave it running and
+   holding port 9000, and `rustfs` would fail to bind.
+3. Rename the variables in `.env`, then `docker compose up -d`.
+4. Sync the objects into the new `rustfs-data` server, then drop the old
+   volume: `docker volume rm <project>_minio-data`.
 
 ## The update check
 

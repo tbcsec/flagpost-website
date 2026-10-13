@@ -61,28 +61,22 @@ const rows: Row[] = [
     others: { state: "partial", label: "Paid tiers or plugins, typically" },
   },
   {
-    capability: "Multi-competition",
-    detail: "Many isolated events from one install",
-    flagpost: "Multi-tenant core",
-    others: { state: "partial", label: "One event per instance, typically" },
-  },
-  {
-    capability: "Deep challenge model",
-    detail: "Regex & multiple-choice flags, unlock chains, waved release, guess caps",
-    flagpost: "All built in",
-    others: { state: "partial", label: "Partial — often plugins" },
-  },
-  {
     capability: "On-demand challenge instances",
     detail: "Per-team isolated containers, unique flags, TTL reaping — Docker or Kubernetes",
     flagpost: "Built in — optional module",
     others: { state: "no", label: "Third-party add-on (e.g. CTFd-Whale)" },
   },
   {
-    capability: "Feedback & analytics",
-    detail: "Surveys, post-solve ratings, challenge health, insight cards",
+    capability: "Cross-competition skills",
+    detail: "Per-player skills radar + an organiser skills matrix, difficulty-weighted, with CSV export",
     flagpost: "Built in",
-    others: { state: "partial", label: "Basic stats" },
+    others: { state: "no", label: "—" },
+  },
+  {
+    capability: "Modules & marketplace",
+    detail: "Install signed challenge & theme packs from an open, mirrorable registry; SDK to build your own",
+    flagpost: "Built in — opt-in, air-gappable",
+    others: { state: "partial", label: "Plugins, no signed registry" },
   },
   {
     capability: "AI assistants",
@@ -91,34 +85,10 @@ const rows: Row[] = [
     others: { state: "no", label: "—" },
   },
   {
-    capability: "Participation certificates",
-    detail: "In-app designer, server-rendered per participant, released and shared",
-    flagpost: "Built in",
-    others: { state: "no", label: "—" },
-  },
-  {
     capability: "Post-event reporting",
     detail: "Branded PDF/HTML wrap-up — participation, results, challenges, support, feedback",
     flagpost: "One click, built in",
     others: { state: "no", label: "Export CSV, build it yourself" },
-  },
-  {
-    capability: "Interface languages",
-    detail: "English, Français, Español, Polski — with a Crowdin translator workflow",
-    flagpost: "Four maintained locales",
-    others: { state: "partial", label: "Community translations, varies" },
-  },
-  {
-    capability: "Divisions & spectators",
-    detail: "Brackets, public spectator board + insights, full-screen venue mode, CTFtime feed",
-    flagpost: "Built in",
-    others: { state: "partial", label: "Varies" },
-  },
-  {
-    capability: "Portability",
-    detail: "ctfcli-format challenge import/export, full platform backup",
-    flagpost: "No lock-in by design",
-    others: { state: "partial", label: "Varies" },
   },
   {
     capability: "Licence & cost",

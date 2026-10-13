@@ -22,6 +22,7 @@ truth.
 | `delete_competition` | Competition Management | competition |
 | `manage_schedule` | Competition Management | competition |
 | `manage_modules` | Competition Management | competition |
+| `manage_invite_links` | Competition Management | competition |
 | `generate_report` | Competition Management | competition |
 | `challenge_view` | Challenges | competition |
 | `challenge_create` | Challenges | competition |
@@ -51,6 +52,7 @@ truth.
 | `manage_auth_providers` | Site Settings | global |
 | `manage_ai` | Site Settings | global |
 | `manage_pages` | Site Settings | global |
+| `install_content_pack` | Site Settings | global |
 | `ai_view_transcripts` | AI Assistants | competition |
 | `view_competition_analytics` | Analytics | competition |
 | `view_global_analytics` | Analytics | global |
@@ -74,7 +76,7 @@ truth.
 competition:
 
 `edit_competition` · `manage_schedule` · `manage_modules` ·
-`generate_report` · `challenge_view` · `challenge_create` ·
+`manage_invite_links` · `generate_report` · `challenge_view` · `challenge_create` ·
 `challenge_edit` · `challenge_delete` · `challenge_publish` ·
 `score_override` · `scoreboard_freeze` · `team_view_all` ·
 `team_edit_any` · `team_disqualify` · `ticket_view` · `ticket_respond` ·
@@ -118,6 +120,15 @@ competition:
   `instance_manage` are the staff ops grants (see and force-kill/extend any
   subject's instance). A Judge holds all three; site provisioner config stays
   behind `manage_instance_infra`.
+- `manage_invite_links` (v1.7.0) is a competition grant for the
+  [invite & view links](/guides/competitions/#sharing-links) under
+  Settings → Sharing — a Judge holds it, since sharing a competition is an
+  organiser action. `install_content_pack` (v1.7.0) is an Administrator-only
+  global grant for installing signed
+  [marketplace content packs](/admin/site-settings/#marketplace--content-packs)
+  (challenge and theme packs) — a site-level trust decision, so it sits beside
+  `manage_instance_infra` and the auth and AI grants rather than inside a
+  competition role.
 - System roles **re-sync from this catalogue on every startup**, so
   permissions added by an upgrade reach existing installs' built-in roles
   automatically. Custom roles are never touched by the sync.

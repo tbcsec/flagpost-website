@@ -138,3 +138,26 @@ same schema the editor writes, never raw HTML.
 
 The platform [export / import panel](/admin/backup/) lives on the Backup
 tab.
+
+## Marketplace & content packs
+
+Since v1.7.0 an Administrator (`install_content_pack`) can install **content
+packs** from the Flagpost **marketplace** — an open, mirrorable registry. Two
+kinds ship: **challenge packs** install into a competition, and **theme
+packs** install site-wide alongside your [brand themes](#custom-brand-themes).
+
+**Safe by default.** Nothing installs from the hosted registry until an
+operator opts in — the default trust policy is `verified` with no root key
+configured, so installs stay blocked until you configure one. Every artifact
+is **signed**, and its signature and content digest are **re-verified against
+your own instance's policy** at install time; the registry's trust tier is a
+display hint, never authority.
+
+**Mirrorable and air-gappable.** `marketplace_url` (default
+`marketplace.flagpost.io`) can point at your own mirror for curated or
+offline use, and a single **`marketplace_enabled`** switch disables the whole
+surface. Building, signing and validating your own packs is covered in
+[Developing modules](/dev/modules/) and the module SDK.
+
+> Only content packs ship today — declarative and signed-code **modules**,
+> and a module sandbox, are designed (ADR-0040) but not yet built.

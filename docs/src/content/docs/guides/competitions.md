@@ -33,15 +33,16 @@ start, not a lock-in.
 ## Settings
 
 Competition Settings is tabbed: **General**, **Controls**, **Challenges**,
-**Rules**, **Modules**, and — when their optional modules are enabled —
-**Assistant** and **Certificates**.
+**Rules**, **Modules**, **Sharing**, and — when their optional modules are
+enabled — **Assistant** and **Certificates**.
 
 ### General
 
 - **Visibility** — public competitions appear in the lobby; private ones are
   reachable only by invite code.
 - **Joining** — self-serve join for public events, or an invite code (the
-  only way into a private one). The code can be regenerated.
+  only way into a private one). The code can be regenerated. For a direct,
+  managed alternative to the bare code, see [Sharing links](#sharing-links).
 - **Public spectator scoreboard** — an explicit opt-in (`off` by default)
   that exposes an unauthenticated, read-only scoreboard — and, since
   v1.3.0, the full-screen
@@ -60,6 +61,23 @@ Competition Settings is tabbed: **General**, **Controls**, **Challenges**,
   for this event. Unless marked display-only, competitors must record
   acceptance before joining (`competition.rules_accepted` gives you the
   audit trail).
+
+### Sharing links
+
+Since v1.7.0 you can share a competition with a **direct link**, not just a
+code. Links are managed on the **Sharing** tab under the
+`manage_invite_links` permission (a Judge holds it), and come in two kinds:
+
+- **Join links** — for public *and* private competitions. The recipient lands
+  on a public page at `/invite/{token}`, signs in or registers, and is walked
+  through to joined — the token survives the whole auth round-trip, **including
+  SSO**, and still honours the competition's rules, email-verification,
+  registration-field and registration-window gates.
+- **View links** — public competitions only; a read-only pass to spectate
+  without joining.
+
+Every link is **revocable, expiring, and use-capped**, so a leaked link is a
+contained, reversible mistake rather than an open door.
 
 ### Controls — status and schedule
 
@@ -117,7 +135,7 @@ Six optional modules can be switched off for this competition:
 (which additionally sits behind a site-wide master switch),
 **[Certificates](/guides/certificates/)**, and
 **[Post-event reports](/guides/reports/)**. Certificates and reports both
-need [object storage](/deploy/production/#attachments-and-minio_public_endpoint).
+need [object storage](/deploy/production/#attachments-and-s3_public_endpoint).
 The Modules tab and toggles require the competition-scoped `manage_modules`
 permission (previously part of `edit_competition`); built-in Judge and
 Administrator hold it. Required-core modules are listed but locked on.

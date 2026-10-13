@@ -30,9 +30,11 @@ Twenty-four modules in all. Two ship inert even when enabled for a
 competition, behind a site master switch: **AI Assistants**
 (`ai_settings.enabled`, default off; ADR-0023) and **Challenge Instances**,
 which stays refused until an operator configures a container backend and
-flips its site-level switch (ADR-0036). Marketplace /
-third-party modules are a future concern with an explicit sandboxing
-question to answer first — today's module system runs trusted, in-repo code.
+flips its site-level switch (ADR-0036). Since v1.7.0 a **content-pack
+marketplace** and an authoring SDK ship (ADR-0040) — signed, trust-tiered
+challenge and theme packs through the existing validated importers. Third-party
+**code** modules (the declarative and signed-code tiers) and a module sandbox
+remain future concerns; code modules still run trusted and in-repo.
 
 ## The event-driven core
 

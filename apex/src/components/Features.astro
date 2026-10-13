@@ -1,8 +1,9 @@
 ---
 /**
- * The differentiators, straight from the repo README's Highlights —
- * every one built and working today. No roadmap features here. The tenth
- * (AI assistants) closes the grid as a deliberate full-width card.
+ * The differentiators — the handful of things that win the decision against
+ * another platform, not a catalogue. The full feature list lives in the docs
+ * and the comparison table; this grid stays ruthless. AI assistants close it
+ * as a deliberate full-width card. `badge` flags genuinely-recent arrivals.
  */
 import Icon from "./Icon.astro";
 
@@ -23,29 +24,26 @@ const features = [
     body: "True CRDT co-editing on every challenge — a shared scratchpad for your team where everyone types at once, conflict-free.",
   },
   {
-    icon: "award",
-    title: "A scoreboard done right",
-    body: "First blood, brackets and divisions, a freeze for the final stretch, a public spectator board with a big-screen venue mode, and a CTFtime feed.",
-  },
-  {
-    icon: "layers",
-    title: "A deep challenge model",
-    body: "Static, regex and multiple-choice flags. Dynamic decay scoring, prerequisite unlock chains, scheduled releases, guess caps.",
-  },
-  {
     icon: "server",
     title: "Per-team challenge instances",
     body: "Hand every team its own isolated, containerised copy of a challenge — launched on demand, reaped on a TTL, with unique per-instance flags. Docker or Kubernetes, behind one least-privilege contract.",
   },
   {
+    icon: "crosshair",
+    title: "A skills web, not just a score",
+    body: "A per-player skills radar that spans every event on the install, and an organiser matrix that answers who's proficient, who's struggling and who's fresh — difficulty-weighted, with CSV export.",
+    badge: "NEW · v1.7.0",
+  },
+  {
+    icon: "package",
+    title: "Modules & a marketplace",
+    body: "Install challenge and theme packs from an open, mirrorable registry — signed, trust-tiered, and off until you opt in. A documented SDK to build, sign and ship your own.",
+    badge: "NEW · v1.7.0",
+  },
+  {
     icon: "users",
     title: "Permissions as data",
     body: "RBAC that isn't hard-coded: clone the built-in roles and craft custom ones with per-competition or site-wide scope.",
-  },
-  {
-    icon: "repeat",
-    title: "No lock-in, ever",
-    body: "CTFd-compatible ctfcli YAML import and export, plus a one-click, full-fidelity backup of your entire install.",
   },
   {
     icon: "lock",
@@ -55,22 +53,7 @@ const features = [
   {
     icon: "terminal",
     title: "Production in one command",
-    body: "docker compose up brings up the app, Postgres, Redis, MinIO and Caddy behind one origin — with automatic HTTPS.",
-  },
-  {
-    icon: "award",
-    title: "Certificates worth sharing",
-    body: "Design one template; every participant downloads a server-rendered certificate drawn from the final standings. A certificate on LinkedIn is an impression for your event.",
-  },
-  {
-    icon: "file-text",
-    title: "The write-up writes itself",
-    body: "End the competition and generate a branded PDF report — participation, results, challenge analysis, support and feedback — from the data you already have. The document you email a sponsor on Monday.",
-  },
-  {
-    icon: "globe",
-    title: "Speaks your language",
-    body: "The interface ships in English, Français, Español and Polski, chosen per device — with a Crowdin workflow for adding more. Your challenge text and announcements stay in your words.",
+    body: "docker compose up brings up the app, Postgres, Redis, RustFS and Caddy behind one origin — with automatic HTTPS.",
   },
 ] as const;
 
@@ -105,7 +88,16 @@ const aiFeature = {
           <span class="flex h-10 w-10 items-center justify-center rounded-md bg-fp-green-dark/10 text-fp-green-dark transition group-hover:bg-fp-green-dark/15">
             <Icon name={f.icon} class="h-5 w-5" />
           </span>
-          <h3 class="mt-4 font-display text-base font-semibold">{f.title}</h3>
+          <h3 class="mt-4 font-display text-base font-semibold">
+            <span class="inline-flex flex-wrap items-center gap-2.5">
+              {f.title}
+              {"badge" in f && f.badge && (
+                <span class="whitespace-nowrap rounded-full bg-fp-green-dark/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-fp-green-dark">
+                  {f.badge}
+                </span>
+              )}
+            </span>
+          </h3>
           <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
         </li>
       ))}
@@ -118,14 +110,7 @@ const aiFeature = {
             <Icon name={aiFeature.icon} class="h-5 w-5" />
           </span>
           <div>
-            <h3 class="font-display text-base font-semibold">
-              <span class="inline-flex flex-wrap items-center gap-2.5">
-                {aiFeature.title}
-                <span class="whitespace-nowrap rounded-full bg-fp-green-dark/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-fp-green-dark">
-                  NEW · v1.4.0
-                </span>
-              </span>
-            </h3>
+            <h3 class="font-display text-base font-semibold">{aiFeature.title}</h3>
             <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">{aiFeature.body}</p>
           </div>
         </div>

@@ -25,7 +25,7 @@ Each Compose service maps to an AWS building block:
 | *(new)* scheduler | ECS Fargate service, **exactly 1 task** — `python -m scheduler` |
 | `postgres` | RDS for PostgreSQL |
 | `redis` | ElastiCache for Redis — **required** here (cross-task broadcasts, presence, rate limits), not optional |
-| `minio` | An S3 bucket (pre-created; S3 Block Public Access **on** — presigned URLs still work) |
+| `rustfs` | An S3 bucket (pre-created; S3 Block Public Access **on** — presigned URLs still work) — on AWS you point the S3 client at the bucket and run no RustFS container |
 
 **The front door — two options.** Keeping **Caddy** as a tiny ECS service is
 the low-drift choice: it already emits the security headers Flagpost expects
@@ -83,18 +83,18 @@ instance startup precisely because N tasks starting at once would race them.
 | `MULTI_INSTANCE` | `1` on **every** web task *and* the scheduler task |
 | `SCHEDULER_ENABLED` | `false` on web tasks |
 | `WEB_CONCURRENCY` | ≈ task vCPU (match `--workers`) |
-| `MINIO_ENDPOINT` | `s3.<region>.amazonaws.com` |
-| `MINIO_SECURE` / `MINIO_REGION` | `true` / the bucket's region. Set the region so presigned URLs are signed **offline** — without it the client makes a location call at sign time. |
-| `MINIO_BUCKET` | the bucket name |
-| `MINIO_IAM_AUTH` | `true` to authenticate with the ECS **task role** (recommended — no static keys anywhere). If unset/false: `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` from Secrets Manager. |
-| `MINIO_PUBLIC_ENDPOINT` | leave **unset** — S3 is browser-reachable itself, so the internal and public endpoints are the same |
+| `S3_ENDPOINT` | `s3.<region>.amazonaws.com` |
+| `S3_SECURE` / `S3_REGION` | `true` / the bucket's region. Set the region so presigned URLs are signed **offline** — without it the client makes a location call at sign time. |
+| `S3_BUCKET` | the bucket name |
+| `S3_IAM_AUTH` | `true` to authenticate with the ECS **task role** (recommended — no static keys anywhere). If unset/false: `S3_ACCESS_KEY` / `S3_SECRET_KEY` from Secrets Manager. |
+| `S3_PUBLIC_ENDPOINT` | leave **unset** — S3 is browser-reachable itself, so the internal and public endpoints are the same |
 | `JWT_SECRET` | explicit, from Secrets Manager — Fargate storage is ephemeral, so all tasks must share one value rather than each deriving its own |
 | `SECRET_ENCRYPTION_KEY` | same — and it must be a [Fernet key](/deploy/without-docker/), not an arbitrary string |
 | `PUBLIC_BASE_URL` / `CORS_ORIGINS` | the public origin, e.g. `https://ctf.example.org` |
 | `REFRESH_COOKIE_SECURE` | `true` |
 | SMTP vars | if outbound email is wanted |
 
-**Task-role IAM policy** (when `MINIO_IAM_AUTH=true`). On Fargate, EC2
+**Task-role IAM policy** (when `S3_IAM_AUTH=true`). On Fargate, EC2
 instance profiles aren't available to containers — the
 [ECS **task role**](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)
 is *"required when your application accesses other AWS services, such as

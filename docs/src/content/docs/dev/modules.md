@@ -114,11 +114,14 @@ mutation.
 
 Be aware of the honest edges: manifest keys for `settings`, `widgets`,
 `nav_items`, and frontend `extensions` are **declared but unused** until a
-module needs them, the frontend extension-slot system is specified but not
-wired, and there is **no marketplace or sandboxing** — modules are trusted
-code running in-process, reviewed like any other contribution. If you're
-building something you hope to distribute, open a discussion on the repo
-first.
+module needs them, and the frontend extension-slot system is specified but
+not wired. Since v1.7.0 there **is** a marketplace, but only for **content
+packs** (challenges and themes) through the validated importers (ADR-0040) —
+**code** modules still have **no sandbox** and run trusted in-process,
+reviewed like any other contribution, and there is no supported way to
+distribute one yet (the declarative and signed-code tiers are designed in
+ADR-0040 but not built). If you're building something you hope to distribute,
+open a discussion on the repo first.
 
 ## Frontend counterpart
 

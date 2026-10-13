@@ -48,7 +48,7 @@ export const faq: FaqEntry[] = [
   {
     question: "What do I need to self-host Flagpost?",
     answer:
-      "Docker with Compose on a single machine. One command starts the app, PostgreSQL, Redis, MinIO and a Caddy reverse proxy; point it at your domain and HTTPS certificates are obtained and renewed automatically.",
+      "Docker with Compose on a single machine. One command starts the app, PostgreSQL, Redis, RustFS and a Caddy reverse proxy; point it at your domain and HTTPS certificates are obtained and renewed automatically.",
   },
   {
     question: "Does it support team and individual competitions?",

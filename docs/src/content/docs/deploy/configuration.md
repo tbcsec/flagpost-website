@@ -25,10 +25,10 @@ config, but those fallbacks are published in the repo — set real values
 | Variable | Fallback | Meaning |
 | --- | --- | --- |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `flagpost` / `flagpost` / `flagpost` | Postgres credentials; compose derives the backend's `DATABASE_URL` from them. |
-| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` | `minioadmin` / `minioadmin` | MinIO credentials; also the backend's S3 keys. **The backend refuses to boot on these defaults when the deployment looks reachable** — see [Production deployment](/deploy/production/#1-configure-env). |
-| `MINIO_PUBLIC_ENDPOINT` | `localhost:9000` | The host **browsers** hit for signed attachment downloads — must be reachable by competitors. See [Production deployment](/deploy/production/#attachments-and-minio_public_endpoint). |
-| `MINIO_REGION` | `us-east-1` | SigV4 region for the object-storage client. Set it to your bucket's region so signed URLs sign **offline**; unset, the client makes a `GetBucketLocation` call at sign time, which can't reach a browser-only endpoint. Relevant when the store is real S3. |
-| `MINIO_IAM_AUTH` | `false` | Authenticate to object storage with an **AWS IAM role** (ECS task role / EC2 instance profile) resolved from the metadata endpoint, instead of static keys — no long-lived storage secret to distribute. Only meaningful against real S3; see [Deploying to AWS (Fargate + ALB)](/deploy/fargate/). |
+| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | `rustfsadmin` / `rustfsadmin` | Object-storage credentials — one pair, passed to both the RustFS service and the backend's S3 client. **The backend refuses to boot on these defaults when the deployment looks reachable** — see [Production deployment](/deploy/production/#1-configure-env). Renamed from `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` in v1.7.0 ([ADR-0041](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0041-object-storage-rustfs-replaces-minio.md)); any `MINIO_*` variable left set makes the backend refuse to start. |
+| `S3_PUBLIC_ENDPOINT` | `localhost:9000` | The host **browsers** hit for signed attachment downloads — must be reachable by competitors. See [Production deployment](/deploy/production/#attachments-and-s3_public_endpoint). |
+| `S3_REGION` | `us-east-1` | SigV4 region for the object-storage client. Set it to your bucket's region so signed URLs sign **offline**; unset, the client makes a `GetBucketLocation` call at sign time, which can't reach a browser-only endpoint. Relevant when the store is real S3. |
+| `S3_IAM_AUTH` | `false` | Authenticate to object storage with an **AWS IAM role** (ECS task role / EC2 instance profile) resolved from the metadata endpoint, instead of static keys — no long-lived storage secret to distribute. Only meaningful against real S3; see [Deploying to AWS (Fargate + ALB)](/deploy/fargate/). |
 
 ## Update check
 
@@ -108,7 +108,7 @@ recreate the stack on a schedule (`docker compose down -v && docker compose up -
 ## Variables the compose file manages for you
 
 You'll see these on the backend service; they're derived and rarely need
-touching directly: `DATABASE_URL`, `REDIS_URL`, `MINIO_ENDPOINT`,
-`MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `CORS_ORIGINS`, `JWT_SECRET_FILE`,
+touching directly: `DATABASE_URL`, `REDIS_URL`, `S3_ENDPOINT`
+(`rustfs:9000` under compose), `CORS_ORIGINS`, `JWT_SECRET_FILE`,
 `SECRET_ENCRYPTION_KEY_FILE`.
 Running [without Docker](/deploy/without-docker/), you set them yourself.

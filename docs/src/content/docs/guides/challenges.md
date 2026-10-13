@@ -81,7 +81,7 @@ hidden/schedule state, so a clone never publishes early.
 
 ## Attachments
 
-Files attach per challenge and are stored in MinIO/S3. Downloads go through
+Files attach per challenge and are stored in object storage (RustFS/S3). Downloads go through
 **short-lived signed URLs** issued only after the same permission check as
 viewing the challenge, so a pasted link stops working once the challenge is
 unpublished or the event ends.

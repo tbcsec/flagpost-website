@@ -4,13 +4,13 @@ description: Get a full Flagpost stack running locally in three commands, then c
 ---
 
 The default Docker Compose stack **is** the production stack: built images
-behind a Caddy reverse proxy, with PostgreSQL, Redis, and MinIO. It runs
+behind a Caddy reverse proxy, with PostgreSQL, Redis, and RustFS. It runs
 as-is on a laptop with no configuration.
 
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) with the Compose plugin.
-- Around 2 GB of free RAM for the five services.
+- Around 2 GB of free RAM for the six services.
 
 ## Run it
 
@@ -44,7 +44,7 @@ See [First-run setup](/admin/setup/) for details.
 | `backend` | FastAPI + WebSockets; runs `alembic upgrade head` before serving |
 | `postgres` | The database |
 | `redis` | Cache / pub-sub transport |
-| `minio` | S3-compatible storage for challenge attachments |
+| `rustfs` | S3-compatible storage for challenge attachments |
 
 ## Next steps
 

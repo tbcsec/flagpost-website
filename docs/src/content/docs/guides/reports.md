@@ -55,7 +55,7 @@ GET /api/competitions/{id}/reports/{report_id}/download/{pdf|html}
 ```
 
 That's a deliberate choice — it means downloads work on single-origin
-deployments, behind a Cloudflare Tunnel, or anywhere MinIO isn't
+deployments, behind a Cloudflare Tunnel, or anywhere the object store isn't
 browser-reachable, and `generate_report` is re-checked on **every** fetch
 rather than baked into a shareable link. Files are served as an attachment
 with `nosniff` and a sandboxing CSP.
@@ -82,7 +82,7 @@ large events.
 
 ## Object storage and source installs
 
-Generated reports live in [object storage](/deploy/production/#attachments-and-minio_public_endpoint)
+Generated reports live in [object storage](/deploy/production/#attachments-and-s3_public_endpoint)
 until downloaded or purged. If you run **[without Docker](/deploy/without-docker/)**,
 the backend needs WeasyPrint's system libraries installed before you can
 generate reports — the official image already bundles them.

@@ -14,7 +14,7 @@ default) under **Settings → Modules**. Authoring needs the
 `manage_certificates` permission — held by Judge and Administrator. The
 module builds on competitions, scoring and notifications (all core), and
 **uploaded backgrounds, image elements, custom fonts and the bulk export
-all need [object storage](/deploy/production/#attachments-and-minio_public_endpoint)**;
+all need [object storage](/deploy/production/#attachments-and-s3_public_endpoint)**;
 a solid-colour or preset background needs none.
 
 ## Design the template
