@@ -36,6 +36,14 @@ https://<your-domain>/api/auth/saml/<slug>/acs
 Both URLs are built from `PUBLIC_ORIGIN` — it must match your real origin
 exactly, same as [OIDC redirect URIs](/admin/sso/#oidc-specifics).
 
+:::caution[SAML needs HTTPS]
+The IdP returns the sign-in as a form post from its own site, and the cookie
+that ties it to the browser that started the login only travels with that
+post over HTTPS. Since v1.8.0, an IdP on a different site therefore requires
+Flagpost to be served over **HTTPS**; over plain HTTP, SAML works only with an
+IdP on the same site.
+:::
+
 ## Provider fields
 
 | Field | Meaning |

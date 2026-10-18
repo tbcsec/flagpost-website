@@ -127,7 +127,8 @@ Flagpost's defaults reflect that.
   role so its permission set shrinks, force-closes the affected users'
   open sockets so they re-handshake and re-authorize — no staff-only room
   (ticket internal notes most sensitively) keeps streaming to a demoted
-  session.
+  session. Since v1.7.1 these evictions reach every worker of a
+  [multi-worker](/deploy/scaling/) deployment.
 - **Challenge instancing runs adversary-controlled code under
   least-privilege** (v1.6.0, optional module). The platform never mounts
   the raw Docker socket: it talks to an operator-run least-privilege
@@ -141,6 +142,15 @@ Flagpost's defaults reflect that.
   Docker; an enforced per-instance NetworkPolicy on Kubernetes). See
   [Deploying challenge instances](/deploy/challenge-instances/#security-posture--threat-model)
   for the full trust boundary and the operator-owned gaps.
+- **The code judge runs competitor-written code in a box with no network**
+  (v1.8.0, optional module, inert until configured). Each judging is a
+  throwaway container with networking disabled, reached through the same
+  kind of least-privilege socket proxy (`exec`, volumes and build denied —
+  setup refuses to continue until it verifies that). Inside it, the
+  submission runs as a separate unprivileged user with no capabilities, so it
+  can't read the hidden tests or forge its verdict, under hard CPU, memory,
+  output, file and process limits. The judge's configuration is never in a
+  backup. See [Code judge](/deploy/code-judge/#how-a-judging-is-contained).
 - **The [`/metrics` endpoint](/deploy/observability/) is off by default**
   (v1.6.0). When enabled it is token- and/or IP-allowlisted (the app
   refuses to boot if enabled with neither) and exposes only
@@ -183,7 +193,10 @@ with the `webhook` action.
 
 Fixed vulnerabilities are published as
 [GitHub Security Advisories](https://github.com/tbcsec/flagpost/security/advisories)
-with affected-version ranges (v1.2.0 shipped four). The
+with affected-version ranges (v1.2.0 shipped four). v1.7.1 and v1.8.0 include
+security fixes; see the
+[security advisories](https://github.com/tbcsec/Flagpost/security/advisories).
+The
 [update check](/deploy/upgrades/#the-update-check) tells administrators
 when they're behind; if you've disabled it, watch the advisories feed —
 security releases are the ones not to sit on.

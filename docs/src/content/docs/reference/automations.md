@@ -162,6 +162,14 @@ See [announcement severity & audiences](/guides/support/#announcements).
 - The time trigger fires **once** per rule when its threshold first goes
   true (deduplicated via the trigger count), and only for
   competition-scoped rules.
+- A **personal rule** is re-checked against its owner's current permissions
+  every time it would fire; if the owner can no longer observe the trigger,
+  the rule is skipped — no actions, no trigger count. It can only ever
+  *notify me*, however it was created or imported.
+- Actions are never rolled back. If a judged solve is later rejudged or
+  overridden away (`challenge.solve_revoked`, v1.8.0), a webhook or email a
+  rule already sent stays sent; a solve granted by a rejudge or override carries
+  `regrade: true`, so a rule can skip it.
 - On a [demo-mode](/deploy/configuration/#demo-mode) instance, the outbound
   actions (`webhook`, `send_email`) are hidden from the builder and refused
   at execution time.

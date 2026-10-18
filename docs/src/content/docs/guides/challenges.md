@@ -16,6 +16,10 @@ competitors.
 | **Regex** | The submission is matched against a stored pattern | Evaluation is hardened against catastrophic backtracking (ReDoS) — see [ADR-0018](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0018-regex-flag-redos-containment.md). |
 | **Multiple choice** | The picked option is hashed and compared like a static flag | Options are public; the correct answer never leaves the server. |
 
+A challenge can also be a **programming problem** (v1.8.0), solved by
+submitting code rather than a flag and graded by the code judge — see
+[Programming challenges](/guides/programming/).
+
 ### Multiple-choice guess caps
 
 Because a finite option set is trivially brute-forced, multiple-choice

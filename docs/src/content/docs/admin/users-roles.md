@@ -24,7 +24,9 @@ Self-service account management, from **/profile** and the login screen:
 - **Password reset** (needs [SMTP](/admin/site-settings/#operational-settings)):
   the request endpoint never discloses whether an account exists, reset
   tokens are stored hashed and expire after an hour, and a successful reset
-  revokes every active session.
+  revokes every active session. Since v1.8.0 reset and verification links are
+  tied to the address they were sent to, so changing an account's email
+  cancels any still outstanding.
 - **Email add / change / clear** — users manage their own address; if
   [email verification](/admin/site-settings/#registration) is enabled, a
   changed address must be re-verified (emits `user.email_verified`).
@@ -49,7 +51,12 @@ Self-service account management, from **/profile** and the login screen:
 
 - **Browse and search** the directory (`view_all_users`).
 - **Create and edit** accounts, including setting passwords
-  (`manage_users`) — the workflow for closed-registration installs.
+  (`manage_users`) — the workflow for closed-registration installs. An email
+  address a full Administrator sets — on create, CSV import or edit — counts
+  as **verified**, since you're vouching for it; one set by a delegate holding
+  `manage_users` but not the whole Administrator role stays unverified.
+  Changing an address cancels links sent to the old one; changing only its
+  capitalisation changes nothing.
 - **Ban / unban** — a soft ban: the account stays (with its history), but
   live tokens stop working immediately, login is refused, and active
   sessions are revoked. Unban restores access.
@@ -112,8 +119,8 @@ Roles are data — rows holding a list of permission keys from the
 | Role | Scope | Summary |
 | --- | --- | --- |
 | **Administrator** | Global | Every permission; manages users, roles, and all competitions |
-| **Judge** | Per competition | Full operational control inside an assigned competition — challenges, scoring, tickets, announcements, analytics, automations |
-| **Participant** | Per competition | Competitor-facing: view challenges, submit flags, own tickets, answer surveys |
+| **Judge** | Per competition | Full operational control inside an assigned competition — challenges, scoring, tickets, announcements, analytics, automations, instances, code judging |
+| **Participant** | Per competition | Competitor-facing: view challenges, submit flags and code, own tickets, answer surveys |
 
 System roles are **read-only**: they can't be edited or deleted, so "a Judge
 can run their competition" stays a safe assumption. They also **re-sync from
@@ -141,3 +148,33 @@ Operational invariants the platform enforces:
 - A role still assigned to anyone can't be deleted — unassign first.
 - The **last Administrator can never be unassigned** (or banned/deleted), so
   an install can't lock itself out.
+- You can't grant — or take away — permissions you don't hold yourself.
+
+## Delegating administration
+
+You don't have to make everyone an Administrator. Custom **global** roles can
+carry just the grants a job needs, and since v1.8.0 the rules are:
+
+- **The Admin section opens per page.** Each Admin page appears for the global
+  grant that governs it — the audit log for `view_audit_log`, custom pages for
+  `manage_pages`, the token panel for `manage_api_tokens`, and so on — and
+  offers only the actions the viewer holds. Competition-scoped grants never
+  open it.
+- **Account management is contained.** A delegate with `manage_users` can
+  edit, reset, ban, delete or remove the picture of only those accounts holding
+  no permission the delegate lacks (the ordinary Participant permissions
+  aside). A help desk looks after players in any competition, but not Judges
+  or Administrators. Acting on your own account is unaffected.
+- **Some things need the full Administrator permission set:** changing the
+  [mail server settings](/admin/site-settings/#operational-settings) or From
+  address, exporting user accounts and importing an audit log in a
+  [backup](/admin/backup/#who-can-move-which-section), and vouching for an
+  email address.
+- **Seeing every competition.** A site-wide role sees every competition,
+  private ones included, only if it carries at least one competition-scope
+  permission. One holding only global permissions sees public competitions
+  and its own, like anyone else.
+
+Treat `manage_users`, `manage_roles` and `manage_auth_providers` as
+administrator-level grants all the same, and start people on the narrowest
+role that covers their job.

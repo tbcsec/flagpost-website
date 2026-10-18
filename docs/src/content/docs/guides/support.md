@@ -31,6 +31,24 @@ Ticket events (`ticket.created`, `.assigned`, `.resolved`,
 `.message_posted`) are all [automation triggers](/guides/automations/) — a
 webhook rule can mirror the queue into your team chat.
 
+### Questions and clarifications
+
+Since **v1.8.0** a competitor can **Ask the judges** privately from a
+[programming problem](/guides/programming/)'s page. The question arrives as a
+ticket tagged **Question** — one message, answered with **Send answer** or a
+quick answer (*No comment*, *Read the problem statement*); the asker follows up
+by asking again, and the question is marked answered when a judge replies.
+
+When an answer helps everyone, tick **Also send to everyone as a
+clarification** (it needs `ticket_assign` and `announcement_create`; the
+checkbox works on any ticket about a challenge). Edit *The question, as
+everyone will see it* to strip anything that identifies the asker, then
+**Send to everyone**: it's published as an announcement of kind
+`clarification` — with no record of who asked — and listed on the challenge.
+Staff can also **Post a clarification** straight from a challenge and
+**Withdraw** one later; it stays listed, marked withdrawn, with its answer
+removed everywhere.
+
 ## Announcements
 
 Staff with `announcement_create` publish announcements that land as a live

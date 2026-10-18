@@ -22,7 +22,9 @@ the audit log, the automation engine, and the rule-builder UI.
   rule's scope* to automate on the event — the permission that governs
   observing it, so a rule can't be used to exfiltrate events its author
   couldn't see. [Personal rules](/guides/automations/#rule-scopes-and-who-can-create-what)
-  skip this check because they only fire for events their owner caused.
+  need it too, even though they only fire for events their owner caused —
+  and the engine re-checks the owner every time a personal rule would run, so
+  a rule whose owner has since lost the permission stays silent.
 
 ## Competition
 
@@ -40,6 +42,9 @@ the audit log, the automation engine, and the rule-builder UI.
 | `competition.archived` | `competition_id` | `edit_competition` |
 | `competition.unarchived` | `competition_id` | `edit_competition` |
 | `competition.deleted` | `competition_id`, `user_id`, `auto` | `delete_competition` |
+| `invite_link.created` | `competition_id`, `invite_link_id`, `capability` | `manage_invite_links` |
+| `invite_link.revoked` | `competition_id`, `invite_link_id`, `capability` | `manage_invite_links` |
+| `invite_link.used` | `competition_id`, `invite_link_id`, `user_id` | `manage_invite_links` |
 
 `competition.started` / `.ended` are emitted by the scheduler as the clock
 crosses the schedule (once each); `competition.time_remaining` ticks from
@@ -51,7 +56,10 @@ manual delete. `registration_field.updated` (v1.6.0) fires when an organiser
 edits the [custom registration fields](/guides/teams/#custom-registration-fields)
 set (`count` is the new field count); `registration_field.value_set` fires
 when a subject saves their answers, at entry or later (`subject_id` is the
-user in individual mode, the team in team mode).
+user in individual mode, the team in team mode). `invite_link.*` (v1.7.0)
+covers the [sharing links](/guides/competitions/#sharing-links): `capability`
+is `join` or `view`, and `invite_link.used` fires when a
+join link admits someone new.
 
 ## Teams
 
@@ -70,7 +78,8 @@ user in individual mode, the team in team mode).
 | `challenge.updated` | `competition_id`, `challenge_id` | `challenge_edit` |
 | `challenge.published` | `competition_id`, `challenge_id`, `user_id`, `title` | `challenge_view` |
 | `challenge.deleted` | common | `challenge_edit` |
-| `challenge.solved` | `competition_id`, `challenge_id`, `user_id`, `team_id`, `points`, `is_first_blood` | `challenge_view` |
+| `challenge.solved` | `competition_id`, `challenge_id`, `user_id`, `team_id`, `points`, `is_first_blood`, `regrade`, `solved_at` | `challenge_view` |
+| `challenge.solve_revoked` | `competition_id`, `challenge_id`, `user_id`, `team_id`, `solved_at` | `challenge_view` |
 | `challenge.attempted` | `competition_id`, `challenge_id`, `user_id`, `team_id`, `correct` | `view_competition_analytics` |
 | `challenge.guesses_reset` | `competition_id`, `challenge_id`, `user_id`, `team_id` | `challenge_edit` |
 | `challenge.rated` | `competition_id`, `challenge_id`, `user_id`, `rating` | `feedback_view_responses` |
@@ -82,7 +91,14 @@ user in individual mode, the team in team mode).
 
 `challenge.solved` is the workhorse: `is_first_blood` makes first-blood
 automation a one-condition rule, and repeat-correct submissions never
-re-emit it.
+re-emit it. `solved_at` is the solve's time — for a
+[programming problem](/guides/programming/), when the code was submitted, not
+when it was judged. `regrade: true` (v1.8.0) marks a solve granted by a
+rejudge or a judge's override, so a rule can tell it from a live solve.
+`challenge.solve_revoked` (v1.8.0) is the reverse — a judged solve rejudged
+or overridden away from Accepted — and moves the scoreboard, activity feed and
+skills web the same way. It doesn't undo what a rule already did on the
+original solve; a rule that must react subscribes to it.
 
 `hint.released` and `hint.published` (v1.4.0) are different moments: a
 *release* grants an existing hint to one event subject, a *publish* makes
@@ -127,6 +143,32 @@ subject's live
 (`matched_*` names the leak source) — provable flag sharing, surfaced as a
 signal with no automatic penalty.
 
+## Code judge
+
+Added in v1.8.0 with the optional [code judge](/deploy/code-judge/) module.
+Payloads carry ids and the verdict — never source code.
+
+| Event | Payload fields | Trigger permission |
+| --- | --- | --- |
+| `judging.queued` | `competition_id`, `challenge_id`, `judging_id`, `user_id`, `team_id`, `kind` | `judging_view` |
+| `judging.completed` | `competition_id`, `challenge_id`, `judging_id`, `user_id`, `team_id`, `kind`, `verdict` | `judging_view` |
+| `judging.rejudge_requested` | `competition_id`, `challenge_id`, `judging_id`, `user_id`, `count` | `judging_view` |
+| `judging.overridden` | `competition_id`, `challenge_id`, `judging_id`, `user_id`, `submitter_user_id`, `team_id`, `verdict`, `reason` | `judging_view` |
+| `judge.settings_updated` | `actor_user_id`, `enabled` *(site-wide)* | `manage_judge_infra` |
+| `judge.language_created` | `actor_user_id`, `language_id`, `key` *(site-wide)* | `manage_judge_infra` |
+| `judge.language_updated` | `actor_user_id`, `language_id`, `key` *(site-wide)* | `manage_judge_infra` |
+| `judge.language_deleted` | `actor_user_id`, `language_id`, `key` *(site-wide)* | `manage_judge_infra` |
+
+`kind` is `submit` (judged on every test and scored), `run` (examples
+only, never scored) or `reference` (an author's reference check, never
+scored). On the two staff actions, `user_id` is the staff member —
+so the audit log attributes them — and `submitter_user_id` names whose code it
+was. Judgings are others' attempts and verdicts, so their triggers are gated on
+the staff `judging_view` grant, as `challenge.attempted` is on staff
+analytics. `judge.*` records site configuration, like
+`instance.settings_updated`; a language's payload carries its key and id,
+never its commands.
+
 ## Scoring & scoreboard
 
 | Event | Payload fields | Trigger permission |
@@ -144,15 +186,16 @@ effects are events like any other mutation's.
 
 | Event | Payload fields | Trigger permission |
 | --- | --- | --- |
-| `ticket.created` | `competition_id`, `ticket_id`, `opener_user_id`, `subject` | `ticket_view` |
+| `ticket.created` | `competition_id`, `ticket_id`, `opener_user_id`, `subject`, `kind` | `ticket_view` |
 | `ticket.assigned` | `competition_id`, `ticket_id`, `assignee_user_id` | `ticket_view` |
 | `ticket.resolved` | `competition_id`, `ticket_id` | `ticket_view` |
 | `ticket.message_posted` | `competition_id`, `ticket_id`, `author_user_id`, `is_internal` | `ticket_view` |
 | `ticket.attachment_added` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id`, `is_internal` | `ticket_view` |
 | `ticket.attachment_deleted` | `competition_id`, `ticket_id`, `message_id`, `attachment_id`, `actor_user_id` | `ticket_view` |
-| `announcement.published` | `competition_id`, `announcement_id`, `title`, `body`, `severity`, `audience_type` | `challenge_view` |
+| `announcement.published` | `competition_id`, `announcement_id`, `title`, `body`, `severity`, `audience_type`, `kind`, `challenge_id`, `question` | `challenge_view` |
 | `announcement.updated` | `competition_id`, `announcement_id` | `announcement_create` |
 | `announcement.deleted` | `competition_id`, `announcement_id` | `announcement_create` |
+| `announcement.withdrawn` | `competition_id`, `announcement_id`, `challenge_id`, `kind`, `user_id` | `announcement_create` |
 
 `announcement.published` also fires when a
 [scheduled announcement](/guides/support/#announcements) reaches its publish
@@ -161,6 +204,14 @@ time — identically to an immediate post. `announcement.updated` /
 edited or cancelled; they're staff-domain (the draft was never
 competitor-visible), so they gate on `announcement_create`, not
 `challenge_view`.
+
+Since v1.8.0 a ticket's `kind` is `support` or `question` — a competitor's
+private question about a challenge, asked from its page — and an
+announcement's `kind` can be `clarification`, carrying the `challenge_id` and
+the `question` as the judge worded it (never who asked). See
+[clarifications](/guides/programming/#clarifications).
+`announcement.withdrawn` fires when staff withdraw a clarification; it names
+the staff member as `user_id`, so it's staff-only too.
 
 ## Feedback
 
@@ -287,3 +338,5 @@ Emitted and audited, but **never** offered as automation triggers:
 | --- | --- |
 | `automation.rule_triggered` / `.rule_created` / `.rule_updated` / `.rule_deleted` | The engine never evaluates its own events — the trivial self-loop guard. |
 | `platform.imported` | Platform administration, not a competition event. |
+| `platform.content_pack_installed` | A [content-pack](/admin/site-settings/#marketplace--content-packs) install (v1.7.0) — one bulk event, not a per-row flood. |
+| `platform.marketplace_settings_updated` | Marketplace registry and trust configuration (v1.7.0) — platform administration. |

@@ -297,7 +297,41 @@ only by the Test-connection probes — plus get/list for status; and nothing
 on `secrets` or `pods/exec`), a zero-rights `flagpost-instance` account
 that the challenge pods themselves run as, and a **namespace default-deny-egress
 baseline** NetworkPolicy that isolates a freshly-created pod during the brief
-window before its own per-instance policy is programmed by the CNI.
+window before its own per-instance policy is programmed by the CNI. Its one
+allowance is DNS to the cluster DNS pods (`k8s-app=kube-dns` in
+`kube-system`), the same scope as each instance's own policy.
+
+:::caution[Upgrading to v1.8.0? Re-apply the manifest]
+Run `kubectl apply -f k8s/instances-rbac.yaml` again so an existing namespace
+picks up the scoped DNS rule. Test connection's `baseline_policy` leg stays red
+until you do.
+:::
+
+If your cluster's DNS **isn't** kube-dns pods in `kube-system` — NodeLocal
+DNSCache, GKE Cloud DNS or OpenShift, for example — DNS fails inside instances.
+Leave the built-in rule alone and add a **supplementary** NetworkPolicy in the
+instance namespace that allows DNS to your resolver only (policies add up, so it
+extends the baseline and every instance's policy). Keep it scoped with a `to`:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: flagpost-dns-extra
+  namespace: flagpost-instances
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - ipBlock: { cidr: 169.254.20.10/32 }   # your resolver's address
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+```
+
+On OpenShift, replace the `ipBlock` with a `namespaceSelector` for
+`openshift-dns` plus a `podSelector` for its DNS pods, and use port `5353`.
 
 Then configure **Admin → Site settings → Instances**:
 
@@ -394,6 +428,7 @@ during it.
 | `privilege_posture` — dangerous verbs return `403` | `privilege_posture` — the SelfSubjectAccessReview allow/deny matrix (a cluster-admin token fails) |
 | `network_isolation` — the instance network exists; egress reminder | `namespace_ready` — the namespace is operable |
 | `image_pull` — a probe image pulls | `network_policy_support` — NetworkPolicy objects are accepted |
+| | `baseline_policy` — the namespace default-deny-egress baseline is present and every egress rule in it is scoped (v1.8.0) |
 | `probe_run` — a hardened probe container runs | `egress_enforcement` — a deny-all pod is actually blocked (with a positive control) |
 | `public_reachable` — the public host is dialled end-to-end on a real port | `probe_run` + `public_reachable` — a hardened pod behind a NodePort, dialled |
 | `http_ingress` (HTTP only) — wildcard DNS + `:443` | `http_ingress` (HTTP only) — wildcard DNS + `:443` |

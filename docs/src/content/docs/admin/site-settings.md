@@ -9,11 +9,13 @@ an Administrator (`manage_site_settings`). Theming is deliberately
 (recorded in ADR-0011).
 
 **Admin → Settings** is tabbed — **General · Email · Auth · Rules · Backup ·
-Appearance · AI** — with the active tab in the URL, so a settings link
-lands where you meant it to. Two tabs require their own permission and are
-covered on their own pages: Auth (`manage_auth_providers`,
-[Single sign-on](/admin/sso/)) and, since v1.4.0, AI (`manage_ai`,
-[AI assistants](/admin/ai/)).
+Appearance · AI · Instances · Code judge** — with the active tab in the URL, so
+a settings link lands where you meant it to. Four tabs require their own
+permission and are covered on their own pages: Auth (`manage_auth_providers`,
+[Single sign-on](/admin/sso/)), AI (`manage_ai`, [AI assistants](/admin/ai/)),
+Instances (`manage_instance_infra`,
+[Challenge instances](/deploy/challenge-instances/)) and, since v1.8.0, Code
+judge (`manage_judge_infra`, [Code judge](/deploy/code-judge/)).
 
 ## Appearance
 
@@ -107,6 +109,8 @@ re-seed only if the theme library is completely empty.
 - **Email verification** — when enabled (requires SMTP), a self-registered
   account must verify its address; verifying emits `user.email_verified`.
   Users manage their own address from `/profile` — add, change, or clear.
+  An address a full Administrator sets counts as verified; see
+  [Users & roles](/admin/users-roles/#the-user-directory-admin--users).
 
 ## Rules & code of conduct
 
@@ -128,7 +132,10 @@ same schema the editor writes, never raw HTML.
   [password resets](/admin/users-roles/), and email verification; all no-op
   quietly while SMTP is unset. The password is write-only — reads only
   reveal *that* one is set — and since v1.3.0 it's stored encrypted at
-  rest and [excluded from platform exports](/admin/backup/).
+  rest and [excluded from platform exports](/admin/backup/). Since v1.8.0,
+  changing the mail server, port, credentials, TLS or From address needs the
+  **full Administrator** permission set, not just `manage_site_settings`,
+  because password-reset links travel through them.
 - **Update checks** — the once-daily, version-only check that drives the
   "update available" notice. Toggle it here, or disable it outright via the
   environment for air-gapped installs; what it sends (and doesn't) is

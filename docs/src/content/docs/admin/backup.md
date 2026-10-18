@@ -9,13 +9,14 @@ sections you pick per operation.
 
 ## Exporting
 
-Choose any combination of sections:
+Choose any combination of the six sections:
 
 `site_settings` · `users` · `roles` · `competitions` · `automations` ·
-`audit_log` · `pages`
+`audit_log`
 
-[Custom pages](/admin/pages/) travel in the backup too (the `pages`
-section, v1.5.0), matched by `slug` on an additive restore.
+[Custom pages](/admin/pages/) travel with `site_settings` (since v1.5.0),
+matched by `slug` on an additive restore — for holders of `manage_pages`;
+otherwise the export leaves them out and the import skips them.
 
 Since v1.6.0, [custom brand themes](/admin/site-settings/#custom-brand-themes)
 ride inside the `site_settings` section (there is no separate themes
@@ -26,6 +27,9 @@ Per-competition
 carry their **definitions** with the `competitions` section — but the
 collected **answers** do not (they are personal data, available only
 through the organiser's per-competition CSV export, never a backup).
+[Programming problems](/guides/programming/) and their test data also ride
+the `competitions` section (v1.8.0); restored test data is checked and rebuilt
+rather than stored as sent.
 
 The export is **complete for what it covers** — including password hashes
 and flag hashes — because a backup that can't actually restore your
@@ -39,13 +43,24 @@ key. Re-enter those on the new install after a restore.
 
 :::caution[The file is sensitive]
 Treat an export like a database dump: it contains credential hashes and
-secrets. Store it encrypted, restrict who can read it, and both endpoints
-are gated on `manage_site_settings` for the same reason — and since
-v1.4.0 the `users` and `roles` sections additionally require the global
-`manage_users` / `manage_roles` permissions, on export and import alike,
-so a site-settings delegate can't read or write the account and RBAC
-graph.
+secrets. Store it encrypted and restrict who can read it.
 :::
+
+### Who can move which section
+
+`manage_site_settings` opens the panel, and an Administrator can move every
+section. Since v1.8.0 each other section also needs the permission that
+governs its content, so a delegate is **offered only the sections they may
+move**:
+
+| Section | Export needs | Import needs |
+| --- | --- | --- |
+| `site_settings` | nothing more | nothing more — but a file that would change the mail server or From address imports only for a full Administrator |
+| `users` | the full Administrator permission set (it carries every password hash and email) | `manage_users` |
+| `roles` | `manage_roles` | `manage_roles`, and you can't import grants beyond your own |
+| `competitions` | every competition-scope permission site-wide, plus `create_competition` | the same |
+| `automations` | `automation_view` + `automation_create` | the same — and each rule's trigger must be one you could automate on yourself |
+| `audit_log` | `view_audit_log` | the full Administrator permission set |
 
 Deliberately excluded: active login sessions, in-app notifications,
 collaborative-note snapshots, personal dashboard layouts, division
@@ -58,8 +73,11 @@ encrypted-at-rest credentials above (SSO providers with their secrets;
 since v1.3.0 also the SMTP password, and since v1.4.0 the AI provider
 key), which are install-specific and re-entered on new infrastructure.
 The [challenge-instance](/deploy/challenge-instances/) provisioner
-settings are excluded on the same footing — infrastructure-specific
-operator config, re-entered per install.
+settings and the [code judge](/deploy/code-judge/)'s endpoint and languages
+(v1.8.0) are excluded on the same footing — infrastructure-specific operator
+config that also decides what code runs, so re-run their setups on a new
+install. Code submissions and judgings are runtime state and aren't exported
+either; the points they earned ride along as ordinary solves.
 
 ## Importing
 
