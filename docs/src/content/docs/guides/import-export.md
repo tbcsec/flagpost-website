@@ -33,6 +33,12 @@ never exported. See [Challenge instances](/deploy/challenge-instances/).
 
 Field-by-field details: [ctfcli YAML format](/reference/ctfcli/).
 
+**Programming problems** (v1.8.0) don't fit the ctfcli format, so its export
+skips them. They have their own: the open **ICPC problem package format**,
+imported and exported from Manage challenges — see
+[Programming challenges](/guides/programming/#problem-packages). Clones and
+platform backups carry them like any other challenge.
+
 **Migrating from CTFd?** Export your challenges with
 [ctfcli](https://github.com/CTFd/ctfcli) (or use your existing ctfcli-format
 challenge repo), zip the challenge directories, and import. Moving your

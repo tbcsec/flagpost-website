@@ -36,10 +36,13 @@ global rule gets an inline competition selector).
 | --- | --- | --- |
 | **Competition rule** | One competition's events | `automation_create` / `automation_edit` in that competition (Judge has these) |
 | **Global rule** | Every competition's events | The same permissions held **globally** (Administrator); managed under Admin → Automations |
-| **Personal rule** | Only events **you caused** | No permissions — but restricted to the *notify me* action |
+| **Personal rule** | Only events **you caused** | Permission to observe the trigger — and restricted to the *notify me* action |
 
 Personal rules are a saved search that pings you ("notify me when I solve
-something"), never a way to run privileged actions.
+something"), never a way to run privileged actions. Being an event's subject
+doesn't entitle you to observe it, so a personal rule needs the trigger's
+permission like any other rule — and the engine re-checks it each time the
+rule would fire, so a rule whose owner has lost access stays silent.
 
 **Trigger authorization:** each event is governed by the permission that
 lets you observe it — a Judge can build rules on solves and tickets, but

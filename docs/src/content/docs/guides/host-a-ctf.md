@@ -51,6 +51,9 @@ platform is a single backend process by design, so scale up, not out.
 - For anything that needs a live target per team, give the challenge its
   own [on-demand instance](/deploy/challenge-instances/) — each subject gets
   an isolated container instead of sharing one endpoint.
+- Mixing in coding problems? Make them
+  [programming challenges](/guides/programming/) and run a reference check
+  on each before publishing.
 - **Rehearse every flag** in a scratch competition — regex flags
   especially. Attach files and download them the way a competitor would.
 - Set hint costs deliberately: free hints released on a timer beat

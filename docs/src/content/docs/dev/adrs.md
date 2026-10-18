@@ -50,6 +50,11 @@ quietly working around it.
 | [0035](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0035-relicense-apache-2.0.md) | Relicense from AGPL-3.0 to Apache 2.0; module exception retired | Accepted |
 | [0036](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0036-challenge-instancing-provisioners.md) | Challenge instancing — provisioner kinds, background-lane lifecycle, hashed unique flags | Accepted |
 | [0037](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0037-metrics-endpoint-gating.md) | Prometheus `/metrics` — kernel middleware, off by default, gated by token/allowlist | Accepted |
+| [0038](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0038-boot-time-baseline-import.md) | Boot-time baseline import — provision an unconfigured instance from a mounted platform export | Accepted |
+| [0039](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0039-cross-competition-skills-web.md) | Cross-competition skills web — the first participant-facing consolidation view | Accepted |
+| [0040](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0040-module-sdk-and-marketplace.md) | Module SDK, import & marketplace — tiered trust over an open registry protocol | Accepted |
+| [0041](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0041-object-storage-rustfs-replaces-minio.md) | Object storage — RustFS replaces the retired MinIO; vendor-neutral `S3_*` configuration (hard break) | Accepted |
+| [0042](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0042-programming-challenges-code-judge.md) | Programming challenges — judge execution model, DB-as-queue, and grading integration | Proposed |
 
 Two threads are worth reading in sequence to see the project's decision
 style: the **bootstrap story** (0007 → 0010 → 0017 — from "first user wins"

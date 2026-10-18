@@ -130,12 +130,15 @@ unlimited), and the **challenge ratings** toggle. Details in
 
 ### Modules
 
-Six optional modules can be switched off for this competition:
-**Automations**, **Feedback**, **Analytics**, **[AI Assistants](/admin/ai/)**
-(which additionally sits behind a site-wide master switch),
-**[Certificates](/guides/certificates/)**, and
-**[Post-event reports](/guides/reports/)**. Certificates and reports both
-need [object storage](/deploy/production/#attachments-and-s3_public_endpoint).
+Eight optional modules can be switched off for this competition:
+**Automations**, **Feedback**, **Analytics**, **[AI Assistants](/admin/ai/)**,
+**[Certificates](/guides/certificates/)**,
+**[Post-event reports](/guides/reports/)**,
+**[Challenge Instances](/deploy/challenge-instances/)** and the
+**[Code Judge](/guides/programming/)**. AI Assistants, Challenge Instances and
+the Code Judge additionally sit behind a site-wide switch an administrator
+turns on. Certificates and reports both need
+[object storage](/deploy/production/#attachments-and-s3_public_endpoint).
 The Modules tab and toggles require the competition-scoped `manage_modules`
 permission (previously part of `edit_competition`); built-in Judge and
 Administrator hold it. Required-core modules are listed but locked on.

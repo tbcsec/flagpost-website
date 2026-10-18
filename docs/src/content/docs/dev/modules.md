@@ -88,8 +88,9 @@ The `ai` module (v1.4.0) layers a second gate on this pattern: besides the
 per-competition toggle it checks a **site-wide master switch**
 (`ai_settings.enabled`, default off) plus required provider config —
 returning 409 when the site hasn't configured it and 404 when the
-competition disabled it. Use that shape for any module that depends on
-install-level operator configuration.
+competition disabled it. `instances` (v1.6.0) and `judge` (v1.8.0) follow the
+same two-gate idea — a per-competition toggle plus site-level operator setup.
+Use it for any module that depends on install-level operator configuration.
 
 Toggles emit `module.enabled` / `module.disabled` events like every other
 mutation.

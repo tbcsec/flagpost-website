@@ -22,8 +22,8 @@ truth.
 | `delete_competition` | Competition Management | competition |
 | `manage_schedule` | Competition Management | competition |
 | `manage_modules` | Competition Management | competition |
-| `manage_invite_links` | Competition Management | competition |
 | `generate_report` | Competition Management | competition |
+| `manage_invite_links` | Competition Management | competition |
 | `challenge_view` | Challenges | competition |
 | `challenge_create` | Challenges | competition |
 | `challenge_edit` | Challenges | competition |
@@ -52,7 +52,6 @@ truth.
 | `manage_auth_providers` | Site Settings | global |
 | `manage_ai` | Site Settings | global |
 | `manage_pages` | Site Settings | global |
-| `install_content_pack` | Site Settings | global |
 | `ai_view_transcripts` | AI Assistants | competition |
 | `view_competition_analytics` | Analytics | competition |
 | `view_global_analytics` | Analytics | global |
@@ -67,6 +66,11 @@ truth.
 | `instance_launch` | Challenge Instances | competition |
 | `instance_view` | Challenge Instances | competition |
 | `instance_manage` | Challenge Instances | competition |
+| `manage_judge_infra` | Site Settings | global |
+| `judging_view` | Code Judge | competition |
+| `judging_rejudge` | Code Judge | competition |
+| `install_content_pack` | Marketplace | global |
+| `manage_marketplace` | Marketplace | global |
 
 ## What the built-in roles hold
 
@@ -76,7 +80,7 @@ truth.
 competition:
 
 `edit_competition` · `manage_schedule` · `manage_modules` ·
-`manage_invite_links` · `generate_report` · `challenge_view` · `challenge_create` ·
+`generate_report` · `manage_invite_links` · `challenge_view` · `challenge_create` ·
 `challenge_edit` · `challenge_delete` · `challenge_publish` ·
 `score_override` · `scoreboard_freeze` · `team_view_all` ·
 `team_edit_any` · `team_disqualify` · `ticket_view` · `ticket_respond` ·
@@ -85,7 +89,8 @@ competition:
 `feedback_submit` · `manage_certificates` ·
 `view_competition_analytics` · `view_submissions` · `ai_view_transcripts` ·
 `customize_dashboard` · `automation_view` · `automation_create` ·
-`automation_edit` · `instance_view` · `instance_manage` · `instance_launch`
+`automation_edit` · `instance_view` · `instance_manage` · `instance_launch` ·
+`judging_view` · `judging_rejudge`
 
 **Participant** (competition) — competitor-facing only:
 
@@ -95,9 +100,9 @@ competition:
 ## Notes
 
 - Some competitor abilities are enforced by **ownership**, not a catalogue
-  permission: submitting flags, managing your own team, replying to your own
-  tickets, and minting your own API tokens. That's why the Participant list
-  looks short.
+  permission: submitting flags or code, reading your own (and your team's)
+  judgings, managing your own team, replying to your own tickets, and minting
+  your own API tokens. That's why the Participant list looks short.
 - Several grants are deliberately narrow: `manage_api_tokens` is
   oversight-only (list/revoke anyone's token — never mint, which is
   self-only by construction); `manage_auth_providers` and `manage_ai` are
@@ -128,7 +133,28 @@ competition:
   [marketplace content packs](/admin/site-settings/#marketplace--content-packs)
   (challenge and theme packs) — a site-level trust decision, so it sits beside
   `manage_instance_infra` and the auth and AI grants rather than inside a
-  competition role.
+  competition role. `manage_marketplace` (v1.7.0) is the separate
+  Administrator-only grant for configuring the marketplace itself — the
+  on/off switch, registry URL, trust policy and trusted keys — since trust
+  configuration decides what the install will accept.
+- The [code judge](/deploy/code-judge/) grants (v1.8.0) follow the instancing
+  split. `manage_judge_infra` is an Administrator-only global grant for the
+  judge's endpoint and languages — it decides which images and commands run
+  competitor code. `judging_view` (read every submission's code, per-test
+  results and judging errors in a competition) and `judging_rejudge` (rejudge
+  submissions and override verdicts, always with a recorded reason) are staff
+  grants a Judge holds. Competitors read their own judgings through ownership.
+- **Delegation is contained.** You can't grant, or take away, permissions you
+  don't hold yourself, and holding `manage_users` lets you manage only accounts
+  whose permissions you also hold — a help desk looks after ordinary players,
+  not Judges or Administrators. A few site settings, such as the mail server,
+  need the full Administrator permission set; see
+  [Users & roles](/admin/users-roles/#delegating-administration).
+- **Seeing every competition.** A site-wide role sees every competition,
+  private ones included, only if it carries at least one
+  **competition**-scope permission (which then applies in every competition).
+  A site-wide role holding only global permissions — pages, auth providers,
+  the audit log — sees public competitions and its own, like anyone else.
 - System roles **re-sync from this catalogue on every startup**, so
   permissions added by an upgrade reach existing installs' built-in roles
   automatically. Custom roles are never touched by the sync.

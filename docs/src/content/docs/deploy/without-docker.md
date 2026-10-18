@@ -29,8 +29,12 @@ export JWT_SECRET="a-long-random-value"
 export SECRET_ENCRYPTION_KEY="$(python3 -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')"
 
 .venv/bin/alembic upgrade head     # migrate + seed built-in roles
-.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000 --ws-max-size 2097152
 ```
+
+Keep `--ws-max-size 2097152` on every launch (it's on every shipped one since
+v1.8.0): it caps an inbound WebSocket frame at 2 MiB, well under uvicorn's
+16 MiB default.
 
 :::note[Reports need WeasyPrint's system libraries]
 Generating [post-event reports](/guides/reports/) renders PDFs through
@@ -64,6 +68,21 @@ Size Postgres to match: each worker's pool is
 `DB_CONNECTION_BUDGET // N` plus half that as overflow (budget default
 100) — the Docker stack raises Postgres to `max_connections=200` for the
 same reason. Multi-machine replicas remain unsupported either way.
+
+## Code judge harness
+
+The [code judge](/deploy/code-judge/) uploads a small harness binary into
+each judging container. The backend image builds it; a source checkout has to
+build it once (it needs Go, or Docker for `make -C backend/judge_harness docker`):
+
+```bash
+make -C backend/judge_harness     # → backend/judge_harness/bin/harness-linux-{amd64,arm64}
+```
+
+Keep the binaries elsewhere? Point `JUDGE_HARNESS_DIR` at them. The setup's
+*Judge harness installed* check says when they're missing. You also run the
+judge's socket proxy yourself — configure it like `judge-proxy` in
+`docker-compose.judge.yml`, reachable only from the backend.
 
 ## Frontend
 

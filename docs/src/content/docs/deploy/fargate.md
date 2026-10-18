@@ -45,7 +45,7 @@ The backend image serves three roles, selected by command and environment.
 directly:
 
 ```
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers <vCPU>
+uvicorn main:app --host 0.0.0.0 --port 8000 --workers <vCPU> --ws-max-size 2097152
 ```
 
 with `SCHEDULER_ENABLED=false` and `MULTI_INSTANCE=1`. Bypassing the stock
@@ -54,13 +54,16 @@ is deliberate: it runs `alembic upgrade head` on every start (N tasks booting
 together would race the migration) and starts a scheduler sidecar (you run the
 scheduler as its own service instead). Set `WEB_CONCURRENCY` to the same
 worker count you pass `--workers` — the app reads the env var, not the flag,
-to size its pools.
+to size its pools. Keep `--ws-max-size 2097152`, which every shipped launch
+passes since v1.8.0: it caps an inbound WebSocket frame well under uvicorn's
+16 MiB default.
 
 **Scheduler task (exactly one).** Command `python -m scheduler`, with
 `MULTI_INSTANCE=1` so its broadcasts relay to the web tasks. It **ignores**
 `SCHEDULER_ENABLED` — running it *is* the opt-in. This is the single process
 that fires automation time-triggers, certificate exports, report renders,
-retention, and the daily update check.
+retention, and the daily update check — and, since v1.8.0, runs the
+[code judge](/deploy/code-judge/)'s worker.
 
 :::danger[Never run more than one scheduler]
 Job pickup has no cross-process locking — the topology guarantees exactly one

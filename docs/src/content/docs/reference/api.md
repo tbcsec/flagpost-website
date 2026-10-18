@@ -168,6 +168,35 @@ individual's own answers (`challenge_view`, individual-mode competitions only
 `GET /export` streams the organiser's CSV of every subject's answers
 (`edit_competition`).
 
+v1.8.0 adds the [code judge](/deploy/code-judge/), competition-scoped under
+`/api/competitions/{cid}`:
+
+- **Competitors** (`challenge_view`, plus ownership) read a problem with
+  `GET /challenges/{chid}/problem` — effective limits, accepted languages and
+  the example cases, never a hidden test — and submit with
+  `POST /challenges/{chid}/submit-code` (`202`, body `{language, source,
+  kind}`, where `kind` is `submit` (the default) or `run`). It applies the
+  flag route's gates and rate limit, answers `413` for source over 128 KB,
+  `429` with three submissions already waiting, and `503` while the judge is
+  off. Poll
+  `GET /judgings/{id}` or list `GET /challenges/{chid}/judgings` — verdicts
+  also arrive live on your per-user WebSocket room.
+- **Authors** (`challenge_edit`) manage a problem under
+  `/challenges/{chid}/judge` (settings, `…/testcases`, `…/reference` for the
+  reference check, `…/package` to export one problem);
+  `POST /judge/packages/import` (`challenge_create`) and
+  `GET /judge/packages/export` handle ICPC problem packages.
+- **Staff** list judgings with `GET /judgings` and `GET /judging-queue`
+  (`judging_view`), and `POST /judgings/{id}/rejudge`,
+  `POST /challenges/{chid}/rejudge` and `POST /judgings/{id}/override`
+  (`judging_rejudge`).
+- **Clarifications** (core): `POST /tickets/{id}/clarify`,
+  `GET`/`POST /challenges/{chid}/clarifications` and
+  `POST /announcements/{id}/withdraw`.
+
+Site judge configuration lives under `/api/admin/judge` (`settings`, `check`,
+`setup`, `presets`, `languages`), all gated `manage_judge_infra`.
+
 Flag submission is rate-limited per user/team with escalating backoff —
 build clients accordingly.
 

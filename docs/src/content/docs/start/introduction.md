@@ -25,6 +25,11 @@ free to run, and designed to be operated on your own infrastructure.
 - **A deep challenge model.** Static, regex, and multiple-choice flags;
   dynamic (decay) scoring; prerequisite unlock chains; scheduled release;
   managed tags and difficulty; per-competition guess caps.
+- **Programming challenges.** An optional code judge grades ICPC-style
+  problems by running competitors' code against hidden tests — upload or
+  write code in the browser, live verdicts, rejudges and clarifications, and
+  ICPC problem-package import — scored on the same board as your flags. See
+  [Programming challenges](/guides/programming/).
 - **On-demand challenge instances.** An optional module gives each
   competitor or team an isolated, TTL-reaped container copy of a challenge
   on a Docker or Kubernetes backend, with unique-per-instance flags and
@@ -56,9 +61,10 @@ free to run, and designed to be operated on your own infrastructure.
 ## What it deliberately is not (yet)
 
 Flagpost is a competition system first. On-demand
-[challenge instances](/deploy/challenge-instances/) are an optional module —
-off by default, and inert until an operator connects a container backend —
-not a general-purpose hosting platform for arbitrary services. Since v1.7.0
+[challenge instances](/deploy/challenge-instances/) and the
+[code judge](/deploy/code-judge/) are optional modules — off by default, and
+inert until an operator connects a container backend — not a general-purpose
+hosting platform for arbitrary services. Since v1.7.0
 you can install signed, trust-tiered **content packs** (challenges and
 themes) from an open, mirrorable [marketplace](/admin/site-settings/#marketplace--content-packs) —
 off until an operator opts in — and author modules with a documented SDK.

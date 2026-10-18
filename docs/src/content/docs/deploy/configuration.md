@@ -60,6 +60,16 @@ IP).
 boot** — the endpoint must never be public. Set at least one.
 :::
 
+## Code judge
+
+Both are optional (v1.8.0). The judge itself is configured in the admin UI —
+see [Code judge](/deploy/code-judge/).
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `JUDGE_ENDPOINT_URL` | *(unset)* | The socket-proxy address the code judge runs submissions through. Set for you by the `docker-compose.judge.yml` overlay (`http://judge-proxy:2375`); when set, the admin setup shows it as *Detected from your deployment* and it can't be edited there. Unset, the address is an ordinary admin setting. |
+| `JUDGE_HARNESS_DIR` | *(unset)* | Where the judge's harness binaries (`harness-linux-amd64` / `-arm64`) live. The backend image builds them into the default location; set it only for a [source checkout](/deploy/without-docker/#code-judge-harness) that keeps them elsewhere. |
+
 ## Auth
 
 | Variable | Default | Meaning |
@@ -73,11 +83,11 @@ boot** — the endpoint must never be public. Set at least one.
 | --- | --- | --- |
 | `WEB_CONCURRENCY` | `1` | Backend worker processes (v1.4.0). `1` = single process, no Redis needed for realtime. `>1` switches the real-time layer to the Redis cross-worker relay + presence (**requires** `REDIS_URL` — the backend refuses to boot multi-worker without it) and starts the singleton scheduler sidecar. The one scaling variable plumbed through `.env` by compose. See [Scaling for large events](/deploy/scaling/). |
 | `MULTI_INSTANCE` | `false` | Declares that this backend runs as **more than one container/host behind a load balancer** ([ADR-0031](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0031-multi-instance-deployment.md)). Forces the cross-process realtime layer (Redis relay + shared presence) on regardless of local worker count — without it, N single-worker tasks each think they're the whole deployment and silently stop relaying. Requires `REDIS_URL`. See [Deploying to AWS (Fargate + ALB)](/deploy/fargate/). |
-| `SCHEDULER_ENABLED` | `true` | Whether **this** process/container may run the singleton background scheduler (time-trigger automations, report and certificate-export jobs, retention purge, the update check). Set `false` on the web tasks of a multi-instance deployment, where one dedicated `python -m scheduler` service is the scheduler; `python -m scheduler` itself ignores the flag. |
+| `SCHEDULER_ENABLED` | `true` | Whether **this** process/container may run the singleton background scheduler (time-trigger automations, report and certificate-export jobs, retention purge, the update check, and since v1.8.0 the code judge's worker). Set `false` on the web tasks of a multi-instance deployment, where one dedicated `python -m scheduler` service is the scheduler; `python -m scheduler` itself ignores the flag. |
 
 The finer-grained knobs (DB pool sizes and the multi-worker connection
 budget, the bounded Redis client pool, presence heartbeat/TTL, WebSocket
-handshake rate limit, scoreboard cache TTL, argon2 parameters) are read
+handshake and message rate limits, scoreboard cache TTL, argon2 parameters) are read
 by the backend process directly — under compose, add them to the backend
 service's environment. They're tabulated with their defaults on the
 [scaling page](/deploy/scaling/#tuning-knobs). One more in that family:

@@ -59,9 +59,10 @@ under your `max_connections`.
 
 ## What changes under multi-worker
 
-- **Redis becomes mandatory** — WebSocket broadcast frames are relayed
-  across workers over a single Redis pub/sub channel behind the
-  connection manager
+- **Redis becomes mandatory** — WebSocket broadcast frames, and since
+  v1.7.1 the socket evictions that follow a revoked access (a ban, a role
+  change), are relayed across workers over a single Redis pub/sub channel
+  behind the connection manager
   ([ADR-0025](https://github.com/tbcsec/flagpost/blob/main/docs/adr/0025-multi-worker-broadcast-relay.md)),
   and presence becomes a Redis liveness view with per-worker heartbeats —
   a crashed worker's members age out within the TTL
@@ -71,13 +72,15 @@ under your `max_connections`.
   WebSocket fan-out crosses workers.
 - **The DB pool becomes a budget** — a fixed connection budget is split
   across workers so N workers can't oversubscribe Postgres.
-- **The scheduler runs once**, as a sidecar.
+- **The scheduler runs once**, as a sidecar — and since v1.8.0 the
+  [code judge](/deploy/code-judge/)'s worker runs with it, so exactly one
+  process judges.
 
 Single-worker attaches none of this and behaves exactly as before.
 
 ## Tuning knobs
 
-All new in v1.4.0, read by the backend process directly (under compose,
+Read by the backend process directly (under compose,
 add them to the backend service's environment — only `WEB_CONCURRENCY` is
 plumbed through `.env` for you):
 
@@ -90,6 +93,7 @@ plumbed through `.env` for you):
 | `REDIS_MAX_CONNECTIONS` / `REDIS_ACQUIRE_TIMEOUT_SECONDS` | `50` / `10` | Per-component cap on the bounded Redis client pools — the rate limiter, relay, and presence store each hold their own pool at this size (so budget up to ~3× per worker for Redis `maxclients`); bursts queue instead of erroring |
 | `WS_PRESENCE_TTL_SECONDS` / `WS_PRESENCE_HEARTBEAT_SECONDS` | `30` / `10` | Presence liveness window; TTL must exceed heartbeat + grace |
 | `WS_HANDSHAKE_RATE_LIMIT` / `WS_HANDSHAKE_RATE_WINDOW_SECONDS` | `60` / `30` | Per-user WebSocket handshake rate limit — a reconnect herd can't recompute a snapshot per socket |
+| `WS_MESSAGE_RATE_LIMIT` / `WS_MESSAGE_RATE_WINDOW_SECONDS` | `300` / `10` | Per-user limit on frames sent to a room that handles them (the collaborative-notes relay; keepalive pings count) — far above fast typing. A socket over it is closed and its client reconnects with its full state. New in v1.8.0 |
 | `WS_SEND_TIMEOUT_SECONDS` | `5` | Per-socket send timeout; a stalled client is reaped instead of stalling its room |
 | `SCOREBOARD_CACHE_TTL_SECONDS` | `5` | TTL backstop on the cached scoreboard read model (cleared on every board-moving event) |
 | `ACTIVITY_COALESCE_WINDOW_SECONDS` | `0.5` | Server-side burst coalescing for activity pings |
